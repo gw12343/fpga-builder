@@ -1,0 +1,25 @@
+//
+// Created by gabed on 4/13/2026.
+//
+
+#pragma once
+#include <string>
+#include <SDL3/SDL_video.h>
+
+
+class Renderer {
+public:
+    void InitWindow(int w, int h, const std::string& title);
+
+    void CloseWindow() const;
+
+    void StartFrame();
+    void EndFrame();
+
+    [[nodiscard]] bool IsRunning() const { return running; };
+private:
+    bool running = true;
+    SDL_Window* window = nullptr;
+    SDL_GLContext gl_context = nullptr;
+};
+
