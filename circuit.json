@@ -1,0 +1,87 @@
+{
+    "inputs": [
+        "btn0",
+        "btn1",
+        "btn2",
+        "btn3",
+        "sw0",
+        "sw1",
+        "sw2",
+        "sw3"
+    ],
+    "links": [
+        {
+            "id": 314966355,
+            "input_guid": "ae6b57ffbf9544cf8258f46882215bb0node0",
+            "output_guid": "8220f5f3da1646369d0b040b18dd35f1node0"
+        },
+        {
+            "id": 553471190,
+            "input_guid": "2b6f6f9bd0b34d369f51f8e20c1b4031node0",
+            "output_guid": "8220f5f3da1646369d0b040b18dd35f1node1"
+        },
+        {
+            "id": 1900322102,
+            "input_guid": "8220f5f3da1646369d0b040b18dd35f1node3",
+            "output_guid": "18e28af8661a435cadc00019fb1901c9node0"
+        },
+        {
+            "id": 18446744072913318146,
+            "input_guid": "360b10173529498da47364fc0cea1e5anode0",
+            "output_guid": "8220f5f3da1646369d0b040b18dd35f1node2"
+        }
+    ],
+    "name": "main_module",
+    "nodes": [
+        {
+            "guid": "18e28af8661a435cadc00019fb1901c9",
+            "id": 1500958452,
+            "name": "OutputNode",
+            "slot": 3,
+            "type": "OutputNode",
+            "x": -26.0,
+            "y": 152.0
+        },
+        {
+            "guid": "ae6b57ffbf9544cf8258f46882215bb0",
+            "id": 18446744073622349909,
+            "name": "InputNode",
+            "slot": 3,
+            "type": "InputNode",
+            "x": -404.0,
+            "y": 72.0
+        },
+        {
+            "guid": "2b6f6f9bd0b34d369f51f8e20c1b4031",
+            "id": 859198666,
+            "name": "InputNode",
+            "slot": 7,
+            "type": "InputNode",
+            "x": -404.0,
+            "y": 168.0
+        },
+        {
+            "guid": "8220f5f3da1646369d0b040b18dd35f1",
+            "id": 18446744071650173369,
+            "name": "Multiplexer Node",
+            "type": "MultiplexerNode",
+            "x": -199.0,
+            "y": 158.0
+        },
+        {
+            "guid": "360b10173529498da47364fc0cea1e5a",
+            "id": 18446744072432122036,
+            "name": "Literal Node",
+            "type": "LiteralNode",
+            "value": 0,
+            "x": -453.0,
+            "y": 280.0
+        }
+    ],
+    "outputs": [
+        "led0",
+        "led1",
+        "led2",
+        "led3"
+    ]
+}

@@ -115,11 +115,9 @@ std::unique_ptr<Node> CircuitSerializer::node_from_json(const json& j, Module* m
         p = std::make_unique<XOrNode>(m, guid);
     }else if (type == "AndNode") {
         p = std::make_unique<AndNode>(m, guid);
-    }
-    else if (type == "OutputNode") {
+    }else if (type == "OutputNode") {
         p = std::make_unique<OutputNode>(m, guid, j.at("slot").get<int>());
-    }
-    else if (type == "InputNode") {
+    }else if (type == "InputNode") {
         p = std::make_unique<InputNode>(m, guid, j.at("slot").get<int>());
     }else if (type == "MultiplexerNode") {
         p = std::make_unique<MultiplexerNode>(m, guid);
