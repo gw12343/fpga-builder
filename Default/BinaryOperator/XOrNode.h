@@ -10,7 +10,7 @@
 class XOrNode : public BinaryOpNode{
 public:
     [[nodiscard]] std::string type() const override { return "XOrNode"; }
-    std::string GetVerilogOperator() const override { return "^"; }
+    std::string GetVerilogOperator() const override { return "xor"; }
     void accept(Visitor& v) override { v.visit(*this); }
 
 

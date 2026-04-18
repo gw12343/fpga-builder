@@ -75,7 +75,9 @@ void Codegen::visit(BinaryOpNode &node) {
     std::string intermediate_wire_name = GetSafeWireName("bin_op_result");
 
     code += "wire " + intermediate_wire_name + ";\n";
-    code += "assign "+ intermediate_wire_name + " = " + a_val + " " + node.GetVerilogOperator() + " " + b_val  + ";\n";
+    //nor g1 (y, a, b); // y = ~(a | b)
+    code += node.GetVerilogOperator() + " " + GetSafeWireName(node.GetVerilogOperator()) + " (" + intermediate_wire_name + ", " + a_val + ", " + b_val +");\n";
+   // code += "assign "+ intermediate_wire_name + " = " + a_val + " " + node.GetVerilogOperator() + " " + b_val  + ";\n";
     returnVals.emplace(intermediate_wire_name);
 }
 

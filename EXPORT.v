@@ -12,10 +12,11 @@ module main_module (
 	 output wire led2,
 	 output wire led3
 );
-wire number_literal0 = 1'b0;
 wire mux_result0;
-assign mux_result0 = number_literal0 ? btn3 : sw3;
+assign mux_result0 = sw2 ? btn0 : btn1;
+wire bin_op_result0;
+nor nor0 (bin_op_result0, mux_result0, sw2);
 
-assign led3 = mux_result0;
+assign led3 = bin_op_result0;
 
 endmodule

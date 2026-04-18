@@ -10,7 +10,7 @@
 class AndNode : public BinaryOpNode{
 public:
     [[nodiscard]] std::string type() const override { return "AndNode"; }
-    std::string GetVerilogOperator() const override { return "&"; }
+    std::string GetVerilogOperator() const override { return "and"; }
     void accept(Visitor& v) override { v.visit(*this); }
 
 

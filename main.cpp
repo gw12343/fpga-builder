@@ -15,6 +15,7 @@
 #include "Default/BinaryOperator/AndNode.h"
 #include "Default/BinaryOperator/OrNode.h"
 #include "Default/BinaryOperator/XOrNode.h"
+#include "Default/BinaryOperator/NorNode.h"
 
 
 int main(int, char**) {
@@ -38,6 +39,11 @@ int main(int, char**) {
 
         if (ImGui::Button("OR")) {
              main_module->nodes.push_back(std::make_unique<OrNode>(main_module.get(), GUID::generate_guid()));
+
+        }
+
+        if (ImGui::Button("NOR")) {
+             main_module->nodes.push_back(std::make_unique<NorNode>(main_module.get(), GUID::generate_guid()));
 
         }
 

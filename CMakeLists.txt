@@ -1,4 +1,4 @@
-    cmake_minimum_required(VERSION 3.30)
+    cmake_minimum_required(VERSION 3.28.1)
     project(fpga_builder)
 
     set(CMAKE_CXX_STANDARD 20)
@@ -103,6 +103,7 @@
             Default/BinaryOperator/AndNode.h
             Default/BinaryOperator/XOrNode.h
             Default/LiteralNode.h
+            Default/BinaryOperator/NorNode.h
     )
 
     target_include_directories(fpga_builder PUBLIC

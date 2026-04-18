@@ -26,8 +26,8 @@
             "output_guid": "18e28af8661a435cadc00019fb1901c9node0"
         },
         {
-            "id": 18446744072913318146,
-            "input_guid": "360b10173529498da47364fc0cea1e5anode0",
+            "id": 3987304211,
+            "input_guid": "2d5e8cab2b1c4d498d13416d81a685fanode0",
             "output_guid": "8220f5f3da1646369d0b040b18dd35f1node2"
         }
     ],
@@ -40,13 +40,13 @@
             "slot": 3,
             "type": "OutputNode",
             "x": -26.0,
-            "y": 152.0
+            "y": 248.0
         },
         {
             "guid": "ae6b57ffbf9544cf8258f46882215bb0",
             "id": 18446744073622349909,
             "name": "InputNode",
-            "slot": 3,
+            "slot": 0,
             "type": "InputNode",
             "x": -404.0,
             "y": 72.0
@@ -55,7 +55,7 @@
             "guid": "2b6f6f9bd0b34d369f51f8e20c1b4031",
             "id": 859198666,
             "name": "InputNode",
-            "slot": 7,
+            "slot": 1,
             "type": "InputNode",
             "x": -404.0,
             "y": 168.0
@@ -69,12 +69,12 @@
             "y": 158.0
         },
         {
-            "guid": "360b10173529498da47364fc0cea1e5a",
-            "id": 18446744072432122036,
-            "name": "Literal Node",
-            "type": "LiteralNode",
-            "value": 0,
-            "x": -453.0,
+            "guid": "2d5e8cab2b1c4d498d13416d81a685fa",
+            "id": 3172429699,
+            "name": "InputNode",
+            "slot": 6,
+            "type": "InputNode",
+            "x": -413.0,
             "y": 280.0
         }
     ],
