@@ -104,6 +104,11 @@
             Default/BinaryOperator/XOrNode.h
             Default/LiteralNode.h
             Default/BinaryOperator/NorNode.h
+            Codegen/Codegen.cpp
+            Codegen/Codegen.h
+            Codegen/Codegen.h
+            Default/DFFNode.h
+            Default/DebounceNode.h
     )
 
     target_include_directories(fpga_builder PUBLIC

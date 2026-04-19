@@ -15,7 +15,7 @@ public:
 
     void accept(Visitor& v) override { v.visit(*this); }
 
-    virtual std::string GetVerilogOperator() const { return "????"; }
+    virtual std::string GetVerilogAssign(std::string out, std::string a, std::string b) const { return "????"; }
 
     BinaryOpNode(Module* parent, const std::string &guid);
 

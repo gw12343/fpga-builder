@@ -8,6 +8,8 @@
 #include <iostream>
 
 #include "Module.h"
+#include "Default/DebounceNode.h"
+#include "Default/DFFNode.h"
 #include "Default/InputNode.h"
 #include "Default/LiteralNode.h"
 #include "Default/MultiplexerNode.h"
@@ -15,6 +17,7 @@
 #include "Default/BinaryOperator/AndNode.h"
 #include "Default/BinaryOperator/OrNode.h"
 #include "Default/BinaryOperator/XOrNode.h"
+#include "Default/BinaryOperator/NorNode.h"
 
 
 using json = nlohmann::json;
@@ -113,6 +116,8 @@ std::unique_ptr<Node> CircuitSerializer::node_from_json(const json& j, Module* m
         p = std::make_unique<OrNode>(m, guid);
     }else if (type == "XOrNode") {
         p = std::make_unique<XOrNode>(m, guid);
+    }else if (type == "NorNode") {
+        p = std::make_unique<NorNode>(m, guid);
     }else if (type == "AndNode") {
         p = std::make_unique<AndNode>(m, guid);
     }else if (type == "OutputNode") {
@@ -123,6 +128,10 @@ std::unique_ptr<Node> CircuitSerializer::node_from_json(const json& j, Module* m
         p = std::make_unique<MultiplexerNode>(m, guid);
     }else if (type == "LiteralNode") {
         p = std::make_unique<LiteralNode>(m, guid, j.at("value").get<int>());
+    }else if (type == "DFFNode") {
+        p = std::make_unique<DFFNode>(m, guid);
+    }else if (type == "DebounceNode") {
+        p = std::make_unique<DebounceNode>(m, guid);
     }
     else {
         throw std::runtime_error("Unknown node type: " + type);

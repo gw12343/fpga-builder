@@ -10,6 +10,8 @@
 
 #include "CircuitSerializer.h"
 #include "GUID.h"
+#include "Default/DebounceNode.h"
+#include "Default/DFFNode.h"
 #include "Default/LiteralNode.h"
 #include "Default/MultiplexerNode.h"
 #include "Default/BinaryOperator/AndNode.h"
@@ -64,6 +66,15 @@ int main(int, char**) {
 
         if (ImGui::Button("LT Node")) {
             main_module->nodes.push_back(std::make_unique<LiteralNode>(main_module.get(), GUID::generate_guid(), 0));
+
+        }
+        if (ImGui::Button("DFF Node")) {
+            main_module->nodes.push_back(std::make_unique<DFFNode>(main_module.get(), GUID::generate_guid()));
+
+        }
+
+        if (ImGui::Button("Debounce Node")) {
+            main_module->nodes.push_back(std::make_unique<DebounceNode>(main_module.get(), GUID::generate_guid()));
 
         }
 
