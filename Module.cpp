@@ -14,6 +14,7 @@
 #include <algorithm>
 
 #include "GUID.h"
+#include "Default/Node.h"
 #include "Default/InputNode.h"
 #include "Default/OutputNode.h"
 
@@ -38,7 +39,7 @@ void Module::Update() {
 
 
 
-void Module::Render()  {
+void Module::Render(const std::shared_ptr<ErrorManager>& error_manager)  {
     ed::SetCurrentEditor(context);
 
     ImGuiWindowClass window_class;
@@ -130,7 +131,7 @@ void Module::Render()  {
         ed::EndDelete(); // Wrap up deletion action
 
         ed::EndCreate();
-        RenderNodes();
+        RenderNodes(error_manager);
         RenderLinks();
 
 
@@ -143,10 +144,7 @@ void Module::Render()  {
     RenderIOList();
 }
 
-void Module::Clean() const {
-    DestroyEditor(context);
 
-}
 
 bool Module::CreateLink(const Pin &a, const Pin &b) {
     const std::string out_pin_guid = a.GetDirection() == ax::NodeEditor::PinKind::Input ? a.GetGuid() : b.GetGuid();
@@ -166,11 +164,29 @@ bool Module::CreateLink(const Pin &a, const Pin &b) {
     }
 
     if (b.CanConnect(a)){
-        links.push_back(Link(this, out_pin_guid, in_pin_guid));
+        links.emplace_back(this, out_pin_guid, in_pin_guid);
         return true;
     }
 
     return false;
+}
+
+std::optional<Node*> Module::GetNode(const std::string &guid) const {
+    for (const auto& node : nodes) {
+            if (node->guid == guid) {
+                return node.get();
+            }
+    }
+    return std::nullopt;
+}
+
+std::optional<Node*> Module::GetNode(const ax::NodeEditor::NodeId &id) const {
+    for (const auto& node : nodes) {
+        if (node->id == id) {
+            return node.get();
+        }
+    }
+    return std::nullopt;
 }
 
 std::optional<Pin> Module::GetPin(const std::string &guid) {
@@ -226,11 +242,11 @@ void Module::RenderIOList() {
     ImGui::EndChild();
         ImGui::Separator();
 
-        const float width = ImGui::GetColumnWidth() / 2.0 - ImGui::GetStyle().ItemSpacing.x / 2.0;
+        const float width = ImGui::GetColumnWidth() / 2.0f - ImGui::GetStyle().ItemSpacing.x / 2.0f;
 
 
         if (ImGui::Button("+##INPUTS-PLUS", ImVec2(width, 0))) {
-            inputs.push_back("New Input");
+            inputs.emplace_back("New Input");
         }
         ImGui::SameLine();
         if (ImGui::Button("-##INPUTS-MINUS", ImVec2(width, 0))) {
@@ -266,7 +282,7 @@ void Module::RenderIOList() {
         ImGui::Separator();
 
         if (ImGui::Button("+##OUTPUTS-PLUS", ImVec2(width, 0))) {
-            outputs.push_back("New Output");
+            outputs.emplace_back("New Output");
         }
         ImGui::SameLine();
         if (ImGui::Button("-##OUTPUTS-MINUS", ImVec2(width, 0))) {
@@ -282,13 +298,13 @@ ImGui::EndTable();
     ImGui::End();
 }
 
-void Module::RenderNodes() const {
+void Module::RenderNodes(const std::shared_ptr<ErrorManager>& error_manager) const {
     for (const auto& node : nodes)
-        node->Render();
+        node->Render(error_manager);
 
 }
 
 void Module::RenderLinks() const {
-    for (auto link : links)
+    for (const auto& link : links)
         link.Render();
 }

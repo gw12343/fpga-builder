@@ -9,9 +9,11 @@
 #include <nlohmann/json.hpp>
 
 #include "CircuitSerializer.h"
+#include "ErrorManager.h"
 #include "GUID.h"
 #include "Default/DebounceNode.h"
 #include "Default/DFFNode.h"
+#include "Default/EdgeNode.h"
 #include "Default/LiteralNode.h"
 #include "Default/MultiplexerNode.h"
 #include "Default/BinaryOperator/AndNode.h"
@@ -22,6 +24,7 @@
 
 int main(int, char**) {
     const auto renderer = std::make_shared<Renderer>();
+    const auto error_manager = std::make_shared<ErrorManager>();
 
     renderer->InitWindow(800, 600, "FPGA Builder");
 
@@ -35,7 +38,7 @@ int main(int, char**) {
         renderer->StartFrame();
 
         main_module->Update();
-        main_module->Render();
+        main_module->Render(error_manager);
 
         ImGui::Begin("Build");
 
@@ -66,16 +69,16 @@ int main(int, char**) {
 
         if (ImGui::Button("LT Node")) {
             main_module->nodes.push_back(std::make_unique<LiteralNode>(main_module.get(), GUID::generate_guid(), 0));
-
         }
         if (ImGui::Button("DFF Node")) {
             main_module->nodes.push_back(std::make_unique<DFFNode>(main_module.get(), GUID::generate_guid()));
 
         }
-
         if (ImGui::Button("Debounce Node")) {
             main_module->nodes.push_back(std::make_unique<DebounceNode>(main_module.get(), GUID::generate_guid()));
-
+        }
+        if (ImGui::Button("Edge Node")) {
+            main_module->nodes.push_back(std::make_unique<EdgeNode>(main_module.get(), GUID::generate_guid()));
         }
 
 
@@ -88,7 +91,7 @@ int main(int, char**) {
         ImGui::SameLine();
 
         if (ImGui::Button("Export Circuit")) {
-            Codegen c;
+            Codegen c(error_manager);
 
             c.GenerateCode(main_module);
         }
@@ -107,12 +110,11 @@ int main(int, char**) {
         }
 
         ImGui::End();
-
+        error_manager->Render(main_module);
         renderer->EndFrame();
     }
 
     // Clean up
-    main_module->Clean();
     renderer->CloseWindow();
     return 0;
 }

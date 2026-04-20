@@ -20,10 +20,8 @@ public:
     ~Module();
 
     void Update();
-    void Render();
+    void Render(const std::shared_ptr<ErrorManager>& error_manager);
 
-
-    void Clean() const;
 
     std::vector<std::string> inputs;
     std::vector<std::string> outputs;
@@ -34,6 +32,9 @@ public:
 
     bool CreateLink(const Pin &a, const Pin &b);
 
+    std::optional<Node*> GetNode(const std::string &guid) const;
+    std::optional<Node*> GetNode(const ax::NodeEditor::NodeId &id) const;
+
     std::optional<Pin> GetPin(const std::string &guid);
     std::optional<Pin> GetPin(const ax::NodeEditor::PinId &id);
 
@@ -41,7 +42,7 @@ public:
 
 private:
     void RenderIOList();
-    void RenderNodes() const;
+    void RenderNodes(const std::shared_ptr<ErrorManager>& error_manager) const;
     void RenderLinks() const;
 
     ed::EditorContext* context = nullptr;

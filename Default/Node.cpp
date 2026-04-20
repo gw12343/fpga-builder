@@ -4,6 +4,9 @@
 
 #include "Node.h"
 
+#include <utility>
+
+#include "ErrorManager.h"
 #include "../GUID.h"
 #include "../Pin.h"
 #include "../Module.h"
@@ -15,17 +18,17 @@ Node::Node(Module* parent, const std::string &name, const std::vector<std::strin
 
 Node::Node(std::string saved_guid, Module* parent, std::string name, std::vector<std::string> inputs, std::vector<std::string> outputs) : name(name) {
     module = parent;
-    guid = saved_guid;
+    guid = std::move(saved_guid);
     id = GUID::to_id(guid);
 
 
     int i = 0;
-    for (const auto input_name : inputs) {
+    for (const auto& input_name : inputs) {
         Pin new_input(input_name, ax::NodeEditor::PinKind::Input, *this, i++);
         pins.push_back(new_input);
     }
 
-    for (const auto output_name : outputs) {
+    for (const auto& output_name : outputs) {
         Pin new_output(output_name, ax::NodeEditor::PinKind::Output, *this, i++);
         pins.push_back(new_output);
     }
@@ -34,7 +37,13 @@ Node::Node(std::string saved_guid, Module* parent, std::string name, std::vector
 }
 
 
-void Node::Render() {
+void Node::Render(const std::shared_ptr<ErrorManager>& error_manager) {
+    bool is_error = error_manager->GetErrorNodeGuid() == guid;
+
+    if(is_error) {
+        ed::PushStyleColor(ed::StyleColor_NodeBg, ImVec4(160/255.0, 60/255.0, 90/255.0, 255/255.0));
+        ed::PushStyleColor(ed::StyleColor_NodeBorder, ImVec4(200/255.0, 100/255.0, 140/255.0, 255/255.0));
+    }
     BeginNode(id);
 
     if (last_pos.x == FLT_MAX && last_pos.y == FLT_MAX) {
@@ -47,14 +56,17 @@ void Node::Render() {
     RenderInternals();
 
     ImGui::BeginGroup();
-    for (auto pin : pins) {
+    for (const auto& pin : pins) {
         if (pin.GetDirection() == ax::NodeEditor::PinKind::Input) pin.Render();
     }
 
     ImGui::EndGroup();
     ImGui::SameLine();
+
+
+
     ImGui::BeginGroup();
-    for (auto pin : pins) {
+    for (const auto& pin : pins) {
         if (pin.GetDirection() == ax::NodeEditor::PinKind::Output) pin.Render();
     }
 
@@ -64,6 +76,10 @@ void Node::Render() {
 
 
     ed::EndNode();
+
+    if(is_error) {
+        ed::PopStyleColor(2);
+    }
 }
 
 void Node::RenderInternals() {

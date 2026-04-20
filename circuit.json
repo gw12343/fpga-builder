@@ -17,11 +17,6 @@
             "output_guid": "763094fd578f473d836b53f23839e3c2node3"
         },
         {
-            "id": 1312265281,
-            "input_guid": "763094fd578f473d836b53f23839e3c2node4",
-            "output_guid": "18e28af8661a435cadc00019fb1901c9node0"
-        },
-        {
             "id": 18446744072924398895,
             "input_guid": "763094fd578f473d836b53f23839e3c2node4",
             "output_guid": "b43a936861b0410fab09bb1bc6945588node0"
@@ -47,14 +42,24 @@
             "output_guid": "da54cf4f150d4ecb8ce3701fcaf9cc58node0"
         },
         {
-            "id": 998495008,
-            "input_guid": "da54cf4f150d4ecb8ce3701fcaf9cc58node2",
-            "output_guid": "763094fd578f473d836b53f23839e3c2node0"
-        },
-        {
             "id": 1589116591,
             "input_guid": "ae6b57ffbf9544cf8258f46882215bb0node0",
             "output_guid": "da54cf4f150d4ecb8ce3701fcaf9cc58node1"
+        },
+        {
+            "id": 18446744072878822917,
+            "input_guid": "da54cf4f150d4ecb8ce3701fcaf9cc58node2",
+            "output_guid": "75a07d6046444721942b636098e27fe7node0"
+        },
+        {
+            "id": 247501499,
+            "input_guid": "ae6b57ffbf9544cf8258f46882215bb0node0",
+            "output_guid": "75a07d6046444721942b636098e27fe7node1"
+        },
+        {
+            "id": 18446744072901395970,
+            "input_guid": "75a07d6046444721942b636098e27fe7node2",
+            "output_guid": "763094fd578f473d836b53f23839e3c2node0"
         }
     ],
     "name": "main_module",
@@ -65,8 +70,8 @@
             "name": "OutputNode",
             "slot": 0,
             "type": "OutputNode",
-            "x": 262.0,
-            "y": 136.0
+            "x": 198.0,
+            "y": 56.0
         },
         {
             "guid": "ae6b57ffbf9544cf8258f46882215bb0",
@@ -83,8 +88,8 @@
             "name": "InputNode",
             "slot": 0,
             "type": "InputNode",
-            "x": -324.0,
-            "y": 24.0
+            "x": -564.0,
+            "y": 56.0
         },
         {
             "guid": "5adcbad204be442d85421bbde9b3618d",
@@ -92,8 +97,8 @@
             "name": "InputNode",
             "slot": 1,
             "type": "InputNode",
-            "x": -228.0,
-            "y": 168.0
+            "x": -244.0,
+            "y": 152.0
         },
         {
             "guid": "763094fd578f473d836b53f23839e3c2",
@@ -108,7 +113,7 @@
             "id": 1456027542,
             "name": "XOR Node",
             "type": "XOrNode",
-            "x": 20.0,
+            "x": 36.0,
             "y": 336.0
         },
         {
@@ -117,16 +122,24 @@
             "name": "Literal Node",
             "type": "LiteralNode",
             "value": 1,
-            "x": -325.0,
-            "y": 280.0
+            "x": -197.0,
+            "y": 328.0
         },
         {
             "guid": "da54cf4f150d4ecb8ce3701fcaf9cc58",
             "id": 1678344115,
             "name": "Debounce Node",
             "type": "DebounceNode",
-            "x": -105.0,
-            "y": 111.0
+            "x": -355.0,
+            "y": 63.0
+        },
+        {
+            "guid": "75a07d6046444721942b636098e27fe7",
+            "id": 18446744071961222952,
+            "name": "Edge Node",
+            "type": "EdgeNode",
+            "x": -185.0,
+            "y": 63.0
         }
     ],
     "outputs": [

@@ -13,6 +13,7 @@
 #include "../Pin.h"
 #include "Codegen/Visitor.h"
 
+class ErrorManager;
     class Module;
     namespace ed = ax::NodeEditor;
 
@@ -26,11 +27,11 @@
 
 
         virtual void accept(Visitor& v) = 0;
-        void Render();
+        void Render(const std::shared_ptr<ErrorManager>& error_manager);
         virtual void RenderInternals();
         [[nodiscard]] virtual std::string type() const = 0;
 
-        virtual nlohmann::json to_json() const {
+        [[nodiscard]] virtual nlohmann::json to_json() const {
             return {
                 {"type", type()},
                 {"guid", guid},

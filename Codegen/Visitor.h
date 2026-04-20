@@ -4,6 +4,7 @@
 
 #pragma once
 
+class EdgeNode;
 class DebounceNode;
 class DFFNode;
 class MultiplexerNode;
@@ -16,6 +17,7 @@ class Visitor {
 public:
     virtual ~Visitor() = default;
 
+    virtual void visit(EdgeNode& node) {}
     virtual void visit(DebounceNode& node) {}
     virtual void visit(DFFNode& node) {}
     virtual void visit(MultiplexerNode& node) {}

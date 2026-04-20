@@ -6,10 +6,12 @@
 
 #include <iostream>
 #include <fstream>
+#include <utility>
 
 #include "Module.h"
 #include "Default/DebounceNode.h"
 #include "Default/DFFNode.h"
+#include "Default/EdgeNode.h"
 #include "Default/BinaryOperator/OrNode.h"
 #include "Default/InputNode.h"
 #include "Default/LiteralNode.h"
@@ -32,6 +34,9 @@
 #define START_CHECK_CYCLES { if(CheckActive(node.guid)){ CircuitError("Cycle detected!", node); ERROR_AND_RETURN} activeNodes.emplace(node.guid);}
 #define END_CHECK_CYCLES activeNodes.pop();
 
+
+Codegen::Codegen(std::shared_ptr<ErrorManager> error_man) : error_manager(std::move(error_man)){
+}
 
 void Codegen::GenerateCode(const std::shared_ptr<Module>& module) {
     std::string header = "module " + module->GetName() + " (";
@@ -72,7 +77,40 @@ void Codegen::GenerateCode(const std::shared_ptr<Module>& module) {
     }
 }
 
+void Codegen::visit(EdgeNode &node) {
+    CHECK_CACHE
 
+    const std::string output_reg = GetSafeWireName("edge_out");
+    visitedNodes[node.guid] = output_reg;
+
+    // Input pin
+    const auto d = node.GetDPin().GetConnectedPin();
+    const auto clk = node.GetClockPin().GetConnectedPin();
+
+    VERIFY_CONNECTION(d);
+    VERIFY_CONNECTION(clk);
+
+    const auto d_val = EvalNode(d->GetNode());
+    const auto clk_val = EvalNode(clk->GetNode());
+
+
+    // declare output register and previous register
+    const std::string previous_reg = GetSafeWireName("edge_prev");
+
+    decls += "reg     " + output_reg + ";\n";
+    decls += "reg     " + previous_reg + ";\n";
+
+    // assign output wire always @
+    inner += "\t" + output_reg + " = " + d_val + " & ~" + previous_reg + ";\n";
+
+
+    // debounce shift block
+    later += "\talways @(posedge " + clk_val + ") begin\n";
+    later += "\t\t" + previous_reg + " <= " + d_val + ";\n";
+    later += "\tend\n\n";
+
+    CACHE_AND_RETURN(node, output_reg)
+}
 
 
 void Codegen::visit(DebounceNode &node) {
@@ -88,8 +126,8 @@ void Codegen::visit(DebounceNode &node) {
     VERIFY_CONNECTION(d);
     VERIFY_CONNECTION(clk);
 
-    auto d_val = EvalNode(d->GetNode());
-    auto clk_val = EvalNode(clk->GetNode());
+    const auto d_val = EvalNode(d->GetNode());
+    const auto clk_val = EvalNode(clk->GetNode());
 
 
     // declare output register and shift register
@@ -115,12 +153,10 @@ void Codegen::visit(DebounceNode &node) {
 
 
     CACHE_AND_RETURN(node, output_reg)
-
 }
 
 void Codegen::visit(DFFNode &node) {
     CHECK_CACHE
-    //START_CHECK_CYCLES
 
     std::string output_reg = GetSafeWireName("dff_out");
     visitedNodes[node.guid] = output_reg;
@@ -137,10 +173,10 @@ void Codegen::visit(DFFNode &node) {
     VERIFY_CONNECTION(d);
     VERIFY_CONNECTION(clk);
 
-    auto set_val = EvalNode(set->GetNode());
-    auto rst_val = EvalNode(rst->GetNode());
-    auto d_val = EvalNode(d->GetNode());
-    auto clk_val = EvalNode(clk->GetNode());
+    const auto set_val = EvalNode(set->GetNode());
+    const auto rst_val = EvalNode(rst->GetNode());
+    const auto d_val = EvalNode(d->GetNode());
+    const auto clk_val = EvalNode(clk->GetNode());
 
     // declare output register
     decls += "reg " + output_reg + ";\n";
@@ -153,7 +189,6 @@ void Codegen::visit(DFFNode &node) {
     later += "\t\t\t" + output_reg + " <= " + d_val + ";\n";
     later += "\tend\n\n";
 
-    //END_CHECK_CYCLES
     CACHE_AND_RETURN(node, output_reg)
 }
 
@@ -272,9 +307,10 @@ std::string Codegen::GetSafeWireName(const std::string &wire_name) {
     return wire_name + "0";
 }
 
-void Codegen::CircuitError(const std::string& msg, const Node &node) {
+void Codegen::CircuitError(const std::string& msg, const Node &node) const {
     std::cerr << "ERROR EXPORTING CIRCUIT: " << msg << std::endl;
     std::cerr << "related node: " << node.guid << std::endl;
+    error_manager->ThrowError(msg, node);
 }
 
 bool Codegen::CheckActive(const std::string &guid) {

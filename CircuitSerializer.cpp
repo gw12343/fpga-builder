@@ -10,6 +10,7 @@
 #include "Module.h"
 #include "Default/DebounceNode.h"
 #include "Default/DFFNode.h"
+#include "Default/EdgeNode.h"
 #include "Default/InputNode.h"
 #include "Default/LiteralNode.h"
 #include "Default/MultiplexerNode.h"
@@ -132,6 +133,8 @@ std::unique_ptr<Node> CircuitSerializer::node_from_json(const json& j, Module* m
         p = std::make_unique<DFFNode>(m, guid);
     }else if (type == "DebounceNode") {
         p = std::make_unique<DebounceNode>(m, guid);
+    }else if (type == "EdgeNode") {
+        p = std::make_unique<EdgeNode>(m, guid);
     }
     else {
         throw std::runtime_error("Unknown node type: " + type);

@@ -109,6 +109,9 @@
             Codegen/Codegen.h
             Default/DFFNode.h
             Default/DebounceNode.h
+            Default/EdgeNode.h
+            ErrorManager.cpp
+            ErrorManager.h
     )
 
     target_include_directories(fpga_builder PUBLIC
