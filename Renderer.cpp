@@ -4,25 +4,23 @@
 
 #include "Renderer.h"
 
+#include <SDL3/SDL_init.h>
+#include <SDL3/SDL_opengl.h>
 #include <imgui.h>
 #include <imgui_impl_opengl3.h>
 #include <imgui_impl_sdl3.h>
 #include <iostream>
-#include <SDL3/SDL_init.h>
-#include <SDL3/SDL_opengl.h>
+#include "IconsFontAwesome6.h"
 
-void Renderer::InitWindow(int w, int h, const std::string& title) {
+static constexpr ImWchar icons_ranges[] = {ICON_MIN_FA, ICON_MAX_FA, 0};
+
+void Renderer::InitWindow(const int w, const int h, const std::string &title) {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         std::cerr << "SDL_Init Error: " << SDL_GetError() << std::endl;
         return;
     }
 
-    window = SDL_CreateWindow(
-    title.c_str(),
-        w,
-        h,
-        SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE
-    );
+    window = SDL_CreateWindow(title.c_str(), w, h, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 
     gl_context = SDL_GL_CreateContext(window);
     SDL_GL_MakeCurrent(window, gl_context);
@@ -30,11 +28,26 @@ void Renderer::InitWindow(int w, int h, const std::string& title) {
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO();
+    ImGuiIO &io = ImGui::GetIO();
 
-    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable ;
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
     ImGui::StyleColorsDark();
+
+    ImFontConfig roboto_config;
+    roboto_config.MergeMode = false;
+    roboto_config.PixelSnapH = true;
+    io.Fonts->AddFontFromFileTTF("../resources/Roboto-Regular.ttf", 18.0f, &roboto_config,
+                                 io.Fonts->GetGlyphRangesDefault());
+
+    ImFontConfig fa_config;
+    fa_config.MergeMode = true;
+    fa_config.PixelSnapH = true;
+    fa_config.GlyphMinAdvanceX = 12.0f;
+    io.Fonts->AddFontFromFileTTF("../resources/fa-solid-900.ttf", 18.0f, &fa_config, icons_ranges);
+
+
+    io.FontGlobalScale = 1.0f;
 
     ImGui_ImplSDL3_InitForOpenGL(window, gl_context);
     ImGui_ImplOpenGL3_Init("#version 130");
@@ -55,8 +68,7 @@ void Renderer::CloseWindow() const {
 SDL_Event event;
 void Renderer::StartFrame() {
 
-    while (SDL_PollEvent(&event))
-    {
+    while (SDL_PollEvent(&event)) {
         ImGui_ImplSDL3_ProcessEvent(&event);
 
         if (event.type == SDL_EVENT_QUIT)
@@ -70,19 +82,19 @@ void Renderer::StartFrame() {
 
     ImGuiWindowFlags flags = ImGuiWindowFlags_NoDocking;
 
-    const auto* viewport = ImGui::GetMainViewport();
+    const auto *viewport = ImGui::GetMainViewport();
     ImGui::SetNextWindowPos(viewport->WorkPos);
     ImGui::SetNextWindowSize(viewport->WorkSize);
     ImGui::SetNextWindowViewport(viewport->ID);
 
-    flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+    flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
+             ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 
     ImGui::Begin("DockspaceWindow", NULL, flags);
     ImGui::PopStyleVar(2);
-
 
 
     ImGuiID dockspace_id = ImGui::GetID("Dockspace");

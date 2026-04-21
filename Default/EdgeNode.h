@@ -6,24 +6,30 @@
 #include "Node.h"
 
 
-static auto EDGE_IN_PIN_D =  "D";
-static auto EDGE_IN_PIN_CLK =  "Clk";
+#include <iostream>
+
+static auto EDGE_IN_PIN_D = "D";
+static auto EDGE_IN_PIN_CLK = "Clk";
+
+static auto EDGE_OUT_PIN_Q = "Q";
+static auto EDGE_OUT_PIN_NQ = "!Q";
 
 class EdgeNode : public Node {
 public:
-
     [[nodiscard]] std::string type() const override { return "EdgeNode"; }
 
-    void accept(Visitor& v) override { v.visit(*this); }
+    void accept(Visitor &v, const int output_slot) override { v.visit(*this, output_slot); }
 
 
-    EdgeNode(Module* module, const std::string &guid) :
-            Node(guid, module,
-                 "Edge Node",
-                 {EDGE_IN_PIN_D, EDGE_IN_PIN_CLK},
-                 {"Q"}
-            ){}
+    EdgeNode(Module *module, const std::string &guid) :
+        Node(guid, module, "Edge Node", {EDGE_IN_PIN_D, EDGE_IN_PIN_CLK}, {EDGE_OUT_PIN_Q, EDGE_OUT_PIN_NQ}),
+
+        EDGE_OUT_Q_ID(FindPin(EDGE_OUT_PIN_Q).value().GetNodeIndex()),
+        EDGE_OUT_NQ_ID(FindPin(EDGE_OUT_PIN_NQ).value().GetNodeIndex()) {}
 
     Pin GetDPin() { return FindPin(EDGE_IN_PIN_D).value(); }
     Pin GetClockPin() { return FindPin(EDGE_IN_PIN_CLK).value(); }
+
+    const int EDGE_OUT_Q_ID;
+    const int EDGE_OUT_NQ_ID;
 };

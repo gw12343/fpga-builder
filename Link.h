@@ -6,34 +6,28 @@
 #include <imgui.h>
 #include <imgui_node_editor.h>
 #include <memory>
-#include <string>
 #include <nlohmann/json.hpp>
+#include <string>
 
 
 class Module;
 
 class Link {
-    public:
-    Link(Module* module, const std::string &output_guid, const std::string &input_guid);
+public:
+    Link(Module *module, const std::string &output_guid, const std::string &input_guid);
 
 
-    Link(Module* module, std::string saved_id, const std::string &output_guid, const std::string &input_guid);
+    Link(Module *module, std::string saved_id, const std::string &output_guid, const std::string &input_guid);
 
     void Render() const;
 
-     nlohmann::json to_json() const {
-        return {
-                    {"output_guid", output_guid},
-                    {"input_guid", input_guid},
-                    {"id", id.Get()}
-        };
+    nlohmann::json to_json() const {
+        return {{"output_guid", output_guid}, {"input_guid", input_guid}, {"id", id.Get()}};
     }
 
     ax::NodeEditor::LinkId id;
-    Module* module;
+    Module *module;
     std::string output_guid;
     std::string input_guid;
     ImColor color;
 };
-
-

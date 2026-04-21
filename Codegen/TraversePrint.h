@@ -5,11 +5,11 @@
 #pragma once
 #include "Visitor.h"
 
-class TraversePrint final : public Visitor{
+class TraversePrint final : public Visitor {
 public:
-     void visit(BinaryOpNode& node) override;
-     void visit(MultiplexerNode& node) override;
-     void visit(LiteralNode& node) override;
-     void visit(InputNode& node) override;
-     void visit(OutputNode& node) override;
+    void visit(BinaryOpNode &node, int output_slot) override;
+    void visit(MultiplexerNode &node, int output_slot) override;
+    void visit(LiteralNode &node, int output_slot) override;
+    void visit(InputNode &node, int output_slot) override;
+    void visit(OutputNode &node, int output_slot) override;
 };

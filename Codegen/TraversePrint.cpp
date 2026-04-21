@@ -6,20 +6,20 @@
 
 #include <iostream>
 
-#include "Module.h"
+#include "Default/BinaryOperator/OrNode.h"
 #include "Default/InputNode.h"
 #include "Default/LiteralNode.h"
 #include "Default/MultiplexerNode.h"
 #include "Default/OutputNode.h"
-#include "Default/BinaryOperator/OrNode.h"
+#include "Module.h"
 
 
 static int indent = 0;
 
-void TraversePrint::visit(BinaryOpNode &node) {
+void TraversePrint::visit(BinaryOpNode &node, int output_slot) {
     std::cout << std::string(indent * 3, ' ').c_str() << "Visiting " << node.name << std::endl;
 
-    indent ++;
+    indent++;
 
     auto a = node.GetAInputPin();
     auto b = node.GetBInputPin();
@@ -29,23 +29,21 @@ void TraversePrint::visit(BinaryOpNode &node) {
 
 
     if (ac) {
-        ac->GetNode().accept(*this);
+        ac->GetNode().accept(*this, 0);
     }
 
     if (bc) {
-        bc->GetNode().accept(*this);
+        bc->GetNode().accept(*this, 0);
     }
 
 
     indent--;
-
-
 }
 
-void TraversePrint::visit(MultiplexerNode &node) {
+void TraversePrint::visit(MultiplexerNode &node, int output_slot) {
     std::cout << std::string(indent * 3, ' ').c_str() << "Visiting " << node.name << std::endl;
 
-    indent ++;
+    indent++;
 
     auto a = node.GetAInputPin();
     auto b = node.GetBInputPin();
@@ -57,44 +55,44 @@ void TraversePrint::visit(MultiplexerNode &node) {
 
 
     if (ac) {
-        ac->GetNode().accept(*this);
+        ac->GetNode().accept(*this, 0);
     }
 
     if (bc) {
-        bc->GetNode().accept(*this);
+        bc->GetNode().accept(*this, 0);
     }
 
     if (sc) {
-        sc->GetNode().accept(*this);
+        sc->GetNode().accept(*this, 0);
     }
 
 
     indent--;
-
-
 }
 
-void TraversePrint::visit(LiteralNode &node) {
-    std::cout << std::string(indent * 3, ' ').c_str() << "Visiting " << node.name << "(" << node.value << ")" << std::endl;
+void TraversePrint::visit(LiteralNode &node, int output_slot) {
+    std::cout << std::string(indent * 3, ' ').c_str() << "Visiting " << node.name << "(" << node.value << ")"
+              << std::endl;
 }
 
-void TraversePrint::visit(InputNode &node) {
-    std::cout << std::string(indent * 3, ' ').c_str() << "Visiting " << node.name << "(" << node.module->inputs[node.slot] << ")" << std::endl;
+void TraversePrint::visit(InputNode &node, int output_slot) {
+    std::cout << std::string(indent * 3, ' ').c_str() << "Visiting " << node.name << "("
+              << node.module->inputs[node.slot] << ")" << std::endl;
 }
 
-void TraversePrint::visit(OutputNode &node) {
-    std::cout << std::string(indent * 3, ' ').c_str() << "Visiting " << node.name << "(" << node.module->outputs[node.slot] << ")" << std::endl;
+void TraversePrint::visit(OutputNode &node, int output_slot) {
+    std::cout << std::string(indent * 3, ' ').c_str() << "Visiting " << node.name << "("
+              << node.module->outputs[node.slot] << ")" << std::endl;
 
 
     auto pin = node.GetValueInputPin();
 
     if (const auto connected = pin.GetConnectedPin()) {
         indent++;
-        connected->GetNode().accept(*this);
+        connected->GetNode().accept(*this, 0);
         indent--;
 
-    }else {
+    } else {
         printf("no connection\n");
     }
-
 }

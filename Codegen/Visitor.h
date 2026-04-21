@@ -4,6 +4,8 @@
 
 #pragma once
 
+
+class ClockNode;
 class EdgeNode;
 class DebounceNode;
 class DFFNode;
@@ -17,12 +19,13 @@ class Visitor {
 public:
     virtual ~Visitor() = default;
 
-    virtual void visit(EdgeNode& node) {}
-    virtual void visit(DebounceNode& node) {}
-    virtual void visit(DFFNode& node) {}
-    virtual void visit(MultiplexerNode& node) {}
-    virtual void visit(LiteralNode& node) {}
-    virtual void visit(BinaryOpNode& node) {}
-    virtual void visit(InputNode& node) {}
-    virtual void visit(OutputNode& node) {}
+    virtual void visit(ClockNode &node, int output_slot) {}
+    virtual void visit(EdgeNode &node, int output_slot) {}
+    virtual void visit(DebounceNode &node, int output_slot) {}
+    virtual void visit(DFFNode &node, int output_slot) {}
+    virtual void visit(MultiplexerNode &node, int output_slot) {}
+    virtual void visit(LiteralNode &node, int output_slot) {}
+    virtual void visit(BinaryOpNode &node, int output_slot) {}
+    virtual void visit(InputNode &node, int output_slot) {}
+    virtual void visit(OutputNode &node, int output_slot) {}
 };

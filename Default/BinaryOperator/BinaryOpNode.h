@@ -7,19 +7,19 @@
 
 class BinaryOpNode : public Node {
 public:
-
-    nlohmann::json to_json() const override {
+    [[nodiscard]] nlohmann::json to_json() const override {
         nlohmann::json j = Node::to_json();
         return j;
     }
 
-    void accept(Visitor& v) override { v.visit(*this); }
+    void accept(Visitor &v, int output_slot) override { v.visit(*this, output_slot); }
 
-    virtual std::string GetVerilogAssign(std::string out, std::string a, std::string b) const { return "????"; }
+    [[nodiscard]] virtual std::string GetVerilogAssign(std::string out, std::string a, std::string b) const {
+        return "????";
+    }
 
-    BinaryOpNode(Module* parent, const std::string &guid);
+    BinaryOpNode(Module *parent, const std::string &guid);
 
     Pin GetAInputPin();
     Pin GetBInputPin();
-
 };

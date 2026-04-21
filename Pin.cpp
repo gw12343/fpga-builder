@@ -3,19 +3,16 @@
 //
 
 #include "Pin.h"
+#include "Default/Node.h"
 #include "GUID.h"
 #include "Module.h"
-#include "Default/Node.h"
 
 
 #include <utility>
 
 
-Pin::Pin(std::string name, const ax::NodeEditor::PinKind direction, Node& parent, const int index) :
-        node(parent),
-        direction(direction),
-        name(std::move(name)
-        ) {
+Pin::Pin(std::string name, const ax::NodeEditor::PinKind direction, Node &parent, const int index) :
+    node(parent), direction(direction), name(std::move(name)) {
 
     guid = parent.guid + "node" + std::to_string(index);
     id = GUID::to_id(guid);
@@ -29,10 +26,7 @@ void Pin::Render() const {
 }
 
 bool Pin::CanConnect(const Pin &other) const {
-    if (other.id == id
-        || other.direction == direction ||
-        other.node.id == node.id
-        ) {
+    if (other.id == id || other.direction == direction || other.node.id == node.id) {
         return false;
     }
 
@@ -40,7 +34,7 @@ bool Pin::CanConnect(const Pin &other) const {
 }
 
 std::optional<Pin> Pin::GetConnectedPin() const {
-    for (const auto module = node.module; const auto& link : module->links) {
+    for (const auto module = node.module; const auto &link: module->links) {
         if (link.input_guid == guid) {
             return module->GetPin(link.output_guid);
         }
@@ -52,3 +46,12 @@ std::optional<Pin> Pin::GetConnectedPin() const {
     return std::nullopt;
 }
 
+int Pin::GetNodeIndex() const {
+    for (int i = 0; i < node.pins.size(); i++) {
+        if (const Pin &pin = node.pins[i]; pin.guid == guid) {
+            return i;
+        }
+    }
+
+    return -1;
+}

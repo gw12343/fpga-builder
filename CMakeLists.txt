@@ -112,6 +112,9 @@
             Default/EdgeNode.h
             ErrorManager.cpp
             ErrorManager.h
+            PinDataType.h
+            IconsFontAwesome6.h
+            Default/ClockNode.h
     )
 
     target_include_directories(fpga_builder PUBLIC

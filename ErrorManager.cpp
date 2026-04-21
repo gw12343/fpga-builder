@@ -8,7 +8,7 @@
 
 #define ERROR_POPUP_TITLE "Error exporting circuit"
 
-void ErrorManager::Render(const std::shared_ptr<Module>& module) {
+void ErrorManager::Render(const std::shared_ptr<Module> &module) {
     if (error_present) {
         ImGui::OpenPopup(ERROR_POPUP_TITLE);
     }
@@ -41,7 +41,7 @@ void ErrorManager::Render(const std::shared_ptr<Module>& module) {
         ImGui::EndPopup();
     }
 
-    if(ImGui::IsKeyDown(ImGuiKey_Escape)) {
+    if (ImGui::IsKeyDown(ImGuiKey_Escape)) {
         error_present = false;
         error_node_guid = "";
         error_msg = "";

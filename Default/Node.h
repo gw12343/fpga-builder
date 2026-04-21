@@ -6,51 +6,48 @@
 #include <optional>
 #include <vector>
 
-#include <string>
 #include <nlohmann/json.hpp>
+#include <string>
 
-#include "../cmake-build-debug/_deps/imgui_node_editor-src/imgui_node_editor.h"
 #include "../Pin.h"
+#include "../cmake-build-debug/_deps/imgui_node_editor-src/imgui_node_editor.h"
 #include "Codegen/Visitor.h"
 
 class ErrorManager;
-    class Module;
-    namespace ed = ax::NodeEditor;
+class Module;
+namespace ed = ax::NodeEditor;
 
-    class Node {
+class Node {
 
-    public:
-        virtual ~Node() = default;
+public:
+    virtual ~Node() = default;
 
-        Node(Module* parent, const std::string &name, const std::vector<std::string> &inputs, const std::vector<std::string> &outputs);
-        Node(std::string saved_guid, Module* parent, std::string name, std::vector<std::string> inputs, std::vector<std::string> outputs);
+    Node(Module *parent, const std::string &name, const std::vector<std::string> &inputs,
+         const std::vector<std::string> &outputs);
+
+    Node(std::string saved_guid, Module *parent, std::string name, const std::vector<std::string> &inputs,
+         const std::vector<std::string> &outputs);
 
 
-        virtual void accept(Visitor& v) = 0;
-        void Render(const std::shared_ptr<ErrorManager>& error_manager);
-        virtual void RenderInternals();
-        [[nodiscard]] virtual std::string type() const = 0;
+    virtual void accept(Visitor &v, int output_slot) = 0;
+    void Render(const std::shared_ptr<ErrorManager> &error_manager);
+    virtual void RenderInternals();
 
-        [[nodiscard]] virtual nlohmann::json to_json() const {
-            return {
-                {"type", type()},
-                {"guid", guid},
-                {"name", name},
-                {"id", id.Get()},
-                {"x", last_pos.x},
-                {"y", last_pos.y}
-            };
-        }
+    [[nodiscard]] virtual std::string type() const = 0;
 
-        std::optional<Pin> FindPin(const std::string& name);
+    [[nodiscard]] virtual nlohmann::json to_json() const {
+        return {{"type", type()}, {"guid", guid},    {"name", name},
+                {"id", id.Get()}, {"x", last_pos.x}, {"y", last_pos.y}};
+    }
 
-        Module* module;
-        std::string name;
-        ed::NodeId id;
-        std::string guid;
-        std::vector<Pin> pins;
+    std::optional<Pin> FindPin(const std::string &name);
 
-        ImVec2 last_pos;
-        ImVec2 start_pos;
-    };
+    Module *module;
+    std::string name;
+    ed::NodeId id;
+    std::string guid;
+    std::vector<Pin> pins;
 
+    ImVec2 last_pos;
+    ImVec2 start_pos;
+};

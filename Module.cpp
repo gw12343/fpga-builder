@@ -8,20 +8,20 @@
 #include <iostream>
 #include <optional>
 
-#include "misc/cpp/imgui_stdlib.h"
+#include <algorithm>
 #include <utility>
 #include <vector>
-#include <algorithm>
+#include "misc/cpp/imgui_stdlib.h"
 
-#include "GUID.h"
-#include "Default/Node.h"
 #include "Default/InputNode.h"
+#include "Default/Node.h"
 #include "Default/OutputNode.h"
+#include "GUID.h"
 
 
 Module::Module(std::string name) : name(std::move(name)) {
     config.SettingsFile = (name + ".json").c_str();
-    context  = CreateEditor(&config);
+    context = CreateEditor(&config);
 }
 
 Module::~Module() {
@@ -32,14 +32,7 @@ Module::~Module() {
 }
 
 
-void Module::Update() {
-
-}
-
-
-
-
-void Module::Render(const std::shared_ptr<ErrorManager>& error_manager)  {
+void Module::Render(const std::shared_ptr<ErrorManager> &error_manager) {
     ed::SetCurrentEditor(context);
 
     ImGuiWindowClass window_class;
@@ -52,11 +45,9 @@ void Module::Render(const std::shared_ptr<ErrorManager>& error_manager)  {
         ed::Begin("Node Editor");
 
 
-        if (ed::BeginCreate())
-        {
+        if (ed::BeginCreate()) {
             ed::PinId inputPinId, outputPinId;
-            if (ed::QueryNewLink(&inputPinId, &outputPinId))
-            {
+            if (ed::QueryNewLink(&inputPinId, &outputPinId)) {
 
 
                 if (inputPinId && outputPinId) // both are valid, let's accept link
@@ -68,62 +59,57 @@ void Module::Render(const std::shared_ptr<ErrorManager>& error_manager)  {
                         if (!out->CanConnect(in.value())) {
                             ed::RejectNewItem(ImColor(255, 0, 0), 2.0f);
 
-                        }else {
+                        } else {
 
                             // ed::AcceptNewItem() return true when user release mouse button.
-                            if (ed::AcceptNewItem())
-                            {
+                            if (ed::AcceptNewItem()) {
 
-                                    Pin outPin = out.value();
-                                    Pin inPin = in.value();
+                                Pin outPin = out.value();
+                                Pin inPin = in.value();
 
-                                    auto b = CreateLink(outPin, inPin);
+                                auto b = CreateLink(outPin, inPin);
 
-                                    printf("LINK: %d\n", b);
-
+                                printf("LINK: %d\n", b);
                             }
                         }
                     }
-
-
-
                 }
             }
         }
 
 
-        if (ed::BeginDelete())
-        {
+        if (ed::BeginDelete()) {
             ed::LinkId deletedLinkId;
             ed::NodeId deletedNodeId;
 
 
             while (QueryDeletedNode(&deletedNodeId)) {
                 if (ed::AcceptDeletedItem()) {
-                    for (auto& node : nodes) {
+                    for (auto &node: nodes) {
                         if (node->id == deletedNodeId) {
 
                             // check all pins on node
-                            for (const auto& pin : node->pins) {
+                            for (const auto &pin: node->pins) {
                                 auto guid = pin.GetGuid();
-                                std::erase_if(links, [guid](const Link &l){return l.input_guid == guid || l.output_guid == guid;});
+                                std::erase_if(links, [guid](const Link &l) {
+                                    return l.input_guid == guid || l.output_guid == guid;
+                                });
                             }
 
-                            std::erase_if(nodes, [deletedNodeId](const std::unique_ptr<Node> &n) { return n->id == deletedNodeId; });
+                            std::erase_if(nodes, [deletedNodeId](const std::unique_ptr<Node> &n) {
+                                return n->id == deletedNodeId;
+                            });
                             break;
                         }
                     }
                 }
             }
 
-            while (QueryDeletedLink(&deletedLinkId))
-            {
-                if (ed::AcceptDeletedItem())
-                {
+            while (QueryDeletedLink(&deletedLinkId)) {
+                if (ed::AcceptDeletedItem()) {
 
-                    std::erase_if(links, [deletedLinkId](const Link &l){return l.id == deletedLinkId;});
+                    std::erase_if(links, [deletedLinkId](const Link &l) { return l.id == deletedLinkId; });
                     break;
-
                 }
             }
         }
@@ -135,7 +121,6 @@ void Module::Render(const std::shared_ptr<ErrorManager>& error_manager)  {
         RenderLinks();
 
 
-
         ed::End();
         ImGui::End();
     }
@@ -145,25 +130,24 @@ void Module::Render(const std::shared_ptr<ErrorManager>& error_manager)  {
 }
 
 
-
 bool Module::CreateLink(const Pin &a, const Pin &b) {
     const std::string out_pin_guid = a.GetDirection() == ax::NodeEditor::PinKind::Input ? a.GetGuid() : b.GetGuid();
     const std::string in_pin_guid = a.GetDirection() == ax::NodeEditor::PinKind::Output ? a.GetGuid() : b.GetGuid();
 
     printf("%s   %s\n", out_pin_guid.c_str(), in_pin_guid.c_str());
 
-    for (const auto& link : links) {
+    for (const auto &link: links) {
         if (link.output_guid == out_pin_guid && link.input_guid == in_pin_guid) {
             // link already exists
             return false;
         }
         if (link.output_guid == out_pin_guid) {
             // remove old connection to this input and replace with current
-            std::erase_if(links, [&](const Link &l){return l.id == link.id;});
+            std::erase_if(links, [&](const Link &l) { return l.id == link.id; });
         }
     }
 
-    if (b.CanConnect(a)){
+    if (b.CanConnect(a)) {
         links.emplace_back(this, out_pin_guid, in_pin_guid);
         return true;
     }
@@ -171,17 +155,17 @@ bool Module::CreateLink(const Pin &a, const Pin &b) {
     return false;
 }
 
-std::optional<Node*> Module::GetNode(const std::string &guid) const {
-    for (const auto& node : nodes) {
-            if (node->guid == guid) {
-                return node.get();
-            }
+std::optional<Node *> Module::GetNode(const std::string &guid) const {
+    for (const auto &node: nodes) {
+        if (node->guid == guid) {
+            return node.get();
+        }
     }
     return std::nullopt;
 }
 
-std::optional<Node*> Module::GetNode(const ax::NodeEditor::NodeId &id) const {
-    for (const auto& node : nodes) {
+std::optional<Node *> Module::GetNode(const ax::NodeEditor::NodeId &id) const {
+    for (const auto &node: nodes) {
         if (node->id == id) {
             return node.get();
         }
@@ -190,8 +174,8 @@ std::optional<Node*> Module::GetNode(const ax::NodeEditor::NodeId &id) const {
 }
 
 std::optional<Pin> Module::GetPin(const std::string &guid) {
-    for (const auto& node : nodes) {
-        for (auto pin : node->pins) {
+    for (const auto &node: nodes) {
+        for (auto pin: node->pins) {
             if (pin.GetGuid() == guid) {
                 return pin;
             }
@@ -201,8 +185,8 @@ std::optional<Pin> Module::GetPin(const std::string &guid) {
 }
 
 std::optional<Pin> Module::GetPin(const ax::NodeEditor::PinId &id) {
-    for (const auto& node : nodes) {
-        for (auto pin : node->pins) {
+    for (const auto &node: nodes) {
+        for (auto pin: node->pins) {
             if (pin.GetId() == id) {
                 return pin;
             }
@@ -215,31 +199,33 @@ void Module::RenderIOList() {
     ImGui::Begin("IO");
 
 
-    if(ImGui::BeginTable("IO TABLE", 2, ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_SizingStretchSame)) {
+    if (ImGui::BeginTable("IO TABLE", 2,
+                          ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerV |
+                                  ImGuiTableFlags_SizingStretchSame)) {
         ImGui::TableNextColumn();
 
 
-    const float footer_height = ImGui::GetFrameHeightWithSpacing();
+        const float footer_height = ImGui::GetFrameHeightWithSpacing();
 
-    ImGui::BeginChild("Inputs", ImVec2(0, -footer_height), false);
+        ImGui::BeginChild("Inputs", ImVec2(0, -footer_height), false);
         ImGui::Text("%d Input/s", inputs.size());
 
 
-    for (int i = 0; i < inputs.size(); ++i) {
-        std::string name = inputs[i];
+        for (int i = 0; i < inputs.size(); ++i) {
+            std::string name = inputs[i];
 
-        if (ImGui::InputText(("##INPUT" + std::to_string(i)).c_str(), &name)) {
-            inputs[i] = name;
+            if (ImGui::InputText(("##INPUT" + std::to_string(i)).c_str(), &name)) {
+                inputs[i] = name;
+            }
+
+            ImGui::SameLine();
+            if (ImGui::Button(("+##INPUTS-INSTANTIATE" + std::to_string(i)).c_str(), ImVec2(0, 0))) {
+                nodes.push_back(std::make_unique<InputNode>(this, GUID::generate_guid(), i));
+            }
         }
 
-        ImGui::SameLine();
-        if (ImGui::Button(("+##INPUTS-INSTANTIATE" + std::to_string(i)).c_str(), ImVec2(0, 0))) {
-            nodes.push_back(std::make_unique<InputNode>(this, GUID::generate_guid(), i));
-        }
-    }
 
-
-    ImGui::EndChild();
+        ImGui::EndChild();
         ImGui::Separator();
 
         const float width = ImGui::GetColumnWidth() / 2.0f - ImGui::GetStyle().ItemSpacing.x / 2.0f;
@@ -257,27 +243,25 @@ void Module::RenderIOList() {
         ImGui::TableNextColumn();
 
 
-
-    ImGui::BeginChild("Outputs", ImVec2(0, -footer_height), false);
+        ImGui::BeginChild("Outputs", ImVec2(0, -footer_height), false);
         ImGui::Text("%d Output/s", outputs.size());
 
 
+        for (int i = 0; i < outputs.size(); i++) {
+            std::string name = outputs.at(i);
+            if (ImGui::InputText(("##OUTPUT" + std::to_string(i)).c_str(), &name)) {
 
-    for(int i = 0; i < outputs.size(); i++) {
-        std::string name = outputs.at(i);
-        if (ImGui::InputText(("##OUTPUT" + std::to_string(i)).c_str(), &name)) {
+                outputs[i] = name;
+            }
 
-            outputs[i] = name;
+            ImGui::SameLine();
+            if (ImGui::Button(("+##OUTPUTS-INSTANTIATE" + std::to_string(i)).c_str(), ImVec2(0, 0))) {
+                nodes.push_back(std::make_unique<OutputNode>(this, GUID::generate_guid(), i));
+            }
         }
 
-        ImGui::SameLine();
-        if (ImGui::Button(("+##OUTPUTS-INSTANTIATE" + std::to_string(i)).c_str(), ImVec2(0, 0))) {
-            nodes.push_back(std::make_unique<OutputNode>(this, GUID::generate_guid(), i));
-        }
-    }
 
-
-    ImGui::EndChild();
+        ImGui::EndChild();
 
         ImGui::Separator();
 
@@ -291,20 +275,18 @@ void Module::RenderIOList() {
         }
 
 
-
-ImGui::EndTable();
+        ImGui::EndTable();
     }
 
     ImGui::End();
 }
 
-void Module::RenderNodes(const std::shared_ptr<ErrorManager>& error_manager) const {
-    for (const auto& node : nodes)
+void Module::RenderNodes(const std::shared_ptr<ErrorManager> &error_manager) const {
+    for (const auto &node: nodes)
         node->Render(error_manager);
-
 }
 
 void Module::RenderLinks() const {
-    for (const auto& link : links)
+    for (const auto &link: links)
         link.Render();
 }

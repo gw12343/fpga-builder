@@ -7,14 +7,16 @@
 #include "BinaryOpNode.h"
 
 
-class AndNode : public BinaryOpNode{
+class AndNode : public BinaryOpNode {
 public:
     [[nodiscard]] std::string type() const override { return "AndNode"; }
 
-    std::string GetVerilogAssign(std::string out, std::string a, std::string b) const { return out + " = " + a + " & " + b + ";\n"; }
+    [[nodiscard]] std::string GetVerilogAssign(std::string out, std::string a, std::string b) const override {
+        return out + " = " + a + " & " + b + ";\n";
+    }
 
-    void accept(Visitor& v) override { v.visit(*this); }
+    void accept(Visitor &v, const int output_slot) override { v.visit(*this, output_slot); }
 
 
-    AndNode(Module *parent, const std::string &guid): BinaryOpNode(parent, guid) { name = "AND Node"; }
+    AndNode(Module *parent, const std::string &guid) : BinaryOpNode(parent, guid) { name = "AND Node"; }
 };

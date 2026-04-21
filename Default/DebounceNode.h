@@ -6,23 +6,18 @@
 #include "Node.h"
 
 
-static auto DEBOUNCE_IN_PIN_D =  "D";
-static auto DEBOUNCE_IN_PIN_CLK =  "Clk";
+static auto DEBOUNCE_IN_PIN_D = "D";
+static auto DEBOUNCE_IN_PIN_CLK = "Clk";
 
 class DebounceNode : public Node {
 public:
-
     [[nodiscard]] std::string type() const override { return "DebounceNode"; }
 
-    void accept(Visitor& v) override { v.visit(*this); }
+    void accept(Visitor &v, const int output_slot) override { v.visit(*this, output_slot); }
 
 
-    DebounceNode(Module* module, const std::string &guid) :
-            Node(guid, module,
-                 "Debounce Node",
-                 {DEBOUNCE_IN_PIN_D, DEBOUNCE_IN_PIN_CLK},
-                 {"Q"}
-            ){}
+    DebounceNode(Module *module, const std::string &guid) :
+        Node(guid, module, "Debounce Node", {DEBOUNCE_IN_PIN_D, DEBOUNCE_IN_PIN_CLK}, {"Q"}) {}
 
     Pin GetDPin() { return FindPin(DEBOUNCE_IN_PIN_D).value(); }
     Pin GetClockPin() { return FindPin(DEBOUNCE_IN_PIN_CLK).value(); }
