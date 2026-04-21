@@ -84,7 +84,7 @@ void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
     }
     header += "\n\tinput wire sys_clk,";
     for (const auto &output: module->outputs) {
-        header += "\n\t output reg " + output + ","; // TODO maybe reg?
+        header += "\n\t output reg " + output + ",";
     }
     header.pop_back(); // remove last comma
     header += "\n);\n";
