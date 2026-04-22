@@ -115,6 +115,9 @@
             PinDataType.h
             IconsFontAwesome6.h
             Default/ClockNode.h
+            Default/UnaryOperator/UnaryOpNode.h
+            Default/UnaryOperator/UnaryOpNode.cpp
+            Default/UnaryOperator/NotNode.h
     )
 
     target_include_directories(fpga_builder PUBLIC

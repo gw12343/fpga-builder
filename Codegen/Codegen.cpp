@@ -17,6 +17,7 @@
 #include "Default/LiteralNode.h"
 #include "Default/MultiplexerNode.h"
 #include "Default/OutputNode.h"
+#include "Default/UnaryOperator/UnaryOpNode.h"
 #include "Module.h"
 
 #define OUTPUT_PATH "../EXPORT.v"
@@ -270,6 +271,27 @@ void Codegen::visit(BinaryOpNode &node, const int output_slot) {
 
     decls += "reg " + intermediate_wire_name + ";\n";
     inner += "\t\t" + node.GetVerilogAssign(intermediate_wire_name, a_val, b_val);
+
+    END_CHECK_CYCLES
+    CACHE_AND_RETURN(node, intermediate_wire_name, output_slot)
+}
+
+
+void Codegen::visit(UnaryOpNode &node, int output_slot) {
+    CHECK_CACHE
+    START_CHECK_CYCLES
+
+    const auto a = node.GetAInputPin().GetConnectedPin();
+
+    VERIFY_CONNECTION(a);
+
+    const auto a_val = EvalNode(a);
+
+
+    std::string intermediate_wire_name = GetSafeWireName("bin_op_result");
+
+    decls += "reg " + intermediate_wire_name + ";\n";
+    inner += "\t\t" + node.GetVerilogAssign(intermediate_wire_name, a_val);
 
     END_CHECK_CYCLES
     CACHE_AND_RETURN(node, intermediate_wire_name, output_slot)

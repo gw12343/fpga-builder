@@ -19,10 +19,10 @@
 #include "Default/EdgeNode.h"
 #include "Default/LiteralNode.h"
 #include "Default/MultiplexerNode.h"
+#include "Default/UnaryOperator/NotNode.h"
 #include "ErrorManager.h"
 #include "GUID.h"
 #include "IconsFontAwesome6.h"
-
 
 int main(int, char **) {
     const auto renderer = std::make_shared<Renderer>();
@@ -41,70 +41,94 @@ int main(int, char **) {
 
         ImGui::Begin("Build");
 
-        if (ImGui::Button("OR")) {
-            main_module->nodes.push_back(std::make_unique<OrNode>(main_module.get(), GUID::generate_guid()));
+        ImGui::BeginChild("options");
+        {
+            if (ImGui::Button("OR", ImVec2(150, 150))) {
+                main_module->nodes.push_back(std::make_unique<OrNode>(main_module.get(), GUID::generate_guid()));
+            }
+
+            ImGui::SameLine();
+
+            if (ImGui::Button("NOR", ImVec2(150, 150))) {
+                main_module->nodes.push_back(std::make_unique<NorNode>(main_module.get(), GUID::generate_guid()));
+            }
+
+            ImGui::SameLine();
+            if (ImGui::Button("AND", ImVec2(150, 150))) {
+                main_module->nodes.push_back(std::make_unique<AndNode>(main_module.get(), GUID::generate_guid()));
+            }
+
+            ImGui::SameLine();
+            if (ImGui::Button("XOrNode", ImVec2(150, 150))) {
+                main_module->nodes.push_back(std::make_unique<XOrNode>(main_module.get(), GUID::generate_guid()));
+            }
+
+            ImGui::SameLine();
+            if (ImGui::Button("MP Node", ImVec2(150, 150))) {
+                main_module->nodes.push_back(
+                        std::make_unique<MultiplexerNode>(main_module.get(), GUID::generate_guid()));
+            }
+            ImGui::SameLine();
+
+            if (ImGui::Button("LT Node", ImVec2(150, 150))) {
+                main_module->nodes.push_back(
+                        std::make_unique<LiteralNode>(main_module.get(), GUID::generate_guid(), 0));
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("DFF Node", ImVec2(150, 150))) {
+                main_module->nodes.push_back(std::make_unique<DFFNode>(main_module.get(), GUID::generate_guid()));
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Debounce Node", ImVec2(150, 150))) {
+                main_module->nodes.push_back(std::make_unique<DebounceNode>(main_module.get(), GUID::generate_guid()));
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Edge Node", ImVec2(150, 150))) {
+                main_module->nodes.push_back(std::make_unique<EdgeNode>(main_module.get(), GUID::generate_guid()));
+            }
+            ImGui::SameLine();
+
+            if (ImGui::Button("Clock Node " ICON_FA_WAVE_SQUARE, ImVec2(150, 150))) {
+                main_module->nodes.push_back(std::make_unique<ClockNode>(main_module.get(), GUID::generate_guid()));
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Not Node", ImVec2(150, 150))) {
+                main_module->nodes.push_back(std::make_unique<NotNode>(main_module.get(), GUID::generate_guid()));
+            }
         }
+        ImGui::EndChild();
 
-        if (ImGui::Button("NOR")) {
-            main_module->nodes.push_back(std::make_unique<NorNode>(main_module.get(), GUID::generate_guid()));
+        ImGui::BeginChild("menu");
+        {
+            if (ImGui::Button("Print Circuit")) {
+                TraversePrint v;
+                main_module->nodes[0]->accept(v, 0);
+            }
+
+            ImGui::SameLine();
+
+            if (ImGui::Button("Export Circuit")) {
+                Codegen c(error_manager);
+
+                c.GenerateCode(main_module);
+            }
+
+            ImGui::SameLine();
+
+            if (ImGui::Button("Save Circuit")) {
+                CircuitSerializer::SaveModule(main_module, "../circuit.json");
+            }
+
+            ImGui::SameLine();
+
+            if (ImGui::Button("Load Circuit")) {
+                main_module = CircuitSerializer::LoadModule("../circuit.json");
+            }
         }
-
-        if (ImGui::Button("AND")) {
-            main_module->nodes.push_back(std::make_unique<AndNode>(main_module.get(), GUID::generate_guid()));
-        }
-
-        if (ImGui::Button("XOrNode")) {
-            main_module->nodes.push_back(std::make_unique<XOrNode>(main_module.get(), GUID::generate_guid()));
-        }
-
-        if (ImGui::Button("MP Node")) {
-            main_module->nodes.push_back(std::make_unique<MultiplexerNode>(main_module.get(), GUID::generate_guid()));
-        }
-
-        if (ImGui::Button("LT Node")) {
-            main_module->nodes.push_back(std::make_unique<LiteralNode>(main_module.get(), GUID::generate_guid(), 0));
-        }
-        if (ImGui::Button("DFF Node")) {
-            main_module->nodes.push_back(std::make_unique<DFFNode>(main_module.get(), GUID::generate_guid()));
-        }
-        if (ImGui::Button("Debounce Node")) {
-            main_module->nodes.push_back(std::make_unique<DebounceNode>(main_module.get(), GUID::generate_guid()));
-        }
-        if (ImGui::Button("Edge Node")) {
-            main_module->nodes.push_back(std::make_unique<EdgeNode>(main_module.get(), GUID::generate_guid()));
-        }
-
-        if (ImGui::Button("Clock Node " ICON_FA_WAVE_SQUARE)) {
-            main_module->nodes.push_back(std::make_unique<ClockNode>(main_module.get(), GUID::generate_guid()));
-        }
-
-
-        if (ImGui::Button("Print Circuit")) {
-            TraversePrint v;
-            main_module->nodes[0]->accept(v, 0);
-        }
-
-        ImGui::SameLine();
-
-        if (ImGui::Button("Export Circuit")) {
-            Codegen c(error_manager);
-
-            c.GenerateCode(main_module);
-        }
-
-        ImGui::SameLine();
-
-        if (ImGui::Button("Save Circuit")) {
-            CircuitSerializer::SaveModule(main_module, "../circuit.json");
-        }
-
-        ImGui::SameLine();
-
-        if (ImGui::Button("Load Circuit")) {
-            main_module = CircuitSerializer::LoadModule("../circuit.json");
-        }
+        ImGui::EndChild();
 
         ImGui::End();
+
         error_manager->Render(main_module);
         renderer->EndFrame();
     }

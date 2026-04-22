@@ -5,7 +5,7 @@
 #pragma once
 #include "Default/Node.h"
 
-class BinaryOpNode : public Node {
+class UnaryOpNode : public Node {
 public:
     [[nodiscard]] nlohmann::json to_json() const override {
         nlohmann::json j = Node::to_json();
@@ -15,16 +15,14 @@ public:
     void accept(Visitor &v, int output_slot) override { v.visit(*this, output_slot); }
 
     [[nodiscard]] int width() const override { return 75; }
+    [[nodiscard]] ImVec4 color() const override { return {0.114f, 0.616f, 0.647f, 1.0f}; }
 
-    [[nodiscard]] ImVec4 color() const override { return {0.059f, 0.431f, 0.333f, 1.0f}; }
 
-    [[nodiscard]] virtual std::string GetVerilogAssign(const std::string &out, const std::string &a,
-                                                       const std::string &b) const {
+    [[nodiscard]] virtual std::string GetVerilogAssign(const std::string &out, const std::string &a) const {
         return "????";
     }
 
-    BinaryOpNode(Module *parent, const std::string &guid);
+    UnaryOpNode(Module *parent, const std::string &guid);
 
     Pin GetAInputPin();
-    Pin GetBInputPin();
 };

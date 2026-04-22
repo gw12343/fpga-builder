@@ -19,6 +19,7 @@
 #include "Default/LiteralNode.h"
 #include "Default/MultiplexerNode.h"
 #include "Default/OutputNode.h"
+#include "Default/UnaryOperator/NotNode.h"
 #include "Module.h"
 
 
@@ -58,6 +59,8 @@ std::unique_ptr<Node> CircuitSerializer::node_from_json(const json &j, Module *m
         p = std::make_unique<EdgeNode>(m, guid);
     } else if (type == "ClockNode") {
         p = std::make_unique<ClockNode>(m, guid);
+    } else if (type == "NotNode") {
+        p = std::make_unique<NotNode>(m, guid);
     } else {
         throw std::runtime_error("Unknown node type: " + type);
     }

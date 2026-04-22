@@ -11,21 +11,6 @@
     ],
     "links": [
         {
-            "id": 18446744072924398895,
-            "input_guid": "763094fd578f473d836b53f23839e3c2node4",
-            "output_guid": "b43a936861b0410fab09bb1bc6945588node0"
-        },
-        {
-            "id": 1536849559,
-            "input_guid": "6296c0f3ecd349d896adcb72ead77a61node0",
-            "output_guid": "b43a936861b0410fab09bb1bc6945588node1"
-        },
-        {
-            "id": 1566735500,
-            "input_guid": "b43a936861b0410fab09bb1bc6945588node2",
-            "output_guid": "763094fd578f473d836b53f23839e3c2node2"
-        },
-        {
             "id": 452470644,
             "input_guid": "5adcbad204be442d85421bbde9b3618dnode0",
             "output_guid": "763094fd578f473d836b53f23839e3c2node1"
@@ -56,26 +41,6 @@
             "output_guid": "7c8000bbeec547d5af9b139440ccb1e2node0"
         },
         {
-            "id": 1770601416,
-            "input_guid": "5adcbad204be442d85421bbde9b3618dnode0",
-            "output_guid": "7c8000bbeec547d5af9b139440ccb1e2node1"
-        },
-        {
-            "id": 538863328,
-            "input_guid": "7c8000bbeec547d5af9b139440ccb1e2node4",
-            "output_guid": "62332e57acc94f81af5fa1a084ba8321node0"
-        },
-        {
-            "id": 18446744072997703892,
-            "input_guid": "62332e57acc94f81af5fa1a084ba8321node2",
-            "output_guid": "7c8000bbeec547d5af9b139440ccb1e2node2"
-        },
-        {
-            "id": 18446744071686132954,
-            "input_guid": "6296c0f3ecd349d896adcb72ead77a61node0",
-            "output_guid": "62332e57acc94f81af5fa1a084ba8321node1"
-        },
-        {
             "id": 148352017,
             "input_guid": "7c8000bbeec547d5af9b139440ccb1e2node4",
             "output_guid": "f4394f05a54d4257b08ffff8935c1ea0node0"
@@ -96,7 +61,32 @@
             "output_guid": "763094fd578f473d836b53f23839e3c2node3"
         },
         {
-            "id": 175282513,
+            "id": 18446744072809247847,
+            "input_guid": "763094fd578f473d836b53f23839e3c2node4",
+            "output_guid": "9be4f538eff74173ba80ddadb8a08313node0"
+        },
+        {
+            "id": 1404971168,
+            "input_guid": "9be4f538eff74173ba80ddadb8a08313node1",
+            "output_guid": "763094fd578f473d836b53f23839e3c2node2"
+        },
+        {
+            "id": 18446744072395315363,
+            "input_guid": "7c8000bbeec547d5af9b139440ccb1e2node4",
+            "output_guid": "2da39749013242469f1427b31356c1f2node0"
+        },
+        {
+            "id": 18446744071968115925,
+            "input_guid": "2da39749013242469f1427b31356c1f2node1",
+            "output_guid": "7c8000bbeec547d5af9b139440ccb1e2node2"
+        },
+        {
+            "id": 18446744072972935946,
+            "input_guid": "968e608fd89d4afd8017f5817744352dnode0",
+            "output_guid": "7c8000bbeec547d5af9b139440ccb1e2node1"
+        },
+        {
+            "id": 18446744072061271465,
             "input_guid": "36a4d29228fb40e98cff014262d77615node0",
             "output_guid": "7c8000bbeec547d5af9b139440ccb1e2node3"
         }
@@ -106,119 +96,119 @@
         {
             "guid": "18e28af8661a435cadc00019fb1901c9",
             "id": 1500958452,
-            "name": "OutputNode",
+            "name": "Output",
             "slot": 0,
             "type": "OutputNode",
-            "x": 293.0,
-            "y": 119.0
+            "x": 181.0,
+            "y": 320.0
         },
         {
             "guid": "2b6f6f9bd0b34d369f51f8e20c1b4031",
             "id": 859198666,
-            "name": "InputNode",
+            "name": "Input",
             "slot": 0,
             "type": "InputNode",
-            "x": -677.0,
-            "y": -185.0
+            "x": -724.0,
+            "y": 192.0
         },
         {
             "guid": "5adcbad204be442d85421bbde9b3618d",
             "id": 18446744071573245418,
-            "name": "InputNode",
+            "name": "Input",
             "slot": 1,
             "type": "InputNode",
-            "x": -613.0,
-            "y": 55.0
+            "x": -388.0,
+            "y": 432.0
         },
         {
             "guid": "763094fd578f473d836b53f23839e3c2",
             "id": 1810202911,
-            "name": "D Flip Flop Node",
+            "name": "D Flip Flop",
             "type": "DFFNode",
-            "x": 29.0,
-            "y": 192.0
-        },
-        {
-            "guid": "b43a936861b0410fab09bb1bc6945588",
-            "id": 1456027542,
-            "name": "XOR Node",
-            "type": "XOrNode",
-            "x": 67.0,
-            "y": 393.0
-        },
-        {
-            "guid": "6296c0f3ecd349d896adcb72ead77a61",
-            "id": 1348979728,
-            "name": "Literal Node",
-            "type": "LiteralNode",
-            "value": 1,
-            "x": -377.0,
-            "y": 347.0
+            "x": -68.0,
+            "y": 438.0
         },
         {
             "guid": "da54cf4f150d4ecb8ce3701fcaf9cc58",
             "id": 1678344115,
-            "name": "Debounce Node",
+            "name": "Debounce",
             "type": "DebounceNode",
-            "x": -499.0,
-            "y": -103.0
+            "x": -491.0,
+            "y": 284.0
         },
         {
             "guid": "75a07d6046444721942b636098e27fe7",
             "id": 18446744071961222952,
-            "name": "Edge Node",
+            "name": "Edge",
             "type": "EdgeNode",
-            "x": -355.0,
-            "y": -61.0
+            "x": -341.0,
+            "y": 316.0
         },
         {
             "guid": "7c8000bbeec547d5af9b139440ccb1e2",
             "id": 1814122426,
-            "name": "D Flip Flop Node",
+            "name": "D Flip Flop",
             "type": "DFFNode",
-            "x": 35.0,
-            "y": -167.0
-        },
-        {
-            "guid": "62332e57acc94f81af5fa1a084ba8321",
-            "id": 18446744071884491149,
-            "name": "XOR Node",
-            "type": "XOrNode",
-            "x": 26.0,
-            "y": 9.0
+            "x": -68.0,
+            "y": 176.0
         },
         {
             "guid": "f4394f05a54d4257b08ffff8935c1ea0",
             "id": 1516146243,
-            "name": "OutputNode",
+            "name": "Output",
             "slot": 1,
             "type": "OutputNode",
-            "x": 294.0,
-            "y": -40.0
+            "x": 181.0,
+            "y": 192.0
         },
         {
             "guid": "a4f12e2e99954aa4a6286e90eec8dd9d",
             "id": 1373286286,
             "name": "",
             "type": "ClockNode",
-            "x": -80.0,
-            "y": 297.0
+            "x": -135.0,
+            "y": 530.0
         },
         {
             "guid": "41b531c1a34a437ca7fe05c1547f3b72",
             "id": 18446744072329363421,
             "name": "",
             "type": "ClockNode",
-            "x": -624.0,
-            "y": -23.0
+            "x": -583.0,
+            "y": 354.0
         },
         {
             "guid": "36a4d29228fb40e98cff014262d77615",
             "id": 18446744071788548986,
             "name": "",
             "type": "ClockNode",
-            "x": -64.0,
-            "y": -39.0
+            "x": -151.0,
+            "y": 338.0
+        },
+        {
+            "guid": "9be4f538eff74173ba80ddadb8a08313",
+            "id": 1479951878,
+            "name": "NOT",
+            "type": "NotNode",
+            "x": -13.0,
+            "y": 594.0
+        },
+        {
+            "guid": "2da39749013242469f1427b31356c1f2",
+            "id": 1666715831,
+            "name": "NOT",
+            "type": "NotNode",
+            "x": -13.0,
+            "y": 354.0
+        },
+        {
+            "guid": "968e608fd89d4afd8017f5817744352d",
+            "id": 16360859,
+            "name": "Input",
+            "slot": 1,
+            "type": "InputNode",
+            "x": -388.0,
+            "y": 96.0
         }
     ],
     "outputs": [

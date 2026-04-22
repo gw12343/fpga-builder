@@ -17,6 +17,8 @@ public:
         return j;
     }
 
+    [[nodiscard]] ImVec4 color() const override { return {0.094f, 0.373f, 0.647f, 1.0f}; }
+
 
     void accept(Visitor &v, const int output_slot) override { v.visit(*this, output_slot); }
 

@@ -20,9 +20,11 @@ public:
 
     void accept(Visitor &v, const int output_slot) override { v.visit(*this, output_slot); }
 
+    [[nodiscard]] int width() const override { return 100; }
+    [[nodiscard]] ImVec4 color() const override { return {0.729f, 0.455f, 0.067f, 1.0f}; }
 
     EdgeNode(Module *module, const std::string &guid) :
-        Node(guid, module, "Edge Node", {EDGE_IN_PIN_D, EDGE_IN_PIN_CLK}, {EDGE_OUT_PIN_Q, EDGE_OUT_PIN_NQ}),
+        Node(guid, module, "Edge", {EDGE_IN_PIN_D, EDGE_IN_PIN_CLK}, {EDGE_OUT_PIN_Q, EDGE_OUT_PIN_NQ}),
 
         EDGE_OUT_Q_ID(FindPin(EDGE_OUT_PIN_Q).value().GetNodeIndex()),
         EDGE_OUT_NQ_ID(FindPin(EDGE_OUT_PIN_NQ).value().GetNodeIndex()) {}

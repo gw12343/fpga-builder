@@ -45,7 +45,7 @@ Node::Node(std::string saved_guid, Module *parent, std::string name, const std::
 
 
 void Node::Render(const std::shared_ptr<ErrorManager> &error_manager) {
-    bool is_error = error_manager->GetErrorNodeGuid() == guid;
+    const bool is_error = error_manager->GetErrorNodeGuid() == guid;
 
     if (is_error) {
         ed::PushStyleColor(ed::StyleColor_NodeBg, ImVec4(160 / 255.0, 60 / 255.0, 90 / 255.0, 255 / 255.0));
@@ -61,24 +61,51 @@ void Node::Render(const std::shared_ptr<ErrorManager> &error_manager) {
     }
     last_pos = GetNodePosition(id);
 
-    ImGui::Text(name.c_str());
+    ImDrawList *drawList = ImGui::GetWindowDrawList();
+
+    float nodeWidth = width();
+    int padding = 7;
+
+    const char *label = name.c_str();
+    ImVec2 labelSize = ImGui::CalcTextSize(label);
+    ImVec2 titleMin = ImGui::GetCursorScreenPos();
+    ImVec2 titleMax = ImVec2(titleMin.x + nodeWidth, titleMin.y + labelSize.y + padding);
+
+    // reserve space
+    ImGui::Dummy(ImVec2(nodeWidth, labelSize.y + padding));
+
+    // draw background directly onto the node's draw list
+    drawList->AddRectFilled(titleMin, titleMax,
+                            IM_COL32(color().x * 255.0, color().y * 255.0, color().z * 255.0, color().w * 255.0));
+
+    // draw centered label on top
+    float labelX = titleMin.x + (nodeWidth - labelSize.x) * 0.5f;
+    float labelY = titleMin.y + padding * 0.5f;
+    drawList->AddText(ImGui::GetFont(), ImGui::GetFontSize(), ImVec2(labelX, labelY), IM_COL32(255, 255, 255, 255),
+                      label);
+
 
     RenderInternals();
 
     ImGui::BeginGroup();
+
+    const auto x = ImGui::GetCursorPosX();
+
     for (const auto &pin: pins) {
         if (pin.GetDirection() == ax::NodeEditor::PinKind::Input)
             pin.Render();
     }
 
     ImGui::EndGroup();
-    ImGui::SameLine();
 
+    ImGui::SameLine();
 
     ImGui::BeginGroup();
     for (const auto &pin: pins) {
-        if (pin.GetDirection() == ax::NodeEditor::PinKind::Output)
+        if (pin.GetDirection() == ax::NodeEditor::PinKind::Output) {
+            ImGui::SetCursorPosX(x + width() - ImGui::CalcTextSize(pin.GetName().c_str()).x);
             pin.Render();
+        }
     }
 
     ImGui::EndGroup();

@@ -34,6 +34,8 @@ public:
     virtual void RenderInternals();
 
     [[nodiscard]] virtual std::string type() const = 0;
+    [[nodiscard]] virtual int width() const { return 175; };
+    [[nodiscard]] virtual ImVec4 color() const { return {1.0, 0.5, 0.5, 1.0}; }
 
     [[nodiscard]] virtual nlohmann::json to_json() const {
         return {{"type", type()}, {"guid", guid},    {"name", name},

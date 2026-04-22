@@ -10,6 +10,8 @@
 
 #include <utility>
 
+#include "IconsFontAwesome6.h"
+
 
 Pin::Pin(std::string name, const ax::NodeEditor::PinKind direction, Node &parent, const int index) :
     node(parent), direction(direction), name(std::move(name)) {

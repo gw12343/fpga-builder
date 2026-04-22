@@ -17,11 +17,14 @@ public:
         return j;
     }
 
+    [[nodiscard]] ImVec4 color() const override { return {0.373f, 0.369f, 0.353f, 1.0f}; }
+
+    [[nodiscard]] int width() const override { return 75; }
+
     void RenderInternals() override;
 
 
-    LiteralNode(Module *module, const std::string &guid, const int val) :
-        Node(guid, module, "Literal Node", {}, {"Value"}) {
+    LiteralNode(Module *module, const std::string &guid, const int val) : Node(guid, module, "Literal", {}, {"Value"}) {
         value = val;
     }
 
@@ -32,6 +35,6 @@ public:
 
 inline void LiteralNode::RenderInternals() {
     ImGui::PushItemWidth(60);
-    ImGui::SliderInt(("Value##" + guid).c_str(), &value, 0, powl(2, bits) - 1);
+    ImGui::SliderInt(("##" + guid).c_str(), &value, 0, powl(2, bits) - 1);
     ImGui::PopItemWidth();
 }

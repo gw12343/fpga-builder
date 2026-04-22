@@ -6,7 +6,8 @@ module main_module (
 	 input wire sw0,
 	 input wire sw1,
 	 input wire sw2,
-	 input wire sw3,	input wire sys_clk,
+	 input wire sw3,
+	input wire sys_clk,
 	 output reg led0,
 	 output reg led1,
 	 output reg led2,
@@ -19,7 +20,6 @@ reg debounce_out0;
 reg edge_rise0;
 reg edge_fall0;
 reg edge_prev0;
-wire number_literal0 = 1'b1;
 reg bin_op_result0;
 reg dff_out0;
 reg bin_op_result1;
@@ -30,10 +30,10 @@ reg dff_out1;
 		// Output1
 		edge_rise0 = debounce_out0 & ~edge_prev0;
 		edge_fall0 = ~debounce_out0 & edge_prev0;
-		bin_op_result0 = dff_out0 ^ number_literal0;
+		bin_op_result0 = ~dff_out0;
 		led0 = dff_out0;
 		// Output2
-		bin_op_result1 = dff_out1 ^ number_literal0;
+		bin_op_result1 = ~dff_out1;
 		led1 = dff_out1;
 	end
 
