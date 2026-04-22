@@ -5,7 +5,7 @@
 #pragma once
 #include "Node.h"
 
-class LiteralNode : public Node {
+class LiteralNode final : public Node {
 public:
     [[nodiscard]] std::string type() const override { return "LiteralNode"; }
 

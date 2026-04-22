@@ -9,7 +9,7 @@ static auto IN_PIN_A = "A";
 static auto IN_PIN_B = "B";
 static auto IN_PIN_SELECT = "Sel";
 
-class MultiplexerNode : public Node {
+class MultiplexerNode final : public Node {
 public:
     [[nodiscard]] std::string type() const override { return "MultiplexerNode"; }
 

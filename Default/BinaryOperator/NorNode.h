@@ -7,7 +7,7 @@
 #include "BinaryOpNode.h"
 
 
-class NorNode : public BinaryOpNode {
+class NorNode final : public BinaryOpNode {
 public:
     [[nodiscard]] std::string type() const override { return "NorNode"; }
     [[nodiscard]] std::string GetVerilogAssign(const std::string &out, const std::string &a,

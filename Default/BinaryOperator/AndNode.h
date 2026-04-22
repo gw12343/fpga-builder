@@ -7,7 +7,7 @@
 #include "BinaryOpNode.h"
 
 
-class AndNode : public BinaryOpNode {
+class AndNode final : public BinaryOpNode {
 public:
     [[nodiscard]] std::string type() const override { return "AndNode"; }
 

@@ -11,7 +11,7 @@ static auto IN_PIN_RESET = "Reset";
 static auto IN_PIN_D = "D";
 static auto IN_PIN_CLOCK = "Clk";
 
-class DFFNode : public Node {
+class DFFNode final : public Node {
 public:
     [[nodiscard]] std::string type() const override { return "DFFNode"; }
 

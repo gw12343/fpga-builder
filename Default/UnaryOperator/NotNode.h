@@ -7,7 +7,7 @@
 #include "UnaryOpNode.h"
 
 
-class NotNode : public UnaryOpNode {
+class NotNode final : public UnaryOpNode {
 public:
     [[nodiscard]] std::string type() const override { return "NotNode"; }
 

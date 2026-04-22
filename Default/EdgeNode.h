@@ -14,7 +14,7 @@ static auto EDGE_IN_PIN_CLK = "Clk";
 static auto EDGE_OUT_PIN_Q = "Q";
 static auto EDGE_OUT_PIN_NQ = "!Q";
 
-class EdgeNode : public Node {
+class EdgeNode final : public Node {
 public:
     [[nodiscard]] std::string type() const override { return "EdgeNode"; }
 

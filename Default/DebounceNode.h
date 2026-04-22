@@ -9,7 +9,7 @@
 static auto DEBOUNCE_IN_PIN_D = "D";
 static auto DEBOUNCE_IN_PIN_CLK = "Clk";
 
-class DebounceNode : public Node {
+class DebounceNode final : public Node {
 public:
     [[nodiscard]] std::string type() const override { return "DebounceNode"; }
 

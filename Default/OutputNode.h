@@ -6,7 +6,7 @@
 #include "Node.h"
 
 
-class OutputNode : public Node {
+class OutputNode final : public Node {
 
 public:
     [[nodiscard]] std::string type() const override { return "OutputNode"; }

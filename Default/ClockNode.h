@@ -7,7 +7,7 @@
 #include "Node.h"
 
 
-class ClockNode : public Node {
+class ClockNode final : public Node {
 public:
     [[nodiscard]] std::string type() const override { return "ClockNode"; }
 
