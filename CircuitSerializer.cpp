@@ -12,6 +12,7 @@
 #include "Default/BinaryOperator/OrNode.h"
 #include "Default/BinaryOperator/XOrNode.h"
 #include "Default/ClockNode.h"
+#include "Default/CounterNode.h"
 #include "Default/DFFNode.h"
 #include "Default/DebounceNode.h"
 #include "Default/EdgeNode.h"
@@ -29,7 +30,7 @@ using json = nlohmann::json;
 
 // Helpers for Node and Link
 
-std::unique_ptr<Node> CircuitSerializer::node_from_json(const json &j, Module *m) {
+std::unique_ptr<Node> CircuitSerializer::NodeFromJson(const json &j, Module *m) {
     const std::string type = j.at("type");
 
     std::unique_ptr<Node> p;
@@ -54,6 +55,8 @@ std::unique_ptr<Node> CircuitSerializer::node_from_json(const json &j, Module *m
         p = std::make_unique<LiteralNode>(m, guid, j.at("value").get<int>());
     } else if (type == "SplitterNode") {
         p = std::make_unique<SplitterNode>(m, guid, j.at("bits").get<int>());
+    } else if (type == "CounterNode") {
+        p = std::make_unique<CounterNode>(m, guid, j.at("bits").get<int>());
     } else if (type == "DFFNode") {
         p = std::make_unique<DFFNode>(m, guid);
     } else if (type == "DebounceNode") {
@@ -81,7 +84,7 @@ std::unique_ptr<Node> CircuitSerializer::node_from_json(const json &j, Module *m
 }
 
 
-Link CircuitSerializer::link_from_json(const json &j, Module *m) {
+Link CircuitSerializer::LinkFromJson(const json &j, Module *m) {
     const std::string input_guid = j.at("input_guid").get<std::string>();
     const std::string output_guid = j.at("output_guid").get<std::string>();
     Link p(m, output_guid, input_guid);
@@ -96,7 +99,7 @@ Link CircuitSerializer::link_from_json(const json &j, Module *m) {
 
 // other
 
-CircuitSerializer::CircuitSerializer() {}
+CircuitSerializer::CircuitSerializer() = default;
 
 std::shared_ptr<Module> CircuitSerializer::LoadModule(const std::string &file_path) {
     // Open and read file
@@ -110,12 +113,12 @@ std::shared_ptr<Module> CircuitSerializer::LoadModule(const std::string &file_pa
     auto module = std::make_shared<Module>(j["name"].get<std::string>());
 
     for (json j_nodes = j["nodes"]; const auto &j_node: j_nodes) {
-        auto node = node_from_json(j_node, module.get());
+        auto node = NodeFromJson(j_node, module.get());
         module->nodes.push_back(std::move(node));
     }
 
     for (json j_links = j["links"]; const auto &j_link: j_links) {
-        auto link = link_from_json(j_link, module.get());
+        auto link = LinkFromJson(j_link, module.get());
         module->links.push_back(link);
     }
 
@@ -131,7 +134,7 @@ std::shared_ptr<Module> CircuitSerializer::LoadModule(const std::string &file_pa
     return module;
 }
 
-void CircuitSerializer::SaveModule(std::shared_ptr<Module> module, const std::string &file_path) {
+void CircuitSerializer::SaveModule(const std::shared_ptr<Module> &module, const std::string &file_path) {
     json j_file;
     json j_nodes = json::array();
     json j_links = json::array();
@@ -148,12 +151,12 @@ void CircuitSerializer::SaveModule(std::shared_ptr<Module> module, const std::st
         j_links.push_back(j);
     }
 
-    for (auto in: module->inputs) {
+    for (const auto &in: module->inputs) {
         json j = in;
         j_inputs.push_back(j);
     }
 
-    for (auto out: module->outputs) {
+    for (const auto &out: module->outputs) {
         json j = out;
         j_outputs.push_back(j);
     }
@@ -165,13 +168,11 @@ void CircuitSerializer::SaveModule(std::shared_ptr<Module> module, const std::st
     j_file["outputs"] = j_outputs;
     j_file["name"] = module->GetName();
 
-    if (std::ofstream file("../circuit.json"); file.is_open()) {
+    if (std::ofstream file(file_path); file.is_open()) {
         std::cout << "Writing output file..." << std::endl;
         file << j_file.dump(4);
         file.close();
     } else {
-        std::cerr << "Could not open file \""
-                  << "circuit.json"
-                  << "\"" << std::endl;
+        std::cerr << "Could not open file \"" << file_path << "\"" << std::endl;
     }
 }

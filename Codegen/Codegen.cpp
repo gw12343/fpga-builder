@@ -10,6 +10,7 @@
 
 #include "Default/BinaryOperator/OrNode.h"
 #include "Default/ClockNode.h"
+#include "Default/CounterNode.h"
 #include "Default/DFFNode.h"
 #include "Default/DebounceNode.h"
 #include "Default/EdgeNode.h"
@@ -195,7 +196,8 @@ void Codegen::visit(EdgeNode &node, const int output_slot) {
     inner += "\t\t" + output_reg_fall + " = ~" + d_val + " & " + previous_reg + ";\n";
 
 
-    // debounce shift block
+    // edge block
+    // edge block
     later += "\talways @(posedge " + clk_val + ") begin\n";
     later += "\t\t" + previous_reg + " <= " + d_val + ";\n";
     later += "\tend\n\n";
@@ -255,6 +257,50 @@ void Codegen::visit(DebounceNode &node, const int output_slot) {
 
     RETURN_REG(output_reg)
 }
+
+
+void Codegen::visit(CounterNode &node, int output_slot) {
+    CHECK_CACHE
+
+    std::string output_reg = GetSafeWireName("counter_out");
+    visitedNodes[NODE_KEY(output_slot)] = output_reg;
+
+    // Input pins
+    const auto enb = node.GetEnablePin().GetConnectedPin();
+    const auto cup = node.GetCountUpPin().GetConnectedPin();
+    const auto clk = node.GetClkPin().GetConnectedPin();
+    const auto rst = node.GetResetPin().GetConnectedPin();
+
+    // Verify connections to pins
+    VERIFY_CONNECTION(enb);
+    VERIFY_CONNECTION(cup);
+    VERIFY_CONNECTION(clk);
+    VERIFY_CONNECTION(rst);
+
+    // Evaluate inputs
+    const auto enb_val = EvalNode(enb);
+    const auto cup_val = EvalNode(cup);
+    const auto clk_val = EvalNode(clk);
+    const auto rst_val = EvalNode(rst);
+
+    decls += "reg [" + std::to_string(node.bits - 1) + ":0] " + output_reg + ";\n";
+
+    // counter block
+    later += "\talways @(posedge " + clk_val + ") begin\n";
+    later += "\t\tif (" + rst_val + ") \n";
+    later += "\t\t\t" + output_reg + " <= " + std::to_string(node.bits) + "'b0;\n";
+    later += "\t\telse if (" + enb_val + " & " + cup_val + " )\n";
+    later += "\t\t\t" + output_reg + " <= " + output_reg + " + 1;\n";
+    later += "\t\telse if (" + enb_val + " & ~" + cup_val + " )\n";
+    later += "\t\t\t" + output_reg + " <= " + output_reg + " - 1;\n";
+    later += "\t\telse\n";
+    later += "\t\t\t" + output_reg + " <= " + output_reg + ";\n";
+
+    later += "\tend\n\n";
+
+    RETURN_REG(output_reg)
+}
+
 
 void Codegen::visit(DFFNode &node, const int output_slot) {
     CHECK_CACHE

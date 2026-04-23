@@ -14,6 +14,7 @@
 #include "Default/BinaryOperator/OrNode.h"
 #include "Default/BinaryOperator/XOrNode.h"
 #include "Default/ClockNode.h"
+#include "Default/CounterNode.h"
 #include "Default/DFFNode.h"
 #include "Default/DebounceNode.h"
 #include "Default/EdgeNode.h"
@@ -81,6 +82,12 @@ int main(int, char **) {
             if (ImGui::Button("Splitter Node", ImVec2(150, 150))) {
                 main_module->nodes.push_back(
                         std::make_unique<SplitterNode>(main_module.get(), GUID::generate_guid(), 4));
+            }
+            ImGui::SameLine();
+
+            if (ImGui::Button("Counter Node", ImVec2(150, 150))) {
+                main_module->nodes.push_back(
+                        std::make_unique<CounterNode>(main_module.get(), GUID::generate_guid(), 4));
             }
             ImGui::SameLine();
             if (ImGui::Button("DFF Node", ImVec2(150, 150))) {

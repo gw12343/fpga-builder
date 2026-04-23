@@ -21,7 +21,7 @@ public:
     }
 
     [[nodiscard]] ImVec4 GetUIColor() const override { return {0.325f, 0.290f, 0.718f, 1.0f}; }
-    [[nodiscard]] int GetNodeWidth() const override { return 75; }
+    [[nodiscard]] int GetNodeWidth() const override { return 150; }
 
 
     static std::string GetBitOutPinName(const int n) { return "Bit " + std::to_string(n); }

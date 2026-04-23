@@ -120,6 +120,7 @@
             Default/UnaryOperator/NotNode.h
             Pins/PinDataType.cpp
             Default/SplitterNode.h
+            Default/CounterNode.h
     )
 
     target_include_directories(fpga_builder PUBLIC
