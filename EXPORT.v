@@ -15,7 +15,7 @@ module main_module (
 );
 
 // ─── wire/reg declarations ────────────────────────────────
-reg [3:0]debounce_sr0;
+reg [15:0]debounce_sr0;
 reg debounce_out0;
 reg edge_rise0;
 reg edge_fall0;
@@ -26,8 +26,6 @@ reg splitter_b0_out0, splitter_b1_out0, splitter_b2_out0, splitter_b3_out0;
 // ─── combination logic ────────────────────────────────────
 	always @(*) begin
 		// Output1
-		edge_rise0 = debounce_out0 & ~edge_prev0;
-		edge_fall0 = ~debounce_out0 & edge_prev0;
 		splitter_b0_out0 = counter_out0[0];
 		splitter_b1_out0 = counter_out0[1];
 		splitter_b2_out0 = counter_out0[2];
@@ -44,17 +42,19 @@ reg splitter_b0_out0, splitter_b1_out0, splitter_b2_out0, splitter_b3_out0;
 
 // ─── clocked logic ────────────────────────────────────────
 	always @(posedge sys_clk) begin
-		debounce_sr0 <= { debounce_sr0[2:0], btn0 };
+		debounce_sr0 <= { debounce_sr0[14:0], btn0 };
 	end
 
 	always @(posedge sys_clk) begin
-		if (debounce_sr0 == 4'b1111)
+		if (debounce_sr0 == 16'hFFFF)
 			debounce_out0 <= 1'b1;
-		else if (debounce_sr0 == 4'b0000)
+		else if (debounce_sr0 == 16'h0000)
 			debounce_out0 <= 1'b0;
 	end
 
 	always @(posedge sys_clk) begin
+		edge_rise0 <= debounce_out0 & ~edge_prev0;
+		edge_fall0 <= ~debounce_out0 & edge_prev0;
 		edge_prev0 <= debounce_out0;
 	end
 
@@ -65,8 +65,6 @@ reg splitter_b0_out0, splitter_b1_out0, splitter_b2_out0, splitter_b3_out0;
 			counter_out0 <= counter_out0 + 1;
 		else if (edge_rise0 & ~sw0 )
 			counter_out0 <= counter_out0 - 1;
-		else
-			counter_out0 <= counter_out0;
 	end
 
 endmodule

@@ -191,14 +191,11 @@ void Codegen::visit(EdgeNode &node, const int output_slot) {
     decls += "reg " + output_reg_fall + ";\n";
     decls += "reg " + previous_reg + ";\n";
 
-    // assign output wire always @
-    inner += "\t\t" + output_reg_rise + " = " + d_val + " & ~" + previous_reg + ";\n";
-    inner += "\t\t" + output_reg_fall + " = ~" + d_val + " & " + previous_reg + ";\n";
 
-
-    // edge block
     // edge block
     later += "\talways @(posedge " + clk_val + ") begin\n";
+    later += "\t\t" + output_reg_rise + " <= " + d_val + " & ~" + previous_reg + ";\n";
+    later += "\t\t" + output_reg_fall + " <= ~" + d_val + " & " + previous_reg + ";\n";
     later += "\t\t" + previous_reg + " <= " + d_val + ";\n";
     later += "\tend\n\n";
 
@@ -237,20 +234,20 @@ void Codegen::visit(DebounceNode &node, const int output_slot) {
 
     // declare output register and shift register
     std::string output_sr = GetSafeWireName("debounce_sr");
-    decls += "reg [3:0]" + output_sr + ";\n";
+    decls += "reg [15:0]" + output_sr + ";\n";
     decls += "reg " + output_reg + ";\n";
 
 
     // debounce shift block
     later += "\talways @(posedge " + clk_val + ") begin\n";
-    later += "\t\t" + output_sr + " <= { " + output_sr + "[2:0], " + d_val + " };\n";
+    later += "\t\t" + output_sr + " <= { " + output_sr + "[14:0], " + d_val + " };\n";
     later += "\tend\n\n";
 
     // debounce output register set
     later += "\talways @(posedge " + clk_val + ") begin\n";
-    later += "\t\tif (" + output_sr + " == 4'b1111)\n";
+    later += "\t\tif (" + output_sr + " == 16'hFFFF)\n";
     later += "\t\t\t" + output_reg + " <= 1'b1;\n";
-    later += "\t\telse if (" + output_sr + " == 4'b0000)\n";
+    later += "\t\telse if (" + output_sr + " == 16'h0000)\n";
     later += "\t\t\t" + output_reg + " <= 1'b0;\n";
     later += "\tend\n\n";
 
@@ -293,9 +290,6 @@ void Codegen::visit(CounterNode &node, int output_slot) {
     later += "\t\t\t" + output_reg + " <= " + output_reg + " + 1;\n";
     later += "\t\telse if (" + enb_val + " & ~" + cup_val + " )\n";
     later += "\t\t\t" + output_reg + " <= " + output_reg + " - 1;\n";
-    later += "\t\telse\n";
-    later += "\t\t\t" + output_reg + " <= " + output_reg + ";\n";
-
     later += "\tend\n\n";
 
     RETURN_REG(output_reg)
