@@ -19,6 +19,7 @@
 #include "Default/EdgeNode.h"
 #include "Default/LiteralNode.h"
 #include "Default/MultiplexerNode.h"
+#include "Default/SplitterNode.h"
 #include "Default/UnaryOperator/NotNode.h"
 #include "ErrorManager.h"
 #include "GUID.h"
@@ -73,6 +74,13 @@ int main(int, char **) {
             if (ImGui::Button("LT Node", ImVec2(150, 150))) {
                 main_module->nodes.push_back(
                         std::make_unique<LiteralNode>(main_module.get(), GUID::generate_guid(), 0));
+            }
+
+            ImGui::SameLine();
+
+            if (ImGui::Button("Splitter Node", ImVec2(150, 150))) {
+                main_module->nodes.push_back(
+                        std::make_unique<SplitterNode>(main_module.get(), GUID::generate_guid(), 4));
             }
             ImGui::SameLine();
             if (ImGui::Button("DFF Node", ImVec2(150, 150))) {

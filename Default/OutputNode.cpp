@@ -21,6 +21,6 @@ void OutputNode::RenderInternals() {
 Pin OutputNode::GetValueInputPin() { return FindPin(IN_PIN_VALUE).value(); }
 
 OutputNode::OutputNode(Module *module, const std::string &guid, int output) :
-    Node(guid, module, "Output", {IN_PIN_VALUE}, {}) {
+    Node(guid, module, "Output", {{IN_PIN_VALUE, PinDataType(1)}}, {}) {
     slot = output;
 }

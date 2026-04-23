@@ -25,7 +25,7 @@
 
     FetchContent_Declare(json
             GIT_REPOSITORY https://github.com/ArthurSonzogni/nlohmann_json_cmake_fetchcontent
-            GIT_PROGRESS TRUE  GIT_SHALLOW TRUE
+            GIT_PROGRESS TRUE GIT_SHALLOW TRUE
             GIT_TAG v3.11.2)
 
     FetchContent_MakeAvailable(json)
@@ -76,8 +76,8 @@
             Module.h
             Renderer.cpp
             Renderer.h
-            Pin.cpp
-            Pin.h
+            Pins/Pin.cpp
+            Pins/Pin.h
             GUID.cpp
             GUID.h
             Default/Node.cpp
@@ -112,12 +112,14 @@
             Default/EdgeNode.h
             ErrorManager.cpp
             ErrorManager.h
-            PinDataType.h
+            Pins/PinDataType.h
             IconsFontAwesome6.h
             Default/ClockNode.h
             Default/UnaryOperator/UnaryOpNode.h
             Default/UnaryOperator/UnaryOpNode.cpp
             Default/UnaryOperator/NotNode.h
+            Pins/PinDataType.cpp
+            Default/SplitterNode.h
     )
 
     target_include_directories(fpga_builder PUBLIC
@@ -137,4 +139,4 @@
         target_link_libraries(fpga_builder PRIVATE
                 user32 gdi32 winmm imm32 ole32 oleaut32 version uuid
         )
-    endif()
+    endif ()

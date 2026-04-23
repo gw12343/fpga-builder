@@ -5,6 +5,7 @@
 #pragma once
 
 
+class SplitterNode;
 class UnaryOpNode;
 class ClockNode;
 class EdgeNode;
@@ -20,6 +21,7 @@ class Visitor {
 public:
     virtual ~Visitor() = default;
 
+    virtual void visit(SplitterNode &node, int output_slot) {}
     virtual void visit(UnaryOpNode &node, int output_slot) {}
     virtual void visit(ClockNode &node, int output_slot) {}
     virtual void visit(EdgeNode &node, int output_slot) {}

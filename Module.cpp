@@ -70,6 +70,9 @@ void Module::Render(const std::shared_ptr<ErrorManager> &error_manager) {
                                 auto b = CreateLink(outPin, inPin);
 
                                 printf("LINK: %d\n", b);
+
+                                printf("Connected %d bits to %d bits \n", outPin.GetDataType().GetBitWidth(),
+                                       inPin.GetDataType().GetBitWidth());
                             }
                         }
                     }

@@ -15,6 +15,6 @@ void InputNode::RenderInternals() {
 }
 
 InputNode::InputNode(Module *module, const std::string &guid, const int input) :
-    Node(guid, module, "Input", {}, {"Value"}) {
+    Node(guid, module, "Input", {}, {{"Value", PinDataType(1)}}) {
     slot = input;
 }

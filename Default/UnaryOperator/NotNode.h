@@ -9,7 +9,7 @@
 
 class NotNode final : public UnaryOpNode {
 public:
-    [[nodiscard]] std::string type() const override { return "NotNode"; }
+    [[nodiscard]] std::string GetSerializationType() const override { return "NotNode"; }
 
     [[nodiscard]] std::string GetVerilogAssign(const std::string &out, const std::string &a) const override {
         return out + " = ~" + a + ";\n";

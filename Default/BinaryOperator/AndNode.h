@@ -9,7 +9,7 @@
 
 class AndNode final : public BinaryOpNode {
 public:
-    [[nodiscard]] std::string type() const override { return "AndNode"; }
+    [[nodiscard]] std::string GetSerializationType() const override { return "AndNode"; }
 
     [[nodiscard]] std::string GetVerilogAssign(const std::string &out, const std::string &a,
                                                const std::string &b) const override {

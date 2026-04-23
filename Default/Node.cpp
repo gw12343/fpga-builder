@@ -15,16 +15,16 @@
 
 #include "../GUID.h"
 #include "../Module.h"
-#include "../Pin.h"
 #include "ErrorManager.h"
+#include "Pins/Pin.h"
 
 
-Node::Node(Module *parent, const std::string &name, const std::vector<std::string> &inputs,
-           const std::vector<std::string> &outputs) :
+Node::Node(Module *parent, const std::string &name, const std::vector<PinCreationData> &inputs,
+           const std::vector<PinCreationData> &outputs) :
     Node(GUID::generate_guid(), parent, name, inputs, outputs) {}
 
-Node::Node(std::string saved_guid, Module *parent, std::string name, const std::vector<std::string> &inputs,
-           const std::vector<std::string> &outputs) :
+Node::Node(std::string saved_guid, Module *parent, std::string name, const std::vector<PinCreationData> &inputs,
+           const std::vector<PinCreationData> &outputs) :
     name(std::move(name)) {
     module = parent;
     guid = std::move(saved_guid);
@@ -32,13 +32,13 @@ Node::Node(std::string saved_guid, Module *parent, std::string name, const std::
 
 
     int i = 0;
-    for (const auto &input_name: inputs) {
-        Pin new_input(input_name, ax::NodeEditor::PinKind::Input, *this, i++);
+    for (const auto &[name, type]: inputs) {
+        Pin new_input(name, ax::NodeEditor::PinKind::Input, *this, i++, type);
         pins.push_back(new_input);
     }
 
-    for (const auto &output_name: outputs) {
-        Pin new_output(output_name, ax::NodeEditor::PinKind::Output, *this, i++);
+    for (const auto &[name, type]: outputs) {
+        Pin new_output(name, ax::NodeEditor::PinKind::Output, *this, i++, type);
         pins.push_back(new_output);
     }
 }
@@ -63,7 +63,7 @@ void Node::Render(const std::shared_ptr<ErrorManager> &error_manager) {
 
     ImDrawList *drawList = ImGui::GetWindowDrawList();
 
-    float nodeWidth = width();
+    float nodeWidth = GetNodeWidth();
     int padding = 7;
 
     const char *label = name.c_str();
@@ -76,7 +76,7 @@ void Node::Render(const std::shared_ptr<ErrorManager> &error_manager) {
 
     // draw background directly onto the node's draw list
     drawList->AddRectFilled(titleMin, titleMax,
-                            IM_COL32(color().x * 255.0, color().y * 255.0, color().z * 255.0, color().w * 255.0));
+                            IM_COL32(GetUIColor().x * 255.0, GetUIColor().y * 255.0, GetUIColor().z * 255.0, GetUIColor().w * 255.0));
 
     // draw centered label on top
     float labelX = titleMin.x + (nodeWidth - labelSize.x) * 0.5f;
@@ -103,7 +103,7 @@ void Node::Render(const std::shared_ptr<ErrorManager> &error_manager) {
     ImGui::BeginGroup();
     for (const auto &pin: pins) {
         if (pin.GetDirection() == ax::NodeEditor::PinKind::Output) {
-            ImGui::SetCursorPosX(x + width() - ImGui::CalcTextSize(pin.GetName().c_str()).x);
+            ImGui::SetCursorPosX(x + GetNodeWidth() - ImGui::CalcTextSize(pin.GetName().c_str()).x);
             pin.Render();
         }
     }

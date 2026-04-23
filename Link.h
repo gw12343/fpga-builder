@@ -5,7 +5,6 @@
 #pragma once
 #include <imgui.h>
 #include <imgui_node_editor.h>
-#include <memory>
 #include <nlohmann/json.hpp>
 #include <string>
 
@@ -17,11 +16,11 @@ public:
     Link(Module *module, const std::string &output_guid, const std::string &input_guid);
 
 
-    Link(Module *module, std::string saved_id, const std::string &output_guid, const std::string &input_guid);
+    Link(Module *module, std::string saved_id, std::string output_guid, const std::string &input_guid);
 
     void Render() const;
 
-    nlohmann::json to_json() const {
+    [[nodiscard]] nlohmann::json to_json() const {
         return {{"output_guid", output_guid}, {"input_guid", input_guid}, {"id", id.Get()}};
     }
 

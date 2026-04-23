@@ -13,15 +13,20 @@ static auto IN_PIN_CLOCK = "Clk";
 
 class DFFNode final : public Node {
 public:
-    [[nodiscard]] std::string type() const override { return "DFFNode"; }
+    [[nodiscard]] std::string GetSerializationType() const override { return "DFFNode"; }
 
     void accept(Visitor &v, const int output_slot) override { v.visit(*this, output_slot); }
 
-    [[nodiscard]] ImVec4 color() const override { return {0.729f, 0.455f, 0.067f, 1.0f}; }
+    [[nodiscard]] ImVec4 GetUIColor() const override { return {0.729f, 0.455f, 0.067f, 1.0f}; }
 
 
     DFFNode(Module *module, const std::string &guid) :
-        Node(guid, module, "D Flip Flop", {IN_PIN_SET, IN_PIN_RESET, IN_PIN_D, IN_PIN_CLOCK}, {"Value"}) {}
+        Node(guid, module, "D Flip Flop",
+             {{IN_PIN_SET, PinDataType(1)},
+              {IN_PIN_RESET, PinDataType(1)},
+              {IN_PIN_D, PinDataType(1)},
+              {IN_PIN_CLOCK, PinDataType(1)}},
+             {{"Value", PinDataType(1)}}) {}
 
     Pin GetSetPin() { return FindPin(IN_PIN_SET).value(); }
     Pin GetResetPin() { return FindPin(IN_PIN_RESET).value(); }

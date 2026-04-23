@@ -5,17 +5,25 @@
 #include "Link.h"
 
 #include <iostream>
+#include <utility>
 
 #include "GUID.h"
 #include "Module.h"
-#include "Pin.h"
+#include "Pins/Pin.h"
+
+
+ImVec4 BitWidthColor(const int bits) {
+    const float t = log2f(static_cast<float>(bits)) / 7.0f;
+    const float hue = (1.0f - t) * 0.7f;
+    return ImColor::HSV(hue, 0.7f, 0.9f);
+}
 
 Link::Link(Module *module, const std::string &output_guid, const std::string &input_guid) :
     Link(module, GUID::generate_guid(), output_guid, input_guid) {}
 
-Link::Link(Module *module, std::string saved_id, const std::string &output_guid, const std::string &input_guid) :
-    module(module), output_guid(output_guid), input_guid(input_guid) {
-    id = GUID::to_id(saved_id);
+Link::Link(Module *module, std::string saved_id, std::string output_guid, const std::string &input_guid) :
+    module(module), output_guid(std::move(output_guid)), input_guid(input_guid) {
+    id = GUID::to_id(std::move(saved_id));
 }
 
 void Link::Render() const {
@@ -27,8 +35,10 @@ void Link::Render() const {
         return;
     }
 
-    const Pin outPin = out.value();
-    const Pin inPin = in.value();
+    const Pin &outPin = out.value();
+    const Pin &inPin = in.value();
 
-    ed::Link(id, outPin.GetId(), inPin.GetId(), ImVec4(0, 255, 0, 255), 2.0f);
+    auto col = BitWidthColor(out->GetDataType().GetBitWidth());
+
+    ed::Link(id, outPin.GetId(), inPin.GetId(), col, 2.0f);
 }

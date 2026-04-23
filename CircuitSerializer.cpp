@@ -19,6 +19,7 @@
 #include "Default/LiteralNode.h"
 #include "Default/MultiplexerNode.h"
 #include "Default/OutputNode.h"
+#include "Default/SplitterNode.h"
 #include "Default/UnaryOperator/NotNode.h"
 #include "Module.h"
 
@@ -51,6 +52,8 @@ std::unique_ptr<Node> CircuitSerializer::node_from_json(const json &j, Module *m
         p = std::make_unique<MultiplexerNode>(m, guid);
     } else if (type == "LiteralNode") {
         p = std::make_unique<LiteralNode>(m, guid, j.at("value").get<int>());
+    } else if (type == "SplitterNode") {
+        p = std::make_unique<SplitterNode>(m, guid, j.at("bits").get<int>());
     } else if (type == "DFFNode") {
         p = std::make_unique<DFFNode>(m, guid);
     } else if (type == "DebounceNode") {
@@ -136,7 +139,7 @@ void CircuitSerializer::SaveModule(std::shared_ptr<Module> module, const std::st
     json j_outputs = json::array();
 
     for (const auto &node: module->nodes) {
-        json j = node->to_json();
+        json j = node->ToJson();
         j_nodes.push_back(j);
     }
 

@@ -7,7 +7,9 @@
 #include <optional>
 #include <string>
 
+#include "PinDataType.h"
 #include "imgui_node_editor.h"
+
 
 class Node;
 namespace ed = ax::NodeEditor;
@@ -15,7 +17,7 @@ namespace ed = ax::NodeEditor;
 class Pin {
 
 public:
-    Pin(std::string name, ax::NodeEditor::PinKind direction, Node &parent, int index);
+    Pin(std::string name, ax::NodeEditor::PinKind direction, Node &parent, int index, PinDataType pin_data_type);
 
     void Render() const;
 
@@ -28,11 +30,13 @@ public:
     [[nodiscard]] std::string GetGuid() const { return guid; }
     [[nodiscard]] ax::NodeEditor::PinKind GetDirection() const { return direction; }
     [[nodiscard]] ax::NodeEditor::PinId GetId() const { return id; }
+    [[nodiscard]] PinDataType GetDataType() const { return data_type; }
 
     [[nodiscard]] Node &GetNode() const { return node; }
     [[nodiscard]] int GetNodeIndex() const;
 
 private:
+    PinDataType data_type;
     Node &node;
     ax::NodeEditor::PinId id;
     ax::NodeEditor::PinKind direction;

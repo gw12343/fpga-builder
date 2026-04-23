@@ -8,16 +8,11 @@
 #define IN_PIN_B "B"
 
 
+BinaryOpNode::BinaryOpNode(Module *parent, const std::string &guid) :
+    Node(guid, parent, "Binary op", {{IN_PIN_A, PinDataType(4)}, {IN_PIN_B, PinDataType(4)}},
+         {{"Out", PinDataType(4)}}) {}
 
-BinaryOpNode::BinaryOpNode(Module *parent, const std::string &guid) : Node(guid, parent, "Binary op", {IN_PIN_A, IN_PIN_B}, {"Out"})
-{
-}
 
+Pin BinaryOpNode::GetAInputPin() { return FindPin(IN_PIN_A).value(); }
 
-Pin BinaryOpNode::GetAInputPin() {
-    return FindPin(IN_PIN_A).value();
-}
-
-Pin BinaryOpNode::GetBInputPin() {
-    return FindPin(IN_PIN_B).value();
-}
+Pin BinaryOpNode::GetBInputPin() { return FindPin(IN_PIN_B).value(); }

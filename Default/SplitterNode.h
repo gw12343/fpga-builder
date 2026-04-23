@@ -1,0 +1,44 @@
+//
+// Created by gabed on 4/14/2026.
+//
+
+#pragma once
+#include "Node.h"
+
+static auto SPLITTER_IN_PIN_VAL = "Value";
+
+
+class SplitterNode final : public Node {
+public:
+    [[nodiscard]] std::string GetSerializationType() const override { return "SplitterNode"; }
+
+    void accept(Visitor &v, const int output_slot) override { v.visit(*this, output_slot); }
+
+    [[nodiscard]] nlohmann::json ToJson() const override {
+        nlohmann::json j = Node::ToJson();
+        j["bits"] = bits;
+        return j;
+    }
+
+    [[nodiscard]] ImVec4 GetUIColor() const override { return {0.325f, 0.290f, 0.718f, 1.0f}; }
+    [[nodiscard]] int GetNodeWidth() const override { return 75; }
+
+
+    static std::string GetBitOutPinName(const int n) { return "Bit " + std::to_string(n); }
+
+    SplitterNode(Module *module, const std::string &guid, const int data_width) :
+        Node(guid, module, "Splitter", {{SPLITTER_IN_PIN_VAL, PinDataType(4)}}, {}) {
+        bits = data_width;
+
+        int n = 1;
+        for (int i = 0; i < bits; i++) {
+            Pin new_output(GetBitOutPinName(i), ax::NodeEditor::PinKind::Output, *this, n++, PinDataType(1));
+            pins.push_back(new_output);
+        }
+    }
+
+    Pin GetInputPin() { return FindPin(SPLITTER_IN_PIN_VAL).value(); }
+    Pin GetBitOutputPin(const int i) { return FindPin(GetBitOutPinName(i)).value(); }
+
+    int bits;
+};

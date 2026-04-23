@@ -9,9 +9,9 @@
 #include <nlohmann/json.hpp>
 #include <string>
 
-#include "../Pin.h"
 #include "../cmake-build-debug/_deps/imgui_node_editor-src/imgui_node_editor.h"
 #include "Codegen/Visitor.h"
+#include "Pins/Pin.h"
 
 class ErrorManager;
 class Module;
@@ -22,23 +22,29 @@ class Node {
 public:
     virtual ~Node() = default;
 
-    Node(Module *parent, const std::string &name, const std::vector<std::string> &inputs,
-         const std::vector<std::string> &outputs);
+    struct PinCreationData {
+        std::string name;
+        PinDataType type;
+    };
 
-    Node(std::string saved_guid, Module *parent, std::string name, const std::vector<std::string> &inputs,
-         const std::vector<std::string> &outputs);
+
+    Node(Module *parent, const std::string &name, const std::vector<PinCreationData> &inputs,
+         const std::vector<PinCreationData> &outputs);
+
+    Node(std::string saved_guid, Module *parent, std::string name, const std::vector<PinCreationData> &inputs,
+         const std::vector<PinCreationData> &outputs);
 
 
     virtual void accept(Visitor &v, int output_slot) = 0;
     void Render(const std::shared_ptr<ErrorManager> &error_manager);
     virtual void RenderInternals();
 
-    [[nodiscard]] virtual std::string type() const = 0;
-    [[nodiscard]] virtual int width() const { return 175; };
-    [[nodiscard]] virtual ImVec4 color() const { return {1.0, 0.5, 0.5, 1.0}; }
+    [[nodiscard]] virtual std::string GetSerializationType() const = 0;
+    [[nodiscard]] virtual int GetNodeWidth() const { return 175; };
+    [[nodiscard]] virtual ImVec4 GetUIColor() const { return {1.0, 0.5, 0.5, 1.0}; }
 
-    [[nodiscard]] virtual nlohmann::json to_json() const {
-        return {{"type", type()}, {"guid", guid},    {"name", name},
+    [[nodiscard]] virtual nlohmann::json ToJson() const {
+        return {{"type", GetSerializationType()}, {"guid", guid},    {"name", name},
                 {"id", id.Get()}, {"x", last_pos.x}, {"y", last_pos.y}};
     }
 

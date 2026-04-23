@@ -17,6 +17,7 @@ public:
 
     void GenerateCode(const std::shared_ptr<Module> &module);
 
+    void visit(SplitterNode &node, int output_slot) override;
     void visit(UnaryOpNode &node, int output_slot) override;
     void visit(ClockNode &node, int output_slot) override;
     void visit(EdgeNode &node, int output_slot) override;

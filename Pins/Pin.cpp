@@ -7,14 +7,12 @@
 #include "GUID.h"
 #include "Module.h"
 
-
 #include <utility>
 
-#include "IconsFontAwesome6.h"
 
-
-Pin::Pin(std::string name, const ax::NodeEditor::PinKind direction, Node &parent, const int index) :
-    node(parent), direction(direction), name(std::move(name)) {
+Pin::Pin(std::string name, const ax::NodeEditor::PinKind direction, Node &parent, const int index,
+         const PinDataType pin_data_type) :
+    data_type(pin_data_type), node(parent), direction(direction), name(std::move(name)) {
 
     guid = parent.guid + "node" + std::to_string(index);
     id = GUID::to_id(guid);
@@ -28,7 +26,8 @@ void Pin::Render() const {
 }
 
 bool Pin::CanConnect(const Pin &other) const {
-    if (other.id == id || other.direction == direction || other.node.id == node.id) {
+    if (other.id == id || other.direction == direction || other.node.id == node.id ||
+        !other.GetDataType().CanConnect(data_type)) {
         return false;
     }
 

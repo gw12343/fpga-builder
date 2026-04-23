@@ -17,6 +17,7 @@
 #include "Default/LiteralNode.h"
 #include "Default/MultiplexerNode.h"
 #include "Default/OutputNode.h"
+#include "Default/SplitterNode.h"
 #include "Default/UnaryOperator/UnaryOpNode.h"
 #include "Module.h"
 
@@ -94,7 +95,7 @@ void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
 
     int n = 1;
     for (const auto &node: module->nodes) {
-        if (node->type() != "OutputNode")
+        if (node->GetSerializationType() != "OutputNode")
             continue;
         inner += "\t\t// Output" + std::to_string(n++) + "\n";
         node->accept(*this, 0);
@@ -119,6 +120,48 @@ void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
 }
 
 // ───── MULTI OUTPUT NODES ────────────────────────────────────────────────────────────────────────────────────────────
+void Codegen::visit(SplitterNode &node, int output_slot) {
+    CHECK_CACHE
+
+    std::vector<std::string> out_wire_names;
+
+    // Cache each output wire
+    for (int i = 0; i < node.bits; i++) {
+        const std::string bit_output = GetSafeWireName("splitter_b" + std::to_string(i) + "_out");
+        out_wire_names.push_back(bit_output);
+        visitedNodes[NODE_KEY(i + 1)] = bit_output;
+    }
+
+    // Input pin
+    const auto in = node.GetInputPin().GetConnectedPin();
+    // Verify connection to input pin
+    VERIFY_CONNECTION(in);
+    // Get input value
+    const auto input_val = EvalNode(in);
+
+    // Declare each individual bit as a wire
+    decls += "reg ";
+    for (int i = 0; i < node.bits; i++) {
+        decls += out_wire_names[i] + ", ";
+    }
+    // Remove extra trailing comma and space
+    decls.pop_back();
+    decls.pop_back();
+    // End line
+    decls += ";\n";
+
+    // Assign each wire to single bit
+    for (int i = 0; i < node.bits; i++) {
+        inner += "\t\t" + out_wire_names[i] + " = " + input_val + "[" + std::to_string(i) + "];\n";
+    }
+
+    // Return correct output depending on output slot
+    // Skip over the input pin (pin 0)
+    const int bit_index = output_slot - 1;
+    RETURN_REG(out_wire_names[bit_index]);
+}
+
+
 void Codegen::visit(EdgeNode &node, const int output_slot) {
     CHECK_CACHE
 
@@ -128,7 +171,7 @@ void Codegen::visit(EdgeNode &node, const int output_slot) {
     visitedNodes[NODE_KEY(node.EDGE_OUT_Q_ID)] = output_reg_rise;
     visitedNodes[NODE_KEY(node.EDGE_OUT_NQ_ID)] = output_reg_fall;
 
-    // Input pin
+    // Input pins
     const auto d = node.GetDPin().GetConnectedPin();
     const auto clk = node.GetClockPin().GetConnectedPin();
 
@@ -179,7 +222,7 @@ void Codegen::visit(DebounceNode &node, const int output_slot) {
     std::string output_reg = GetSafeWireName("debounce_out");
     visitedNodes[NODE_KEY(output_slot)] = output_reg;
 
-    // Input pin
+    // Input pins
     const auto d = node.GetDPin().GetConnectedPin();
     const auto clk = node.GetClockPin().GetConnectedPin();
 
@@ -339,7 +382,8 @@ void Codegen::visit(LiteralNode &node, const int output_slot) {
     START_CHECK_CYCLES
 
     std::string wire_name = GetSafeWireName("number_literal");
-    decls += "wire " + wire_name + " = 1'b" + std::to_string(node.value) + ";\n";
+    decls += "wire [" + std::to_string(node.bits - 1) + ":0] " + wire_name + " = " + std::to_string(node.bits) + "'d" +
+             std::to_string(node.value) + ";\n";
 
     END_CHECK_CYCLES
     CACHE_AND_RETURN(node, wire_name, output_slot)

@@ -5,7 +5,7 @@
 #pragma once
 #include <string>
 
-#include "Pin.h"
+#include "Pins/Pin.h"
 
 
 class GUID {
