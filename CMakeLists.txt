@@ -121,6 +121,7 @@
             Pins/PinDataType.cpp
             Default/SplitterNode.h
             Default/CounterNode.h
+            Default/CombinerNode.h
     )
 
     target_include_directories(fpga_builder PUBLIC

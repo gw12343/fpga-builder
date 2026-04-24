@@ -10,6 +10,7 @@
 
 #include "Default/BinaryOperator/OrNode.h"
 #include "Default/ClockNode.h"
+#include "Default/CombinerNode.h"
 #include "Default/CounterNode.h"
 #include "Default/DFFNode.h"
 #include "Default/DebounceNode.h"
@@ -215,6 +216,46 @@ void Codegen::visit(EdgeNode &node, const int output_slot) {
 
 
 // ───── SINGLE OUTPUT NODES ───────────────────────────────────────────────────────────────────────────────────────────
+void Codegen::visit(CombinerNode &node, int output_slot) {
+    CHECK_CACHE
+
+    // Store evaluated pins
+    std::vector<std::string> input_pin_values;
+
+    // Save each input pin value from msb -> lsb
+    for (int i = node.bits - 1; i >= 0; i--) {
+        // Input pin
+        const auto in = node.GetBitInputPin(i).GetConnectedPin();
+        // Verify connection to input pin
+        VERIFY_CONNECTION(in);
+        // Get input value
+        const auto input_val = EvalNode(in);
+
+        // Save value
+        input_pin_values.push_back(input_val);
+    }
+
+    const std::string output_reg = GetSafeWireName("combiner_out");
+    // Declare output bus
+    decls += "reg [" + std::to_string(node.bits - 1) + ":0] " + output_reg + ";\n";
+
+
+    // Assignment statement in always
+    inner += "\t\t" + output_reg + " = {";
+    for (const auto &val: input_pin_values) {
+        inner += val + ", ";
+    }
+
+    // Remove extra trailing comma and space
+    inner.pop_back();
+    inner.pop_back();
+    // End line
+    inner += "};\n";
+
+    RETURN_REG(output_reg);
+}
+
+
 void Codegen::visit(DebounceNode &node, const int output_slot) {
     CHECK_CACHE
 

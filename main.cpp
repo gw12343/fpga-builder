@@ -14,6 +14,7 @@
 #include "Default/BinaryOperator/OrNode.h"
 #include "Default/BinaryOperator/XOrNode.h"
 #include "Default/ClockNode.h"
+#include "Default/CombinerNode.h"
 #include "Default/CounterNode.h"
 #include "Default/DFFNode.h"
 #include "Default/DebounceNode.h"
@@ -82,6 +83,12 @@ int main(int, char **) {
             if (ImGui::Button("Splitter Node", ImVec2(150, 150))) {
                 main_module->nodes.push_back(
                         std::make_unique<SplitterNode>(main_module.get(), GUID::generate_guid(), 4));
+            }
+            ImGui::SameLine();
+
+            if (ImGui::Button("Combiner Node", ImVec2(150, 150))) {
+                main_module->nodes.push_back(
+                        std::make_unique<CombinerNode>(main_module.get(), GUID::generate_guid(), 4));
             }
             ImGui::SameLine();
 

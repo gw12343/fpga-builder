@@ -27,8 +27,7 @@ public:
     static std::string GetBitOutPinName(const int n) { return "Bit " + std::to_string(n); }
 
     SplitterNode(Module *module, const std::string &guid, const int data_width) :
-        Node(guid, module, "Splitter", {{SPLITTER_IN_PIN_VAL, PinDataType(4)}}, {}) {
-        bits = data_width;
+        Node(guid, module, "Splitter", {{SPLITTER_IN_PIN_VAL, PinDataType(data_width)}}, {}), bits(data_width) {
 
         int n = 1;
         for (int i = 0; i < bits; i++) {

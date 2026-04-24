@@ -12,6 +12,7 @@
 #include "Default/BinaryOperator/OrNode.h"
 #include "Default/BinaryOperator/XOrNode.h"
 #include "Default/ClockNode.h"
+#include "Default/CombinerNode.h"
 #include "Default/CounterNode.h"
 #include "Default/DFFNode.h"
 #include "Default/DebounceNode.h"
@@ -55,6 +56,8 @@ std::unique_ptr<Node> CircuitSerializer::NodeFromJson(const json &j, Module *m) 
         p = std::make_unique<LiteralNode>(m, guid, j.at("value").get<int>());
     } else if (type == "SplitterNode") {
         p = std::make_unique<SplitterNode>(m, guid, j.at("bits").get<int>());
+    } else if (type == "CombinerNode") {
+        p = std::make_unique<CombinerNode>(m, guid, j.at("bits").get<int>());
     } else if (type == "CounterNode") {
         p = std::make_unique<CounterNode>(m, guid, j.at("bits").get<int>());
     } else if (type == "DFFNode") {
