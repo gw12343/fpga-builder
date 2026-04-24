@@ -19,6 +19,7 @@
 #include "Default/LiteralNode.h"
 #include "Default/MultiplexerNode.h"
 #include "Default/OutputNode.h"
+#include "Default/RegisterNode.h"
 #include "Default/SplitterNode.h"
 #include "Default/UnaryOperator/UnaryOpNode.h"
 #include "Module.h"
@@ -214,7 +215,6 @@ void Codegen::visit(EdgeNode &node, const int output_slot) {
     CircuitError("Invalid connection!", node);
 }
 
-
 // ───── SINGLE OUTPUT NODES ───────────────────────────────────────────────────────────────────────────────────────────
 void Codegen::visit(CombinerNode &node, int output_slot) {
     CHECK_CACHE
@@ -292,6 +292,44 @@ void Codegen::visit(DebounceNode &node, const int output_slot) {
     later += "\t\t\t" + output_reg + " <= 1'b0;\n";
     later += "\tend\n\n";
 
+
+    RETURN_REG(output_reg)
+}
+
+
+void Codegen::visit(RegisterNode &node, int output_slot) {
+    CHECK_CACHE
+
+    std::string output_reg = GetSafeWireName("register_value");
+    visitedNodes[NODE_KEY(output_slot)] = output_reg;
+
+    // Input pins
+    const auto enb = node.GetEnablePin().GetConnectedPin();
+    const auto d = node.GetDPin().GetConnectedPin();
+    const auto clk = node.GetClkPin().GetConnectedPin();
+    const auto rst = node.GetResetPin().GetConnectedPin();
+
+    // Verify connections to pins
+    VERIFY_CONNECTION(enb);
+    VERIFY_CONNECTION(d);
+    VERIFY_CONNECTION(clk);
+    VERIFY_CONNECTION(rst);
+
+    // Evaluate inputs
+    const auto enb_val = EvalNode(enb);
+    const auto d_val = EvalNode(d);
+    const auto clk_val = EvalNode(clk);
+    const auto rst_val = EvalNode(rst);
+
+    decls += "reg [" + std::to_string(node.bits - 1) + ":0] " + output_reg + ";\n";
+
+    // counter block
+    later += "\talways @(posedge " + clk_val + ") begin\n";
+    later += "\t\tif (" + rst_val + ") \n";
+    later += "\t\t\t" + output_reg + " <= " + std::to_string(node.bits) + "'b0;\n";
+    later += "\t\telse if (" + enb_val + " )\n";
+    later += "\t\t\t" + output_reg + " <= " + d_val + ";\n";
+    later += "\tend\n\n";
 
     RETURN_REG(output_reg)
 }
@@ -441,7 +479,7 @@ void Codegen::visit(MultiplexerNode &node, const int output_slot) {
 
 
     std::string intermediate_wire_name = GetSafeWireName("mux_result");
-    decls += "reg " + intermediate_wire_name + ";\n";
+    decls += "reg [" + std::to_string(node.data_bits - 1) + ":0] " + intermediate_wire_name + ";\n";
 
     inner += "\tif(" + select_val + ")\n\t\t";
     inner += intermediate_wire_name + " = " + a_val + ";\n";
@@ -451,6 +489,7 @@ void Codegen::visit(MultiplexerNode &node, const int output_slot) {
     END_CHECK_CYCLES
     CACHE_AND_RETURN(node, intermediate_wire_name, output_slot)
 }
+
 
 void Codegen::visit(ClockNode &node, const int output_slot) {
     CHECK_CACHE
@@ -470,6 +509,7 @@ void Codegen::visit(LiteralNode &node, const int output_slot) {
     CACHE_AND_RETURN(node, wire_name, output_slot)
 }
 
+
 void Codegen::visit(InputNode &node, const int output_slot) {
     CHECK_CACHE
     START_CHECK_CYCLES
@@ -477,6 +517,7 @@ void Codegen::visit(InputNode &node, const int output_slot) {
     END_CHECK_CYCLES
     CACHE_AND_RETURN(node, node.module->inputs[node.slot], output_slot)
 }
+
 
 void Codegen::visit(OutputNode &node, const int output_slot) {
     CHECK_CACHE

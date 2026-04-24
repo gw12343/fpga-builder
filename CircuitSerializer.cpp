@@ -21,6 +21,7 @@
 #include "Default/LiteralNode.h"
 #include "Default/MultiplexerNode.h"
 #include "Default/OutputNode.h"
+#include "Default/RegisterNode.h"
 #include "Default/SplitterNode.h"
 #include "Default/UnaryOperator/NotNode.h"
 #include "Module.h"
@@ -51,7 +52,7 @@ std::unique_ptr<Node> CircuitSerializer::NodeFromJson(const json &j, Module *m) 
     } else if (type == "InputNode") {
         p = std::make_unique<InputNode>(m, guid, j.at("slot").get<int>());
     } else if (type == "MultiplexerNode") {
-        p = std::make_unique<MultiplexerNode>(m, guid);
+        p = std::make_unique<MultiplexerNode>(m, guid, j.at("data_bits").get<int>());
     } else if (type == "LiteralNode") {
         p = std::make_unique<LiteralNode>(m, guid, j.at("value").get<int>());
     } else if (type == "SplitterNode") {
@@ -60,6 +61,8 @@ std::unique_ptr<Node> CircuitSerializer::NodeFromJson(const json &j, Module *m) 
         p = std::make_unique<CombinerNode>(m, guid, j.at("bits").get<int>());
     } else if (type == "CounterNode") {
         p = std::make_unique<CounterNode>(m, guid, j.at("bits").get<int>());
+    } else if (type == "RegisterNode") {
+        p = std::make_unique<RegisterNode>(m, guid, j.at("bits").get<int>());
     } else if (type == "DFFNode") {
         p = std::make_unique<DFFNode>(m, guid);
     } else if (type == "DebounceNode") {

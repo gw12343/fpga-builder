@@ -21,6 +21,7 @@
 #include "Default/EdgeNode.h"
 #include "Default/LiteralNode.h"
 #include "Default/MultiplexerNode.h"
+#include "Default/RegisterNode.h"
 #include "Default/SplitterNode.h"
 #include "Default/UnaryOperator/NotNode.h"
 #include "ErrorManager.h"
@@ -69,7 +70,7 @@ int main(int, char **) {
             ImGui::SameLine();
             if (ImGui::Button("MP Node", ImVec2(150, 150))) {
                 main_module->nodes.push_back(
-                        std::make_unique<MultiplexerNode>(main_module.get(), GUID::generate_guid()));
+                        std::make_unique<MultiplexerNode>(main_module.get(), GUID::generate_guid(), 4));
             }
             ImGui::SameLine();
 
@@ -95,6 +96,12 @@ int main(int, char **) {
             if (ImGui::Button("Counter Node", ImVec2(150, 150))) {
                 main_module->nodes.push_back(
                         std::make_unique<CounterNode>(main_module.get(), GUID::generate_guid(), 4));
+            }
+            ImGui::SameLine();
+
+            if (ImGui::Button("Register Node", ImVec2(150, 150))) {
+                main_module->nodes.push_back(
+                        std::make_unique<RegisterNode>(main_module.get(), GUID::generate_guid(), 4));
             }
             ImGui::SameLine();
             if (ImGui::Button("DFF Node", ImVec2(150, 150))) {

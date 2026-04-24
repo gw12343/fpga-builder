@@ -122,6 +122,7 @@
             Default/SplitterNode.h
             Default/CounterNode.h
             Default/CombinerNode.h
+            Default/RegisterNode.h
     )
 
     target_include_directories(fpga_builder PUBLIC
