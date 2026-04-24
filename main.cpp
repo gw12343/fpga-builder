@@ -9,6 +9,7 @@
 #include "Renderer.h"
 
 #include "CircuitSerializer.h"
+#include "Default/AdderNode.h"
 #include "Default/BinaryOperator/AndNode.h"
 #include "Default/BinaryOperator/NorNode.h"
 #include "Default/BinaryOperator/OrNode.h"
@@ -45,7 +46,7 @@ int main(int, char **) {
 
         ImGui::Begin("Build");
 
-        ImGui::BeginChild("options");
+        ImGui::BeginChild("options", ImVec2(0, 150), ImGuiChildFlags_AutoResizeX);
         {
             if (ImGui::Button("OR", ImVec2(150, 150))) {
                 main_module->nodes.push_back(std::make_unique<OrNode>(main_module.get(), GUID::generate_guid()));
@@ -71,6 +72,10 @@ int main(int, char **) {
             if (ImGui::Button("MP Node", ImVec2(150, 150))) {
                 main_module->nodes.push_back(
                         std::make_unique<MultiplexerNode>(main_module.get(), GUID::generate_guid(), 4));
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Adder Node", ImVec2(150, 150))) {
+                main_module->nodes.push_back(std::make_unique<AdderNode>(main_module.get(), GUID::generate_guid(), 4));
             }
             ImGui::SameLine();
 
@@ -127,7 +132,7 @@ int main(int, char **) {
         }
         ImGui::EndChild();
 
-        ImGui::BeginChild("menu");
+        // ImGui::BeginChild("menu");
         {
             if (ImGui::Button("Print Circuit")) {
                 TraversePrint v;
@@ -154,7 +159,7 @@ int main(int, char **) {
                 main_module = CircuitSerializer::LoadModule("../circuit.json");
             }
         }
-        ImGui::EndChild();
+        // ImGui::EndChild();
 
         ImGui::End();
 

@@ -123,6 +123,7 @@
             Default/CounterNode.h
             Default/CombinerNode.h
             Default/RegisterNode.h
+            Default/AdderNode.h
     )
 
     target_include_directories(fpga_builder PUBLIC

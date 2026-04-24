@@ -17,6 +17,7 @@ public:
 
     void GenerateCode(const std::shared_ptr<Module> &module);
 
+    void visit(AdderNode &node, int output_slot) override;
     void visit(RegisterNode &node, int output_slot) override;
     void visit(CombinerNode &node, int output_slot) override;
     void visit(CounterNode &node, int output_slot) override;

@@ -7,6 +7,7 @@
 #include <fstream>
 #include <iostream>
 
+#include "Default/AdderNode.h"
 #include "Default/BinaryOperator/AndNode.h"
 #include "Default/BinaryOperator/NorNode.h"
 #include "Default/BinaryOperator/OrNode.h"
@@ -69,6 +70,8 @@ std::unique_ptr<Node> CircuitSerializer::NodeFromJson(const json &j, Module *m) 
         p = std::make_unique<DebounceNode>(m, guid);
     } else if (type == "EdgeNode") {
         p = std::make_unique<EdgeNode>(m, guid);
+    } else if (type == "AdderNode") {
+        p = std::make_unique<AdderNode>(m, guid, j.at("bits").get<int>());
     } else if (type == "ClockNode") {
         p = std::make_unique<ClockNode>(m, guid);
     } else if (type == "NotNode") {

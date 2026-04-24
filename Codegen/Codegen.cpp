@@ -8,6 +8,7 @@
 #include <iostream>
 #include <utility>
 
+#include "Default/AdderNode.h"
 #include "Default/BinaryOperator/OrNode.h"
 #include "Default/ClockNode.h"
 #include "Default/CombinerNode.h"
@@ -106,11 +107,11 @@ void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
     }
 
 
-    std::string out = header + "\n// ─── wire/reg declarations ────────────────────────────────\n" + decls +
-                      "\n// ─── combination logic ────────────────────────────────────\n" +
+    const std::string out = header + "\n// ─── wire/reg declarations ────────────────────────────────\n" + decls +
+                            "\n// ─── combination logic ────────────────────────────────────\n" +
 
-                      "\talways @(*) begin\n" + inner + "\tend\n\n" +
-                      "\n// ─── clocked logic ────────────────────────────────────────\n" + later + footer;
+                            "\talways @(*) begin\n" + inner + "\tend\n\n" +
+                            "\n// ─── clocked logic ────────────────────────────────────────\n" + later + footer;
 
 
     if (std::ofstream file(OUTPUT_PATH); file.is_open()) {
@@ -123,7 +124,7 @@ void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
 }
 
 // ───── MULTI OUTPUT NODES ────────────────────────────────────────────────────────────────────────────────────────────
-void Codegen::visit(SplitterNode &node, int output_slot) {
+void Codegen::visit(SplitterNode &node, const int output_slot) {
     CHECK_CACHE
 
     std::vector<std::string> out_wire_names;
@@ -184,8 +185,6 @@ void Codegen::visit(EdgeNode &node, const int output_slot) {
     const auto d_val = EvalNode(d);
     const auto clk_val = EvalNode(clk);
 
-    std::cout << "evaluating edge node ix: " << output_slot << std::endl;
-
     // declare output register and previous register
     const std::string previous_reg = GetSafeWireName("edge_prev");
 
@@ -215,8 +214,48 @@ void Codegen::visit(EdgeNode &node, const int output_slot) {
     CircuitError("Invalid connection!", node);
 }
 
+void Codegen::visit(AdderNode &node, const int output_slot) {
+    CHECK_CACHE
+
+    const std::string output_value = GetSafeWireName("adder_out");
+    const std::string output_carry = GetSafeWireName("adder_carry_out");
+
+    visitedNodes[NODE_KEY(node.ADDER_Q_ID)] = output_value;
+    visitedNodes[NODE_KEY(node.ADDER_COUT_ID)] = output_carry;
+
+    // Input pins
+    const auto a = node.GetAInputPin().GetConnectedPin();
+    const auto b = node.GetBInputPin().GetConnectedPin();
+    const auto cin = node.GetCarryInputPin().GetConnectedPin();
+
+    VERIFY_CONNECTION(a);
+    VERIFY_CONNECTION(b);
+    VERIFY_CONNECTION(cin);
+
+    const auto a_val = EvalNode(a);
+    const auto b_val = EvalNode(b);
+    const auto cin_val = EvalNode(cin);
+
+    decls += "reg [" + std::to_string(node.bits - 1) + ":0] " + output_value + ";\n";
+    decls += "reg " + output_carry + ";\n";
+
+    inner += "\t\t{" + output_carry + ", " + output_value + "} = " + a_val + " + " + b_val + " + " + cin_val + ";\n";
+
+    // Rising edge option
+    if (output_slot == node.ADDER_Q_ID) {
+        RETURN_REG(output_value);
+    }
+    // Falling edge option
+    if (output_slot == node.ADDER_COUT_ID) {
+        RETURN_REG(output_carry);
+    }
+
+    // Fallback - different output node not recognized??
+    CircuitError("Invalid connection!", node);
+}
+
 // ───── SINGLE OUTPUT NODES ───────────────────────────────────────────────────────────────────────────────────────────
-void Codegen::visit(CombinerNode &node, int output_slot) {
+void Codegen::visit(CombinerNode &node, const int output_slot) {
     CHECK_CACHE
 
     // Store evaluated pins
@@ -274,7 +313,7 @@ void Codegen::visit(DebounceNode &node, const int output_slot) {
 
 
     // declare output register and shift register
-    std::string output_sr = GetSafeWireName("debounce_sr");
+    const std::string output_sr = GetSafeWireName("debounce_sr");
     decls += "reg [15:0]" + output_sr + ";\n";
     decls += "reg " + output_reg + ";\n";
 
@@ -297,7 +336,7 @@ void Codegen::visit(DebounceNode &node, const int output_slot) {
 }
 
 
-void Codegen::visit(RegisterNode &node, int output_slot) {
+void Codegen::visit(RegisterNode &node, const int output_slot) {
     CHECK_CACHE
 
     std::string output_reg = GetSafeWireName("register_value");
@@ -335,7 +374,7 @@ void Codegen::visit(RegisterNode &node, int output_slot) {
 }
 
 
-void Codegen::visit(CounterNode &node, int output_slot) {
+void Codegen::visit(CounterNode &node, const int output_slot) {
     CHECK_CACHE
 
     std::string output_reg = GetSafeWireName("counter_out");
@@ -393,9 +432,7 @@ void Codegen::visit(DFFNode &node, const int output_slot) {
     VERIFY_CONNECTION(d);
     VERIFY_CONNECTION(clk);
 
-    std::cout << "set pin name: " << set->GetName() << "    slot: " << set->GetNodeIndex() << std::endl;
     const auto set_val = EvalNode(set);
-    std::cout << "end: " << std::endl;
     const auto rst_val = EvalNode(rst);
     const auto d_val = EvalNode(d);
     const auto clk_val = EvalNode(clk);
@@ -439,7 +476,7 @@ void Codegen::visit(BinaryOpNode &node, const int output_slot) {
 }
 
 
-void Codegen::visit(UnaryOpNode &node, int output_slot) {
+void Codegen::visit(UnaryOpNode &node, const int output_slot) {
     CHECK_CACHE
     START_CHECK_CYCLES
 

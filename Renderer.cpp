@@ -20,7 +20,8 @@ void Renderer::InitWindow(const int w, const int h, const std::string &title) {
         return;
     }
 
-    window = SDL_CreateWindow(title.c_str(), w, h, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+    window = SDL_CreateWindow(title.c_str(), w, h,
+                              SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY);
 
     gl_context = SDL_GL_CreateContext(window);
     SDL_GL_MakeCurrent(window, gl_context);
@@ -34,20 +35,28 @@ void Renderer::InitWindow(const int w, const int h, const std::string &title) {
 
     ImGui::StyleColorsDark();
 
+
+    float scale = 2;
+    ImGuiStyle &style = ImGui::GetStyle();
+
+    style.ScaleAllSizes(scale);
+
+
     ImFontConfig roboto_config;
     roboto_config.MergeMode = false;
     roboto_config.PixelSnapH = true;
-    io.Fonts->AddFontFromFileTTF("../resources/Roboto-Regular.ttf", 18.0f, &roboto_config,
+    io.Fonts->AddFontFromFileTTF("../resources/Roboto-Regular.ttf", 12.0f * scale, &roboto_config,
                                  io.Fonts->GetGlyphRangesDefault());
 
     ImFontConfig fa_config;
     fa_config.MergeMode = true;
     fa_config.PixelSnapH = true;
     fa_config.GlyphMinAdvanceX = 12.0f;
-    io.Fonts->AddFontFromFileTTF("../resources/fa-solid-900.ttf", 18.0f, &fa_config, icons_ranges);
+    io.Fonts->AddFontFromFileTTF("../resources/fa-solid-900.ttf", 12.0f * scale, &fa_config, icons_ranges);
 
 
     io.FontGlobalScale = 1.0f;
+
 
     ImGui_ImplSDL3_InitForOpenGL(window, gl_context);
     ImGui_ImplOpenGL3_Init("#version 130");

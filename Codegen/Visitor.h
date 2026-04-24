@@ -5,6 +5,7 @@
 #pragma once
 
 
+class AdderNode;
 class RegisterNode;
 class CombinerNode;
 class CounterNode;
@@ -24,6 +25,7 @@ class Visitor {
 public:
     virtual ~Visitor() = default;
 
+    virtual void visit(AdderNode &node, int output_slot) {}
     virtual void visit(RegisterNode &node, int output_slot) {}
     virtual void visit(CombinerNode &node, int output_slot) {}
     virtual void visit(CounterNode &node, int output_slot) {}
