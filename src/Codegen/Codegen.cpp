@@ -131,7 +131,7 @@ void Codegen::visit(SplitterNode &node, const int output_slot) {
     std::vector<std::string> out_wire_names;
 
     // Cache each output wire
-    for (int i = 0; i < node.bits; i++) {
+    for (int i = 0; i < node.GetDataWidth(); i++) {
         const std::string bit_output = GetSafeWireName("splitter_b" + std::to_string(i) + "_out");
         out_wire_names.push_back(bit_output);
         visitedNodes[NODE_KEY(i + 1)] = bit_output;
@@ -146,7 +146,7 @@ void Codegen::visit(SplitterNode &node, const int output_slot) {
 
     // Declare each individual bit as a wire
     decls += "reg ";
-    for (int i = 0; i < node.bits; i++) {
+    for (int i = 0; i < node.GetDataWidth(); i++) {
         decls += out_wire_names[i] + ", ";
     }
     // Remove extra trailing comma and space
@@ -156,7 +156,7 @@ void Codegen::visit(SplitterNode &node, const int output_slot) {
     decls += ";\n";
 
     // Assign each wire to single bit
-    for (int i = 0; i < node.bits; i++) {
+    for (int i = 0; i < node.GetDataWidth(); i++) {
         inner += "\t\t" + out_wire_names[i] + " = " + input_val + "[" + std::to_string(i) + "];\n";
     }
 
@@ -263,7 +263,7 @@ void Codegen::visit(CombinerNode &node, const int output_slot) {
     std::vector<std::string> input_pin_values;
 
     // Save each input pin value from msb -> lsb
-    for (int i = node.bits - 1; i >= 0; i--) {
+    for (int i = node.GetDataWidth() - 1; i >= 0; i--) {
         // Input pin
         const auto in = node.GetBitInputPin(i).GetConnectedPin();
         // Verify connection to input pin
@@ -277,7 +277,7 @@ void Codegen::visit(CombinerNode &node, const int output_slot) {
 
     const std::string output_reg = GetSafeWireName("combiner_out");
     // Declare output bus
-    decls += "reg [" + std::to_string(node.bits - 1) + ":0] " + output_reg + ";\n";
+    decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + output_reg + ";\n";
 
 
     // Assignment statement in always

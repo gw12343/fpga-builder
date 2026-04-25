@@ -124,13 +124,13 @@
             src/Default/CombinerNode.h
             src/Default/RegisterNode.h
             src/Default/AdderNode.h
-            src/Default/ConfigurableBitWithNode.h
-            src/Default/ConfigurableBitWithNode.h
+            src/Default/ConfigurableBitWidthNode.h
+            src/Default/ConfigurableBitWidthNode.h
     )
 
     target_include_directories(fpga_builder PUBLIC
             ${imgui_node_editor_SOURCE_DIR}
-            ${CMAKE_SOURCE_DIR}
+            ${CMAKE_SOURCE_DIR}/src
     )
 
     target_link_libraries(fpga_builder PRIVATE

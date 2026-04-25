@@ -7,30 +7,41 @@
 
 #include "Node.h"
 
+#include "ErrorManager.h"
+#include "GUID.h"
+#include "Module.h"
+#include "Pins/Pin.h"
 
-#include <intrin.h>
 #include <utility>
 #include "imgui.h"
-#include "imgui_internal.h"
-
-#include "../GUID.h"
-#include "../Module.h"
-#include "ErrorManager.h"
-#include "Pins/Pin.h"
 
 
 Node::Node(Module *parent, const std::string &name, const std::vector<PinCreationData> &inputs,
            const std::vector<PinCreationData> &outputs) :
     Node(GUID::generate_guid(), parent, name, inputs, outputs) {}
 
-Node::Node(std::string saved_guid, Module *parent, std::string name, const std::vector<PinCreationData> &inputs,
-           const std::vector<PinCreationData> &outputs) :
-    name(std::move(name)) {
+
+Node::Node(std::string saved_guid, Module *parent, std::string in_name, const std::vector<PinCreationData> &inputs,
+           const std::vector<PinCreationData> &outputs) {
     module = parent;
     guid = std::move(saved_guid);
     id = GUID::to_id(guid);
+    name = std::move(in_name);
+
+    InitPins(inputs, outputs);
+}
+
+// Non pin-creating constructors
+Node::Node(Module *parent, const std::string &name) : Node(GUID::generate_guid(), parent, name) {}
+
+Node::Node(std::string saved_guid, Module *parent, std::string name) : name(std::move(name)) {
+    module = parent;
+    guid = std::move(saved_guid);
+    id = GUID::to_id(guid);
+}
 
 
+void Node::InitPins(const std::vector<PinCreationData> &inputs, const std::vector<PinCreationData> &outputs) {
     int i = 0;
     for (const auto &[name, type]: inputs) {
         Pin new_input(name, ax::NodeEditor::PinKind::Input, *this, i++, type);
@@ -48,12 +59,11 @@ void Node::Render(const std::shared_ptr<ErrorManager> &error_manager) {
     const bool is_error = error_manager->GetErrorNodeGuid() == guid;
 
     if (is_error) {
-        ed::PushStyleColor(ed::StyleColor_NodeBg, ImVec4(160 / 255.0, 60 / 255.0, 90 / 255.0, 255 / 255.0));
-        ed::PushStyleColor(ed::StyleColor_NodeBorder, ImVec4(200 / 255.0, 100 / 255.0, 140 / 255.0, 255 / 255.0));
+        PushStyleColor(ed::StyleColor_NodeBg, ImVec4(160 / 255.0, 60 / 255.0, 90 / 255.0, 255 / 255.0));
+        PushStyleColor(ed::StyleColor_NodeBorder, ImVec4(200 / 255.0, 100 / 255.0, 140 / 255.0, 255 / 255.0));
     }
 
-    ed::PushStyleColor(ax::NodeEditor::StyleColor_PinRectBorder,
-                       ImVec4(160 / 255.0, 60 / 255.0, 90 / 255.0, 255 / 255.0));
+    PushStyleColor(ax::NodeEditor::StyleColor_PinRectBorder, ImVec4(160 / 255.0, 60 / 255.0, 90 / 255.0, 255 / 255.0));
     BeginNode(id);
 
     if (last_pos.x == FLT_MAX && last_pos.y == FLT_MAX) {
@@ -63,24 +73,25 @@ void Node::Render(const std::shared_ptr<ErrorManager> &error_manager) {
 
     ImDrawList *drawList = ImGui::GetWindowDrawList();
 
-    float nodeWidth = GetNodeWidth();
-    int padding = 7;
+    const auto nodeWidth = static_cast<float>(GetNodeWidth());
+    constexpr int padding = 7;
 
     const char *label = name.c_str();
-    ImVec2 labelSize = ImGui::CalcTextSize(label);
-    ImVec2 titleMin = ImGui::GetCursorScreenPos();
-    ImVec2 titleMax = ImVec2(titleMin.x + nodeWidth, titleMin.y + labelSize.y + padding);
+    const ImVec2 labelSize = ImGui::CalcTextSize(label);
+    const ImVec2 titleMin = ImGui::GetCursorScreenPos();
+    const auto titleMax = ImVec2(titleMin.x + nodeWidth, titleMin.y + labelSize.y + padding);
 
     // reserve space
     ImGui::Dummy(ImVec2(nodeWidth, labelSize.y + padding));
 
     // draw background directly onto the node's draw list
-    drawList->AddRectFilled(titleMin, titleMax,
-                            IM_COL32(GetUIColor().x * 255.0, GetUIColor().y * 255.0, GetUIColor().z * 255.0, GetUIColor().w * 255.0));
+    drawList->AddRectFilled(
+            titleMin, titleMax,
+            IM_COL32(GetUIColor().x * 255.0, GetUIColor().y * 255.0, GetUIColor().z * 255.0, GetUIColor().w * 255.0));
 
     // draw centered label on top
-    float labelX = titleMin.x + (nodeWidth - labelSize.x) * 0.5f;
-    float labelY = titleMin.y + padding * 0.5f;
+    const float labelX = titleMin.x + (nodeWidth - labelSize.x) * 0.5f;
+    const float labelY = titleMin.y + padding * 0.5f;
     drawList->AddText(ImGui::GetFont(), ImGui::GetFontSize(), ImVec2(labelX, labelY), IM_COL32(255, 255, 255, 255),
                       label);
 
@@ -103,7 +114,7 @@ void Node::Render(const std::shared_ptr<ErrorManager> &error_manager) {
     ImGui::BeginGroup();
     for (const auto &pin: pins) {
         if (pin.GetDirection() == ax::NodeEditor::PinKind::Output) {
-            ImGui::SetCursorPosX(x + GetNodeWidth() - ImGui::CalcTextSize(pin.GetName().c_str()).x);
+            ImGui::SetCursorPosX(x + static_cast<float>(GetNodeWidth()) - ImGui::CalcTextSize(pin.GetName().c_str()).x);
             pin.Render();
         }
     }

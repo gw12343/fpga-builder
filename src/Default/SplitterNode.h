@@ -3,7 +3,7 @@
 //
 
 #pragma once
-#include "ConfigurableBitWithNode.h"
+#include "ConfigurableBitWidthNode.h"
 #include "Node.h"
 
 static auto SPLITTER_IN_PIN_VAL = "Value";
@@ -22,11 +22,20 @@ public:
 
     static std::string GetBitOutPinName(const int n) { return "Bit " + std::to_string(n); }
 
-    SplitterNode(Module *module, const std::string &guid, const int data_width) :
-        ConfigurableBitWidthNode(guid, module, "Splitter", {{SPLITTER_IN_PIN_VAL, PinDataType(data_width)}}, {},
-                                 data_width),
-        bits(data_width) {
+    // Pre-configured
+    SplitterNode(Module *module, const std::string &guid, const int bit_width) :
+        ConfigurableBitWidthNode(guid, module, "Splitter", bit_width) {
+        InitPinsAfterConfig();
+    }
 
+    explicit SplitterNode(Module *module) : ConfigurableBitWidthNode(module, "Splitter") {}
+
+
+    void InitPinsAfterConfig() override {
+        // Inputs
+        pins.push_back((Pin){SPLITTER_IN_PIN_VAL, ax::NodeEditor::PinKind::Input, *this, 0, PinDataType(bits)});
+
+        // Outputs
         int n = 1;
         for (int i = 0; i < bits; i++) {
             Pin new_output(GetBitOutPinName(i), ax::NodeEditor::PinKind::Output, *this, n++, PinDataType(1));
@@ -34,8 +43,7 @@ public:
         }
     }
 
+
     Pin GetInputPin() { return FindPin(SPLITTER_IN_PIN_VAL).value(); }
     Pin GetBitOutputPin(const int i) { return FindPin(GetBitOutPinName(i)).value(); }
-
-    int bits;
 };

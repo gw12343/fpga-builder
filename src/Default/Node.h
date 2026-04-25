@@ -3,19 +3,21 @@
 //
 
 #pragma once
+#include <imgui.h>
 #include <optional>
 #include <vector>
 
 #include <nlohmann/json.hpp>
 #include <string>
 
-#include "../cmake-build-debug/_deps/imgui_node_editor-src/imgui_node_editor.h"
+
 #include "Codegen/Visitor.h"
 #include "Pins/Pin.h"
+#include "Pins/PinDataType.h"
+
 
 class ErrorManager;
 class Module;
-namespace ed = ax::NodeEditor;
 
 class Node {
 
@@ -31,20 +33,29 @@ public:
     Node(Module *parent, const std::string &name, const std::vector<PinCreationData> &inputs,
          const std::vector<PinCreationData> &outputs);
 
-    Node(std::string saved_guid, Module *parent, std::string name, const std::vector<PinCreationData> &inputs,
+    Node(std::string saved_guid, Module *parent, std::string in_name, const std::vector<PinCreationData> &inputs,
          const std::vector<PinCreationData> &outputs);
 
+    Node(Module *parent, const std::string &name);
+    Node(std::string saved_guid, Module *parent, std::string name);
+
+    void InitPins(const std::vector<PinCreationData> &inputs, const std::vector<PinCreationData> &outputs);
 
     virtual void accept(Visitor &v, int output_slot) = 0;
+
+    // Rendering
     void Render(const std::shared_ptr<ErrorManager> &error_manager);
     virtual void RenderInternals();
-
-    [[nodiscard]] virtual bool HasConfiguration() const { return false; }
-
-    [[nodiscard]] virtual std::string GetSerializationType() const = 0;
     [[nodiscard]] virtual int GetNodeWidth() const { return 175; };
     [[nodiscard]] virtual ImVec4 GetUIColor() const { return {1.0, 0.5, 0.5, 1.0}; }
 
+    // Configuration
+    [[nodiscard]] virtual bool HasConfiguration() const { return false; }
+    virtual void RenderConfiguration() {}
+    virtual void InitPinsAfterConfig() {}
+
+    // Serialization
+    [[nodiscard]] virtual std::string GetSerializationType() const = 0;
     [[nodiscard]] virtual nlohmann::json ToJson() const {
         return {{"type", GetSerializationType()},
                 {"guid", guid},
@@ -54,6 +65,7 @@ public:
                 {"y", last_pos.y}};
     }
 
+    // Helpers
     std::optional<Pin> FindPin(const std::string &name);
 
     Module *module;

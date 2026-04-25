@@ -32,16 +32,25 @@
 
 #define NODE_CONFIG_TITLE "Configure Node"
 bool popup = false;
-
-int RequestNumBits() {
+std::shared_ptr<Node> curr;
+int RequestNumBits(const std::shared_ptr<Module> &module) {
     if (popup) {
         ImGui::OpenPopup(NODE_CONFIG_TITLE);
     }
 
     if (ImGui::BeginPopupModal(NODE_CONFIG_TITLE, &popup, ImGuiWindowFlags_AlwaysAutoResize)) {
-        ImGui::Text("hello there");
+        ImGui::Text("Configuring new %s node.", curr->name.c_str());
         ImGui::Separator();
 
+        curr->RenderConfiguration();
+
+        if (ImGui::Button("Done")) {
+            popup = false;
+
+            curr->InitPinsAfterConfig();
+            module->nodes.push_back(curr);
+            curr.reset();
+        }
 
         ImGui::EndPopup();
     }
@@ -68,7 +77,7 @@ int main(int, char **) {
 
 
         ImGui::Begin("Build");
-        RequestNumBits();
+        RequestNumBits(main_module);
 
         ImGui::InputText("Module Name", &main_module->name);
 
@@ -113,12 +122,12 @@ int main(int, char **) {
             ImGui::SameLine();
 
             if (ImGui::Button("Splitter Node", ImVec2(150, 150))) {
-                new_node = std::make_shared<SplitterNode>(main_module.get(), GUID::generate_guid(), 4);
+                new_node = std::make_shared<SplitterNode>(main_module.get());
             }
             ImGui::SameLine();
 
             if (ImGui::Button("Combiner Node", ImVec2(150, 150))) {
-                new_node = std::make_shared<CombinerNode>(main_module.get(), GUID::generate_guid(), 4);
+                new_node = std::make_shared<CombinerNode>(main_module.get());
             }
             ImGui::SameLine();
 
@@ -155,8 +164,10 @@ int main(int, char **) {
             if (new_node) {
                 if (new_node->HasConfiguration()) {
                     popup = true;
-                } else
+                    curr = new_node;
+                } else {
                     main_module->nodes.push_back(new_node);
+                }
             }
         }
         ImGui::EndChild();
