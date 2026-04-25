@@ -99,9 +99,7 @@ void Module::Render(const std::shared_ptr<ErrorManager> &error_manager) {
                                 });
                             }
 
-                            std::erase_if(nodes, [deletedNodeId](const std::unique_ptr<Node> &n) {
-                                return n->id == deletedNodeId;
-                            });
+                            std::erase_if(nodes, [deletedNodeId](const auto &n) { return n->id == deletedNodeId; });
                             break;
                         }
                     }

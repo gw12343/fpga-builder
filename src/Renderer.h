@@ -14,7 +14,7 @@ public:
     void CloseWindow() const;
 
     void StartFrame();
-    void EndFrame();
+    void EndFrame() const;
 
     [[nodiscard]] bool IsRunning() const { return running; };
 

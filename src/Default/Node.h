@@ -39,13 +39,19 @@ public:
     void Render(const std::shared_ptr<ErrorManager> &error_manager);
     virtual void RenderInternals();
 
+    [[nodiscard]] virtual bool HasConfiguration() const { return false; }
+
     [[nodiscard]] virtual std::string GetSerializationType() const = 0;
     [[nodiscard]] virtual int GetNodeWidth() const { return 175; };
     [[nodiscard]] virtual ImVec4 GetUIColor() const { return {1.0, 0.5, 0.5, 1.0}; }
 
     [[nodiscard]] virtual nlohmann::json ToJson() const {
-        return {{"type", GetSerializationType()}, {"guid", guid},    {"name", name},
-                {"id", id.Get()}, {"x", last_pos.x}, {"y", last_pos.y}};
+        return {{"type", GetSerializationType()},
+                {"guid", guid},
+                {"name", name},
+                {"id", id.Get()},
+                {"x", last_pos.x},
+                {"y", last_pos.y}};
     }
 
     std::optional<Pin> FindPin(const std::string &name);

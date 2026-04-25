@@ -26,7 +26,8 @@ public:
 
     std::vector<Link> links;
 
-    std::vector<std::unique_ptr<Node>> nodes;
+    std::vector<std::shared_ptr<Node>> nodes;
+    std::string name;
 
     bool CreateLink(const Pin &a, const Pin &b);
 
@@ -45,6 +46,4 @@ private:
 
     ed::EditorContext *context = nullptr;
     ed::Config config;
-
-    std::string name;
 };

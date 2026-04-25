@@ -149,8 +149,8 @@
             "id": 1219885031,
             "name": "Splitter",
             "type": "SplitterNode",
-            "x": 810.0,
-            "y": 140.0
+            "x": 794.0,
+            "y": 126.0
         },
         {
             "bits": 4,
@@ -229,8 +229,8 @@
             "name": "Input",
             "slot": 3,
             "type": "InputNode",
-            "x": 334.0,
-            "y": 534.0
+            "x": 210.0,
+            "y": 601.0
         },
         {
             "data_bits": 4,
@@ -238,8 +238,8 @@
             "id": 925474840,
             "name": "Multiplexer",
             "type": "MultiplexerNode",
-            "x": 206.0,
-            "y": -72.0
+            "x": 210.0,
+            "y": -59.0
         },
         {
             "bits": 4,
@@ -265,10 +265,11 @@
             "name": "Input",
             "slot": 2,
             "type": "InputNode",
-            "x": -34.0,
-            "y": 582.0
+            "x": -46.0,
+            "y": 585.0
         },
         {
+            "bits": 4,
             "guid": "12dccdf6616c40ad90fe70b3b58dd29a",
             "id": 18446744072180117594,
             "name": "Literal",
@@ -292,8 +293,8 @@
             "id": 18446744071613277948,
             "name": "Multiplexer",
             "type": "MultiplexerNode",
-            "x": 542.0,
-            "y": 44.0
+            "x": 570.0,
+            "y": 133.0
         },
         {
             "guid": "12a181c57d8544bcb794b0f19eb9bc79",
@@ -309,8 +310,8 @@
             "name": "Output",
             "slot": 0,
             "type": "OutputNode",
-            "x": 1086.0,
-            "y": -135.0
+            "x": 1022.0,
+            "y": -117.0
         },
         {
             "guid": "134d9e3e819544cea12ac66e2e9510fb",
@@ -318,8 +319,8 @@
             "name": "Output",
             "slot": 1,
             "type": "OutputNode",
-            "x": 1086.0,
-            "y": 25.0
+            "x": 1022.0,
+            "y": 43.0
         },
         {
             "guid": "82265a9d37a6434b89ac622f781391d0",
@@ -327,8 +328,8 @@
             "name": "Output",
             "slot": 2,
             "type": "OutputNode",
-            "x": 1086.0,
-            "y": 185.0
+            "x": 1022.0,
+            "y": 203.0
         },
         {
             "guid": "602381f083aa4335b2c0ba911dae78cc",
@@ -336,8 +337,8 @@
             "name": "Output",
             "slot": 3,
             "type": "OutputNode",
-            "x": 1086.0,
-            "y": 345.0
+            "x": 1022.0,
+            "y": 363.0
         }
     ],
     "outputs": [

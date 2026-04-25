@@ -13,6 +13,7 @@ public:
 
     [[nodiscard]] nlohmann::json ToJson() const override {
         nlohmann::json j = Node::ToJson();
+        j["bits"] = bits;
         j["value"] = value;
         return j;
     }
@@ -24,14 +25,15 @@ public:
     void RenderInternals() override;
 
 
-    LiteralNode(Module *module, const std::string &guid, const int val) :
-        Node(guid, module, "Literal", {}, {{"Value", PinDataType(4)}}) {
+    LiteralNode(Module *module, const std::string &guid, const int bit_width, const int val) :
+        Node(guid, module, "Literal", {}, {{"Value", PinDataType(bit_width)}}) {
         value = val;
+        bits = bit_width;
     }
 
 
     int value;
-    int bits = 4;
+    int bits;
 };
 
 inline void LiteralNode::RenderInternals() {

@@ -28,6 +28,28 @@
 #include "ErrorManager.h"
 #include "GUID.h"
 #include "IconsFontAwesome6.h"
+#include "misc/cpp/imgui_stdlib.h"
+
+#define NODE_CONFIG_TITLE "Configure Node"
+bool popup = false;
+
+int RequestNumBits() {
+    if (popup) {
+        ImGui::OpenPopup(NODE_CONFIG_TITLE);
+    }
+
+    if (ImGui::BeginPopupModal(NODE_CONFIG_TITLE, &popup, ImGuiWindowFlags_AlwaysAutoResize)) {
+        ImGui::Text("hello there");
+        ImGui::Separator();
+
+
+        ImGui::EndPopup();
+    }
+
+
+    return 0;
+}
+
 
 int main(int, char **) {
     const auto renderer = std::make_shared<Renderer>();
@@ -35,7 +57,7 @@ int main(int, char **) {
 
     renderer->InitWindow(800, 600, "FPGA Builder");
 
-    auto main_module = CircuitSerializer::LoadModule("../circuit.json");
+    auto main_module = CircuitSerializer::LoadModule("../Project/circuit.json");
 
 
     // Main loop
@@ -44,95 +66,101 @@ int main(int, char **) {
 
         main_module->Render(error_manager);
 
+
         ImGui::Begin("Build");
+        RequestNumBits();
+
+        ImGui::InputText("Module Name", &main_module->name);
 
         ImGui::BeginChild("options", ImVec2(0, 150), ImGuiChildFlags_AutoResizeX);
         {
+            std::shared_ptr<Node> new_node;
+
             if (ImGui::Button("OR", ImVec2(150, 150))) {
-                main_module->nodes.push_back(std::make_unique<OrNode>(main_module.get(), GUID::generate_guid()));
+                new_node = std::make_shared<OrNode>(main_module.get(), GUID::generate_guid());
             }
 
             ImGui::SameLine();
 
             if (ImGui::Button("NOR", ImVec2(150, 150))) {
-                main_module->nodes.push_back(std::make_unique<NorNode>(main_module.get(), GUID::generate_guid()));
+                new_node = std::make_shared<NorNode>(main_module.get(), GUID::generate_guid());
             }
 
             ImGui::SameLine();
             if (ImGui::Button("AND", ImVec2(150, 150))) {
-                main_module->nodes.push_back(std::make_unique<AndNode>(main_module.get(), GUID::generate_guid()));
+                new_node = std::make_shared<AndNode>(main_module.get(), GUID::generate_guid());
             }
 
             ImGui::SameLine();
             if (ImGui::Button("XOrNode", ImVec2(150, 150))) {
-                main_module->nodes.push_back(std::make_unique<XOrNode>(main_module.get(), GUID::generate_guid()));
+                new_node = std::make_shared<XOrNode>(main_module.get(), GUID::generate_guid());
             }
 
             ImGui::SameLine();
             if (ImGui::Button("MP Node", ImVec2(150, 150))) {
-                main_module->nodes.push_back(
-                        std::make_unique<MultiplexerNode>(main_module.get(), GUID::generate_guid(), 4));
+                new_node = std::make_shared<MultiplexerNode>(main_module.get(), GUID::generate_guid(), 4);
             }
             ImGui::SameLine();
             if (ImGui::Button("Adder Node", ImVec2(150, 150))) {
-                main_module->nodes.push_back(std::make_unique<AdderNode>(main_module.get(), GUID::generate_guid(), 4));
+                new_node = std::make_shared<AdderNode>(main_module.get(), GUID::generate_guid(), 4);
             }
             ImGui::SameLine();
 
             if (ImGui::Button("LT Node", ImVec2(150, 150))) {
-                main_module->nodes.push_back(
-                        std::make_unique<LiteralNode>(main_module.get(), GUID::generate_guid(), 0));
+                new_node = std::make_shared<LiteralNode>(main_module.get(), GUID::generate_guid(), 4, 0);
             }
 
             ImGui::SameLine();
 
             if (ImGui::Button("Splitter Node", ImVec2(150, 150))) {
-                main_module->nodes.push_back(
-                        std::make_unique<SplitterNode>(main_module.get(), GUID::generate_guid(), 4));
+                new_node = std::make_shared<SplitterNode>(main_module.get(), GUID::generate_guid(), 4);
             }
             ImGui::SameLine();
 
             if (ImGui::Button("Combiner Node", ImVec2(150, 150))) {
-                main_module->nodes.push_back(
-                        std::make_unique<CombinerNode>(main_module.get(), GUID::generate_guid(), 4));
+                new_node = std::make_shared<CombinerNode>(main_module.get(), GUID::generate_guid(), 4);
             }
             ImGui::SameLine();
 
             if (ImGui::Button("Counter Node", ImVec2(150, 150))) {
-                main_module->nodes.push_back(
-                        std::make_unique<CounterNode>(main_module.get(), GUID::generate_guid(), 4));
+                new_node = std::make_shared<CounterNode>(main_module.get(), GUID::generate_guid(), 4);
             }
             ImGui::SameLine();
 
             if (ImGui::Button("Register Node", ImVec2(150, 150))) {
-                main_module->nodes.push_back(
-                        std::make_unique<RegisterNode>(main_module.get(), GUID::generate_guid(), 4));
+                new_node = std::make_shared<RegisterNode>(main_module.get(), GUID::generate_guid(), 4);
             }
             ImGui::SameLine();
             if (ImGui::Button("DFF Node", ImVec2(150, 150))) {
-                main_module->nodes.push_back(std::make_unique<DFFNode>(main_module.get(), GUID::generate_guid()));
+                new_node = std::make_shared<DFFNode>(main_module.get(), GUID::generate_guid());
             }
             ImGui::SameLine();
             if (ImGui::Button("Debounce Node", ImVec2(150, 150))) {
-                main_module->nodes.push_back(std::make_unique<DebounceNode>(main_module.get(), GUID::generate_guid()));
+                new_node = std::make_shared<DebounceNode>(main_module.get(), GUID::generate_guid());
             }
             ImGui::SameLine();
             if (ImGui::Button("Edge Node", ImVec2(150, 150))) {
-                main_module->nodes.push_back(std::make_unique<EdgeNode>(main_module.get(), GUID::generate_guid()));
+                new_node = std::make_shared<EdgeNode>(main_module.get(), GUID::generate_guid());
             }
             ImGui::SameLine();
 
             if (ImGui::Button("Clock Node " ICON_FA_WAVE_SQUARE, ImVec2(150, 150))) {
-                main_module->nodes.push_back(std::make_unique<ClockNode>(main_module.get(), GUID::generate_guid()));
+                new_node = std::make_shared<ClockNode>(main_module.get(), GUID::generate_guid());
             }
             ImGui::SameLine();
             if (ImGui::Button("Not Node", ImVec2(150, 150))) {
-                main_module->nodes.push_back(std::make_unique<NotNode>(main_module.get(), GUID::generate_guid()));
+                new_node = std::make_shared<NotNode>(main_module.get(), GUID::generate_guid());
+            }
+
+            if (new_node) {
+                if (new_node->HasConfiguration()) {
+                    popup = true;
+                } else
+                    main_module->nodes.push_back(new_node);
             }
         }
         ImGui::EndChild();
 
-        // ImGui::BeginChild("menu");
         {
             if (ImGui::Button("Print Circuit")) {
                 TraversePrint v;
@@ -150,16 +178,15 @@ int main(int, char **) {
             ImGui::SameLine();
 
             if (ImGui::Button("Save Circuit")) {
-                CircuitSerializer::SaveModule(main_module, "../circuit.json");
+                CircuitSerializer::SaveModule(main_module, "../Project/circuit.json");
             }
 
             ImGui::SameLine();
 
             if (ImGui::Button("Load Circuit")) {
-                main_module = CircuitSerializer::LoadModule("../circuit.json");
+                main_module = CircuitSerializer::LoadModule("../Project/circuit.json");
             }
         }
-        // ImGui::EndChild();
 
         ImGui::End();
 

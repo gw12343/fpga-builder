@@ -25,7 +25,7 @@
 #include "Default/UnaryOperator/UnaryOpNode.h"
 #include "Module.h"
 
-#define OUTPUT_PATH "../EXPORT.v"
+#define OUTPUT_DIR "../Project/Export/"
 
 
 #define NODE_KEY(n) (node.guid + "-slot-" + std::to_string(n))
@@ -113,13 +113,14 @@ void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
                             "\talways @(*) begin\n" + inner + "\tend\n\n" +
                             "\n// ─── clocked logic ────────────────────────────────────────\n" + later + footer;
 
+    const std::string out_path = OUTPUT_DIR + module->name + ".v";
 
-    if (std::ofstream file(OUTPUT_PATH); file.is_open()) {
+    if (std::ofstream file(out_path); file.is_open()) {
         std::cout << "Writing output file..." << std::endl;
         file << out;
         file.close();
     } else {
-        std::cerr << "Could not open file \"" << OUTPUT_PATH << "\"" << std::endl;
+        std::cerr << "Could not open file \"" << out_path << "\"" << std::endl;
     }
 }
 

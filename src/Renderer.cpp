@@ -36,7 +36,7 @@ void Renderer::InitWindow(const int w, const int h, const std::string &title) {
     ImGui::StyleColorsDark();
 
 
-    float scale = 2;
+    constexpr float scale = 2;
     ImGuiStyle &style = ImGui::GetStyle();
 
     style.ScaleAllSizes(scale);
@@ -102,16 +102,16 @@ void Renderer::StartFrame() {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 
-    ImGui::Begin("DockspaceWindow", NULL, flags);
+    ImGui::Begin("DockspaceWindow", nullptr, flags);
     ImGui::PopStyleVar(2);
 
 
-    ImGuiID dockspace_id = ImGui::GetID("Dockspace");
+    const ImGuiID dockspace_id = ImGui::GetID("Dockspace");
     ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
     ImGui::End();
 }
 
-void Renderer::EndFrame() {
+void Renderer::EndFrame() const {
     ImGui::Render();
 
     glViewport(0, 0, 800, 600);

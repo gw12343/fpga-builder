@@ -55,7 +55,7 @@ std::unique_ptr<Node> CircuitSerializer::NodeFromJson(const json &j, Module *m) 
     } else if (type == "MultiplexerNode") {
         p = std::make_unique<MultiplexerNode>(m, guid, j.at("data_bits").get<int>());
     } else if (type == "LiteralNode") {
-        p = std::make_unique<LiteralNode>(m, guid, j.at("value").get<int>());
+        p = std::make_unique<LiteralNode>(m, guid, j.at("bits").get<int>(), j.at("value").get<int>());
     } else if (type == "SplitterNode") {
         p = std::make_unique<SplitterNode>(m, guid, j.at("bits").get<int>());
     } else if (type == "CombinerNode") {

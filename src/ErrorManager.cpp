@@ -28,14 +28,6 @@ void ErrorManager::Render(const std::shared_ptr<Module> &module) {
         if (ImGui::Button("View", ImVec2(120, 0))) {
             error_present = false;
             ImGui::CloseCurrentPopup();
-
-            // auto error_node_op = module->GetNode(error_node_guid);
-            // if(error_node_op.has_value()) {
-            //     Node* error_node = error_node_op.value();
-            //
-            //     ax::NodeEditor::SelectNode(error_node->id, false);
-            //     ax::NodeEditor::NavigateToSelection(true, 0.5);
-            // }
         }
 
         ImGui::EndPopup();
