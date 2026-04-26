@@ -540,8 +540,8 @@ void Codegen::visit(LiteralNode &node, const int output_slot) {
     START_CHECK_CYCLES
 
     std::string wire_name = GetSafeWireName("number_literal");
-    decls += "wire [" + std::to_string(node.bits - 1) + ":0] " + wire_name + " = " + std::to_string(node.bits) + "'d" +
-             std::to_string(node.value) + ";\n";
+    decls += "wire [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + wire_name + " = " +
+             std::to_string(node.GetDataWidth()) + "'d" + std::to_string(node.value) + ";\n";
 
     END_CHECK_CYCLES
     CACHE_AND_RETURN(node, wire_name, output_slot)

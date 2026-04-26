@@ -116,7 +116,7 @@ int main(int, char **) {
             ImGui::SameLine();
 
             if (ImGui::Button("LT Node", ImVec2(150, 150))) {
-                new_node = std::make_shared<LiteralNode>(main_module.get(), GUID::generate_guid(), 4, 0);
+                new_node = std::make_shared<LiteralNode>(main_module.get());
             }
 
             ImGui::SameLine();
