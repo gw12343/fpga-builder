@@ -237,7 +237,7 @@ void Codegen::visit(AdderNode &node, const int output_slot) {
     const auto b_val = EvalNode(b);
     const auto cin_val = EvalNode(cin);
 
-    decls += "reg [" + std::to_string(node.bits - 1) + ":0] " + output_value + ";\n";
+    decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + output_value + ";\n";
     decls += "reg " + output_carry + ";\n";
 
     inner += "\t\t{" + output_carry + ", " + output_value + "} = " + a_val + " + " + b_val + " + " + cin_val + ";\n";

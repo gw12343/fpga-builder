@@ -64,7 +64,7 @@ int main(int, char **) {
     const auto renderer = std::make_shared<Renderer>();
     const auto error_manager = std::make_shared<ErrorManager>();
 
-    renderer->InitWindow(800, 600, "FPGA Builder");
+    renderer->InitWindow(2000, 1600, "FPGA Builder");
 
     auto main_module = CircuitSerializer::LoadModule("../Project/circuit.json");
 
@@ -111,7 +111,7 @@ int main(int, char **) {
             }
             ImGui::SameLine();
             if (ImGui::Button("Adder Node", ImVec2(150, 150))) {
-                new_node = std::make_shared<AdderNode>(main_module.get(), GUID::generate_guid(), 4);
+                new_node = std::make_shared<AdderNode>(main_module.get());
             }
             ImGui::SameLine();
 
