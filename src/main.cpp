@@ -9,6 +9,7 @@
 #include "Renderer.h"
 
 #include "CircuitSerializer.h"
+#include "ConfigManager.h"
 #include "Default/AdderNode.h"
 #include "Default/BinaryOperator/AndNode.h"
 #include "Default/BinaryOperator/NorNode.h"
@@ -30,39 +31,13 @@
 #include "IconsFontAwesome6.h"
 #include "misc/cpp/imgui_stdlib.h"
 
-#define NODE_CONFIG_TITLE "Configure Node"
 bool popup = false;
-std::shared_ptr<Node> curr;
-int RequestNumBits(const std::shared_ptr<Module> &module) {
-    if (popup) {
-        ImGui::OpenPopup(NODE_CONFIG_TITLE);
-    }
-
-    if (ImGui::BeginPopupModal(NODE_CONFIG_TITLE, &popup, ImGuiWindowFlags_AlwaysAutoResize)) {
-        ImGui::Text("Configuring new %s node.", curr->name.c_str());
-        ImGui::Separator();
-
-        curr->RenderConfiguration();
-
-        if (ImGui::Button("Done")) {
-            popup = false;
-
-            curr->InitPinsAfterConfig();
-            module->nodes.push_back(curr);
-            curr.reset();
-        }
-
-        ImGui::EndPopup();
-    }
-
-
-    return 0;
-}
 
 
 int main(int, char **) {
     const auto renderer = std::make_shared<Renderer>();
     const auto error_manager = std::make_shared<ErrorManager>();
+    const auto config_manager = std::make_shared<ConfigManager>();
 
     renderer->InitWindow(2000, 1600, "FPGA Builder");
 
@@ -77,7 +52,6 @@ int main(int, char **) {
 
 
         ImGui::Begin("Build");
-        RequestNumBits(main_module);
 
         ImGui::InputText("Module Name", &main_module->name);
 
@@ -162,12 +136,7 @@ int main(int, char **) {
             }
 
             if (new_node) {
-                if (new_node->HasConfiguration()) {
-                    popup = true;
-                    curr = new_node;
-                } else {
-                    main_module->nodes.push_back(new_node);
-                }
+                config_manager->ConfigureAndAdd(main_module, new_node);
             }
         }
         ImGui::EndChild();
@@ -201,6 +170,7 @@ int main(int, char **) {
 
         ImGui::End();
 
+        config_manager->Render(main_module);
         error_manager->Render(main_module);
         renderer->EndFrame();
     }
