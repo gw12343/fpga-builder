@@ -21,6 +21,9 @@ public:
     [[nodiscard]] int GetNodeWidth() const override { return 100; }
     [[nodiscard]] ImVec4 GetUIColor() const override { return {0.729f, 0.455f, 0.067f, 1.0f}; }
 
+    explicit EdgeNode(Module *module) : EdgeNode(module, GUID::generate_guid()) {}
+
+
     EdgeNode(Module *module, const std::string &guid) :
         Node(guid, module, "Edge", {{EDGE_IN_PIN_D, PinDataType(1)}, {EDGE_IN_PIN_CLK, PinDataType(1)}},
              {{EDGE_OUT_PIN_Q, PinDataType(1)}, {EDGE_OUT_PIN_NQ, PinDataType(1)}}),

@@ -18,6 +18,8 @@ public:
     [[nodiscard]] int GetNodeWidth() const override { return 100; }
     [[nodiscard]] ImVec4 GetUIColor() const override { return {0.729f, 0.455f, 0.067f, 1.0f}; }
 
+    explicit DebounceNode(Module *module) : DebounceNode(module, GUID::generate_guid()) {}
+
 
     DebounceNode(Module *module, const std::string &guid) :
         Node(guid, module, "Debounce", {{DEBOUNCE_IN_PIN_D, PinDataType(1)}, {DEBOUNCE_IN_PIN_CLK, PinDataType(1)}},

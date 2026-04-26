@@ -27,11 +27,8 @@
 #include "Default/SplitterNode.h"
 #include "Default/UnaryOperator/NotNode.h"
 #include "ErrorManager.h"
-#include "GUID.h"
 #include "IconsFontAwesome6.h"
 #include "misc/cpp/imgui_stdlib.h"
-
-bool popup = false;
 
 
 int main(int, char **) {
@@ -115,20 +112,20 @@ int main(int, char **) {
             }
             ImGui::SameLine();
             if (ImGui::Button("DFF Node", ImVec2(150, 150))) {
-                new_node = std::make_shared<DFFNode>(main_module.get(), GUID::generate_guid());
+                new_node = std::make_shared<DFFNode>(main_module.get());
             }
             ImGui::SameLine();
             if (ImGui::Button("Debounce Node", ImVec2(150, 150))) {
-                new_node = std::make_shared<DebounceNode>(main_module.get(), GUID::generate_guid());
+                new_node = std::make_shared<DebounceNode>(main_module.get());
             }
             ImGui::SameLine();
             if (ImGui::Button("Edge Node", ImVec2(150, 150))) {
-                new_node = std::make_shared<EdgeNode>(main_module.get(), GUID::generate_guid());
+                new_node = std::make_shared<EdgeNode>(main_module.get());
             }
             ImGui::SameLine();
 
             if (ImGui::Button("Clock Node " ICON_FA_WAVE_SQUARE, ImVec2(150, 150))) {
-                new_node = std::make_shared<ClockNode>(main_module.get(), GUID::generate_guid());
+                new_node = std::make_shared<ClockNode>(main_module.get());
             }
             ImGui::SameLine();
             if (ImGui::Button("Not Node", ImVec2(150, 150))) {

@@ -3,6 +3,7 @@
 //
 
 #pragma once
+#include "GUID.h"
 #include "Node.h"
 
 
@@ -19,6 +20,8 @@ public:
 
     [[nodiscard]] ImVec4 GetUIColor() const override { return {0.729f, 0.455f, 0.067f, 1.0f}; }
 
+
+    explicit DFFNode(Module *module) : DFFNode(module, GUID::generate_guid()) {}
 
     DFFNode(Module *module, const std::string &guid) :
         Node(guid, module, "D Flip Flop",
