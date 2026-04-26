@@ -45,8 +45,8 @@ void TraversePrint::visit(MultiplexerNode &node, int output_slot) {
 
     indent++;
 
-    auto a = node.GetAInputPin();
-    auto b = node.GetBInputPin();
+    auto a = node.GetInputPin(0);
+    auto b = node.GetInputPin(1);
     auto s = node.GetSelectInputPin();
 
     auto ac = a.GetConnectedPin();

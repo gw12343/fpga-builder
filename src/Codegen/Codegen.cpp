@@ -296,6 +296,49 @@ void Codegen::visit(CombinerNode &node, const int output_slot) {
 }
 
 
+void Codegen::visit(MultiplexerNode &node, const int output_slot) {
+    CHECK_CACHE
+    START_CHECK_CYCLES
+
+    // Store evaluated pins
+    std::vector<std::string> input_pin_values;
+
+    // Save each input pin value from msb -> lsb
+    for (int i = node.GetDataWidth() - 1; i >= 0; i--) {
+        // Input pin
+        const auto in = node.GetInputPin(i).GetConnectedPin();
+        // Verify connection to input pin
+        VERIFY_CONNECTION(in);
+        // Get input value
+        const auto input_val = EvalNode(in);
+
+        // Save value
+        input_pin_values.push_back(input_val);
+    }
+
+    const auto s = node.GetSelectInputPin().GetConnectedPin();
+    VERIFY_CONNECTION(s);
+
+    const auto select_val = EvalNode(s);
+
+
+    std::string result_reg = GetSafeWireName("mux_result");
+    decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + result_reg + ";\n";
+
+
+    inner += "\t\tcase (" + select_val + ")\n";
+    for (int i = 0; i < powl(2, node.GetSelectWidth()); i++) {
+        inner += "\t\t\t" + std::to_string(node.GetSelectWidth()) + "'d" + std::to_string(i) + ": " + result_reg +
+                 " = " + input_pin_values[i] + ";\n";
+    }
+    inner += "\t\tendcase\n\n";
+
+
+    END_CHECK_CYCLES
+    CACHE_AND_RETURN(node, result_reg, output_slot)
+}
+
+
 void Codegen::visit(DebounceNode &node, const int output_slot) {
     CHECK_CACHE
 
@@ -492,37 +535,6 @@ void Codegen::visit(UnaryOpNode &node, const int output_slot) {
 
     decls += "reg " + intermediate_wire_name + ";\n";
     inner += "\t\t" + node.GetVerilogAssign(intermediate_wire_name, a_val);
-
-    END_CHECK_CYCLES
-    CACHE_AND_RETURN(node, intermediate_wire_name, output_slot)
-}
-
-
-void Codegen::visit(MultiplexerNode &node, const int output_slot) {
-    CHECK_CACHE
-    START_CHECK_CYCLES
-
-    const auto a = node.GetAInputPin().GetConnectedPin();
-    const auto b = node.GetBInputPin().GetConnectedPin();
-    const auto s = node.GetSelectInputPin().GetConnectedPin();
-
-    VERIFY_CONNECTION(a);
-    VERIFY_CONNECTION(b);
-    VERIFY_CONNECTION(s);
-
-
-    const auto select_val = EvalNode(s);
-    const auto a_val = EvalNode(a);
-    const auto b_val = EvalNode(b);
-
-
-    std::string intermediate_wire_name = GetSafeWireName("mux_result");
-    decls += "reg [" + std::to_string(node.data_bits - 1) + ":0] " + intermediate_wire_name + ";\n";
-
-    inner += "\tif(" + select_val + ")\n\t\t";
-    inner += intermediate_wire_name + " = " + a_val + ";\n";
-    inner += "\telse\n\t\t";
-    inner += intermediate_wire_name + " = " + b_val + ";\n";
 
     END_CHECK_CYCLES
     CACHE_AND_RETURN(node, intermediate_wire_name, output_slot)

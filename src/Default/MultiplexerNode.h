@@ -3,40 +3,42 @@
 //
 
 #pragma once
+#include "ConfigurableDataAndSelectBitWidthNode.h"
 #include "Node.h"
 
-static auto IN_PIN_A = "A";
-static auto IN_PIN_B = "B";
-static auto IN_PIN_SELECT = "Sel";
+static auto MP_IN_PIN_SELECT = "Sel";
 
-class MultiplexerNode final : public Node {
+class MultiplexerNode final : public ConfigurableDataAndSelectBitWidthNode {
 public:
     [[nodiscard]] std::string GetSerializationType() const override { return "MultiplexerNode"; }
 
     void accept(Visitor &v, const int output_slot) override { v.visit(*this, output_slot); }
 
-    [[nodiscard]] nlohmann::json ToJson() const override {
-        nlohmann::json j = Node::ToJson();
-        j["data_bits"] = data_bits;
-        return j;
-    }
 
     [[nodiscard]] ImVec4 GetUIColor() const override { return {0.325f, 0.290f, 0.718f, 1.0f}; }
 
 
-    MultiplexerNode(Module *module, const std::string &guid, const int data_bit_width) :
-        Node(guid, module, "Multiplexer",
-             {{IN_PIN_A, PinDataType(data_bit_width)},
-              {IN_PIN_B, PinDataType(data_bit_width)},
-              {IN_PIN_SELECT, PinDataType(1)}},
-             {{"Value", PinDataType(data_bit_width)}}) {
-        data_bits = data_bit_width;
+    MultiplexerNode(Module *module, const std::string &guid, const int data_bits, const int select_bits) :
+        ConfigurableDataAndSelectBitWidthNode(guid, module, "Multiplexer", data_bits, select_bits) {
+        InitPinsAfterConfig();
     }
 
+    explicit MultiplexerNode(Module *module) : ConfigurableDataAndSelectBitWidthNode(module, "Multiplexer") {}
 
-    int data_bits;
+    void InitPinsAfterConfig() override {
+        // Inputs
+        int n = 0;
+        for (int i = 0; i < powl(2.0, select_bits); i++) {
+            Pin new_input("In " + std::to_string(n), ax::NodeEditor::PinKind::Input, *this, n++,
+                          PinDataType(data_bits));
+            pins.push_back(new_input);
+        }
+        pins.push_back((Pin){MP_IN_PIN_SELECT, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(select_bits)});
 
-    Pin GetAInputPin() { return FindPin(IN_PIN_A).value(); }
-    Pin GetBInputPin() { return FindPin(IN_PIN_B).value(); }
-    Pin GetSelectInputPin() { return FindPin(IN_PIN_SELECT).value(); }
+        // Output
+        pins.push_back((Pin){"Value", ax::NodeEditor::PinKind::Output, *this, n, PinDataType(data_bits)});
+    }
+
+    Pin GetInputPin(const int n) { return pins[n]; }
+    Pin GetSelectInputPin() { return FindPin(MP_IN_PIN_SELECT).value(); }
 };

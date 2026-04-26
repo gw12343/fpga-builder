@@ -126,6 +126,7 @@
             src/Default/AdderNode.h
             src/Default/ConfigurableBitWidthNode.h
             src/Default/ConfigurableBitWidthNode.h
+            src/Default/ConfigurableDataAndSelectBitWidthNode.h
     )
 
     target_include_directories(fpga_builder PUBLIC

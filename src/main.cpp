@@ -107,7 +107,7 @@ int main(int, char **) {
 
             ImGui::SameLine();
             if (ImGui::Button("MP Node", ImVec2(150, 150))) {
-                new_node = std::make_shared<MultiplexerNode>(main_module.get(), GUID::generate_guid(), 4);
+                new_node = std::make_shared<MultiplexerNode>(main_module.get());
             }
             ImGui::SameLine();
             if (ImGui::Button("Adder Node", ImVec2(150, 150))) {
