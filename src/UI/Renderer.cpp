@@ -10,9 +10,10 @@
 #include <imgui_impl_opengl3.h>
 #include <imgui_impl_sdl3.h>
 #include <iostream>
-#include "IconsFontAwesome6.h"
 
-static constexpr ImWchar icons_ranges[] = {ICON_MIN_FA, ICON_MAX_FA, 0};
+#include "Lib/IconsFontAwesome6.h"
+#include "Lib/ImGuiNotify.h"
+
 
 void Renderer::InitWindow(const int w, const int h, const std::string &title) {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -42,16 +43,17 @@ void Renderer::InitWindow(const int w, const int h, const std::string &title) {
     style.ScaleAllSizes(scale);
 
 
-    ImFontConfig roboto_config;
-    roboto_config.MergeMode = false;
-    roboto_config.PixelSnapH = true;
-    io.Fonts->AddFontFromFileTTF("../resources/Roboto-Regular.ttf", 12.0f * scale, &roboto_config,
-                                 io.Fonts->GetGlyphRangesDefault());
+    // ImFontConfig roboto_config;
+    // roboto_config.MergeMode = true;
+    // roboto_config.PixelSnapH = true;
+    io.Fonts->AddFontFromFileTTF("../resources/Roboto-Regular.ttf", 12.0f * scale);
 
     ImFontConfig fa_config;
     fa_config.MergeMode = true;
     fa_config.PixelSnapH = true;
     fa_config.GlyphMinAdvanceX = 12.0f;
+
+    static constexpr ImWchar icons_ranges[] = {ICON_MIN_FA, ICON_MAX_FA, 0};
     io.Fonts->AddFontFromFileTTF("../resources/fa-solid-900.ttf", 12.0f * scale, &fa_config, icons_ranges);
 
 
@@ -89,7 +91,7 @@ void Renderer::StartFrame() {
     ImGui::NewFrame();
 
 
-    ImGuiWindowFlags flags = ImGuiWindowFlags_NoDocking;
+    ImGuiWindowFlags flags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoBringToFrontOnFocus;
 
     const auto *viewport = ImGui::GetMainViewport();
     ImGui::SetNextWindowPos(viewport->WorkPos);
@@ -98,6 +100,7 @@ void Renderer::StartFrame() {
 
     flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
              ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
@@ -112,6 +115,13 @@ void Renderer::StartFrame() {
 }
 
 void Renderer::EndFrame() const {
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.f);
+    ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(43.f / 255.f, 43.f / 255.f, 43.f / 255.f, 100.f / 255.f));
+    ImGui::RenderNotifications();
+
+    ImGui::PopStyleVar(1);
+    ImGui::PopStyleColor(1);
+
     ImGui::Render();
 
     glViewport(0, 0, 800, 600);

@@ -112,7 +112,7 @@
             src/UI/ErrorManager.cpp
             src/UI/ErrorManager.h
             src/Pins/PinDataType.h
-            src/IconsFontAwesome6.h
+            src/UI/Lib/IconsFontAwesome6.h
             src/Default/ClockNode.h
             src/Default/UnaryOperator/UnaryOpNode.h
             src/Default/UnaryOperator/NotNode.h
@@ -131,6 +131,7 @@
             src/UI/Toolbox.h
             src/UI/Topbar.cpp
             src/UI/Topbar.h
+            src/UI/Lib/ImGuiNotify.h
     )
 
     target_include_directories(fpga_builder PUBLIC
