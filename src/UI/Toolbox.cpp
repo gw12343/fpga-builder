@@ -6,7 +6,6 @@
 
 #include "CircuitSerializer.h"
 #include "Codegen/Codegen.h"
-#include "Codegen/TraversePrint.h"
 #include "Default/AdderNode.h"
 #include "Default/BinaryOperator/AndNode.h"
 #include "Default/BinaryOperator/NorNode.h"
@@ -24,129 +23,42 @@
 #include "Default/SplitterNode.h"
 #include "Default/UnaryOperator/NotNode.h"
 #include "IconsFontAwesome6.h"
-#include "misc/cpp/imgui_stdlib.h"
+
+#define NODE_BTN(name, type)                                                                                           \
+    {                                                                                                                  \
+        if (ImGui::Button(name, ImVec2(150, 150))) {                                                                   \
+            new_node = std::make_shared<type>(module.get());                                                           \
+        }                                                                                                              \
+    }
 
 
-void Toolbox::Render(std::shared_ptr<Module> &module, const std::shared_ptr<ConfigManager> &config_manager,
-                     const std::shared_ptr<ErrorManager> &error_manager) {
+void Toolbox::Render(const std::shared_ptr<Module> &module, const std::shared_ptr<ConfigManager> &config_manager) {
     ImGui::Begin("Toolbox");
 
-    ImGui::InputText("Module Name", &module->name);
 
-    ImGui::BeginChild("options", ImVec2(0, 150), ImGuiChildFlags_AutoResizeX);
-    {
-        std::shared_ptr<Node> new_node;
+    std::shared_ptr<Node> new_node;
 
-        if (ImGui::Button("OR", ImVec2(150, 150))) {
-            new_node = std::make_shared<OrNode>(module.get());
-        }
+    NODE_BTN("NOT", NotNode);
+    NODE_BTN("OR", OrNode);
+    NODE_BTN("NOR", NorNode);
+    NODE_BTN("AND", AndNode);
+    NODE_BTN("XOR", XOrNode);
+    NODE_BTN("MUX", MultiplexerNode);
+    NODE_BTN("ADDER", AdderNode);
+    NODE_BTN("#", LiteralNode);
+    NODE_BTN("SPLITTER", SplitterNode);
+    NODE_BTN("COMBINER", CombinerNode);
+    NODE_BTN("COUNTER", CounterNode);
+    NODE_BTN("REGISTER", RegisterNode);
+    NODE_BTN("DFF", DFFNode);
+    NODE_BTN("DEBOUNCE", DebounceNode);
+    NODE_BTN("EDGE", EdgeNode);
+    NODE_BTN(ICON_FA_WAVE_SQUARE, ClockNode);
 
-        ImGui::SameLine();
-
-        if (ImGui::Button("NOR", ImVec2(150, 150))) {
-            new_node = std::make_shared<NorNode>(module.get());
-        }
-
-        ImGui::SameLine();
-        if (ImGui::Button("AND", ImVec2(150, 150))) {
-            new_node = std::make_shared<AndNode>(module.get());
-        }
-
-        ImGui::SameLine();
-        if (ImGui::Button("XOrNode", ImVec2(150, 150))) {
-            new_node = std::make_shared<XOrNode>(module.get());
-        }
-
-        ImGui::SameLine();
-        if (ImGui::Button("MP Node", ImVec2(150, 150))) {
-            new_node = std::make_shared<MultiplexerNode>(module.get());
-        }
-        ImGui::SameLine();
-        if (ImGui::Button("Adder Node", ImVec2(150, 150))) {
-            new_node = std::make_shared<AdderNode>(module.get());
-        }
-        ImGui::SameLine();
-
-        if (ImGui::Button("LT Node", ImVec2(150, 150))) {
-            new_node = std::make_shared<LiteralNode>(module.get());
-        }
-
-        ImGui::SameLine();
-
-        if (ImGui::Button("Splitter Node", ImVec2(150, 150))) {
-            new_node = std::make_shared<SplitterNode>(module.get());
-        }
-        ImGui::SameLine();
-
-        if (ImGui::Button("Combiner Node", ImVec2(150, 150))) {
-            new_node = std::make_shared<CombinerNode>(module.get());
-        }
-        ImGui::SameLine();
-
-        if (ImGui::Button("Counter Node", ImVec2(150, 150))) {
-            new_node = std::make_shared<CounterNode>(module.get());
-        }
-        ImGui::SameLine();
-
-        if (ImGui::Button("Register Node", ImVec2(150, 150))) {
-            new_node = std::make_shared<RegisterNode>(module.get());
-        }
-        ImGui::SameLine();
-        if (ImGui::Button("DFF Node", ImVec2(150, 150))) {
-            new_node = std::make_shared<DFFNode>(module.get());
-        }
-        ImGui::SameLine();
-        if (ImGui::Button("Debounce Node", ImVec2(150, 150))) {
-            new_node = std::make_shared<DebounceNode>(module.get());
-        }
-        ImGui::SameLine();
-        if (ImGui::Button("Edge Node", ImVec2(150, 150))) {
-            new_node = std::make_shared<EdgeNode>(module.get());
-        }
-        ImGui::SameLine();
-
-        if (ImGui::Button("Clock Node " ICON_FA_WAVE_SQUARE, ImVec2(150, 150))) {
-            new_node = std::make_shared<ClockNode>(module.get());
-        }
-        ImGui::SameLine();
-        if (ImGui::Button("Not Node", ImVec2(150, 150))) {
-            new_node = std::make_shared<NotNode>(module.get());
-        }
-
-        if (new_node) {
-            config_manager->ConfigureAndAdd(module, new_node);
-        }
+    if (new_node) {
+        config_manager->ConfigureAndAdd(module, new_node);
     }
-    ImGui::EndChild();
 
-    {
-        if (ImGui::Button("Print Circuit")) {
-            TraversePrint v;
-            module->nodes[0]->accept(v, 0);
-        }
-
-        ImGui::SameLine();
-
-        if (ImGui::Button("Export Circuit")) {
-            Codegen c(error_manager);
-
-            c.GenerateCode(module);
-        }
-
-        ImGui::SameLine();
-
-        if (ImGui::Button("Save Circuit")) {
-            CircuitSerializer::SaveModule(module, "../Project/circuit.json");
-        }
-
-        ImGui::SameLine();
-
-        if (ImGui::Button("Load Circuit")) {
-            module = CircuitSerializer::LoadModule("../Project/circuit.json");
-        }
-
-        ImGui::SameLine();
-    }
 
     ImGui::End();
 }

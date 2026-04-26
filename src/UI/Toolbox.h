@@ -13,6 +13,5 @@ class Toolbox {
 public:
     Toolbox() = default;
 
-    void Render(std::shared_ptr<Module> &module, const std::shared_ptr<ConfigManager> &config_manager,
-                const std::shared_ptr<ErrorManager> &error_manager);
+    static void Render(const std::shared_ptr<Module> &module, const std::shared_ptr<ConfigManager> &config_manager);
 };

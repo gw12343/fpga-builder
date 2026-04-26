@@ -129,6 +129,8 @@
             src/UI/ConfigManager.h
             src/UI/Toolbox.cpp
             src/UI/Toolbox.h
+            src/UI/Topbar.cpp
+            src/UI/Topbar.h
     )
 
     target_include_directories(fpga_builder PUBLIC
