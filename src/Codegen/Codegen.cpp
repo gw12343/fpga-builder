@@ -361,12 +361,12 @@ void Codegen::visit(RegisterNode &node, const int output_slot) {
     const auto clk_val = EvalNode(clk);
     const auto rst_val = EvalNode(rst);
 
-    decls += "reg [" + std::to_string(node.bits - 1) + ":0] " + output_reg + ";\n";
+    decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + output_reg + ";\n";
 
     // counter block
     later += "\talways @(posedge " + clk_val + ") begin\n";
     later += "\t\tif (" + rst_val + ") \n";
-    later += "\t\t\t" + output_reg + " <= " + std::to_string(node.bits) + "'b0;\n";
+    later += "\t\t\t" + output_reg + " <= " + std::to_string(node.GetDataWidth()) + "'b0;\n";
     later += "\t\telse if (" + enb_val + " )\n";
     later += "\t\t\t" + output_reg + " <= " + d_val + ";\n";
     later += "\tend\n\n";
@@ -399,12 +399,12 @@ void Codegen::visit(CounterNode &node, const int output_slot) {
     const auto clk_val = EvalNode(clk);
     const auto rst_val = EvalNode(rst);
 
-    decls += "reg [" + std::to_string(node.bits - 1) + ":0] " + output_reg + ";\n";
+    decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + output_reg + ";\n";
 
     // counter block
     later += "\talways @(posedge " + clk_val + ") begin\n";
     later += "\t\tif (" + rst_val + ") \n";
-    later += "\t\t\t" + output_reg + " <= " + std::to_string(node.bits) + "'b0;\n";
+    later += "\t\t\t" + output_reg + " <= " + std::to_string(node.GetDataWidth()) + "'b0;\n";
     later += "\t\telse if (" + enb_val + " & " + cup_val + " )\n";
     later += "\t\t\t" + output_reg + " <= " + output_reg + " + 1;\n";
     later += "\t\telse if (" + enb_val + " & ~" + cup_val + " )\n";

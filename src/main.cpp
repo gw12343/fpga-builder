@@ -132,12 +132,12 @@ int main(int, char **) {
             ImGui::SameLine();
 
             if (ImGui::Button("Counter Node", ImVec2(150, 150))) {
-                new_node = std::make_shared<CounterNode>(main_module.get(), GUID::generate_guid(), 4);
+                new_node = std::make_shared<CounterNode>(main_module.get());
             }
             ImGui::SameLine();
 
             if (ImGui::Button("Register Node", ImVec2(150, 150))) {
-                new_node = std::make_shared<RegisterNode>(main_module.get(), GUID::generate_guid(), 4);
+                new_node = std::make_shared<RegisterNode>(main_module.get());
             }
             ImGui::SameLine();
             if (ImGui::Button("DFF Node", ImVec2(150, 150))) {
