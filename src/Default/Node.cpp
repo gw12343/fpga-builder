@@ -7,10 +7,10 @@
 
 #include "Node.h"
 
-#include "ErrorManager.h"
 #include "GUID.h"
 #include "Module.h"
 #include "Pins/Pin.h"
+#include "UI/ErrorManager.h"
 
 #include <utility>
 #include "imgui.h"

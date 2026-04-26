@@ -74,8 +74,8 @@
     add_executable(fpga_builder src/main.cpp
             src/Module.cpp
             src/Module.h
-            src/Renderer.cpp
-            src/Renderer.h
+            src/UI/Renderer.cpp
+            src/UI/Renderer.h
             src/Pins/Pin.cpp
             src/Pins/Pin.h
             src/GUID.cpp
@@ -109,8 +109,8 @@
             src/Default/DFFNode.h
             src/Default/DebounceNode.h
             src/Default/EdgeNode.h
-            src/ErrorManager.cpp
-            src/ErrorManager.h
+            src/UI/ErrorManager.cpp
+            src/UI/ErrorManager.h
             src/Pins/PinDataType.h
             src/IconsFontAwesome6.h
             src/Default/ClockNode.h
@@ -125,8 +125,10 @@
             src/Default/ConfigurableBitWidthNode.h
             src/Default/ConfigurableBitWidthNode.h
             src/Default/ConfigurableDataAndSelectBitWidthNode.h
-            src/ConfigManager.cpp
-            src/ConfigManager.h
+            src/UI/ConfigManager.cpp
+            src/UI/ConfigManager.h
+            src/UI/Toolbox.cpp
+            src/UI/Toolbox.h
     )
 
     target_include_directories(fpga_builder PUBLIC

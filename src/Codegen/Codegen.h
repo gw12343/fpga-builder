@@ -7,8 +7,8 @@
 #include <map>
 #include <stack>
 
-#include "ErrorManager.h"
 #include "Module.h"
+#include "UI/ErrorManager.h"
 #include "Visitor.h"
 
 class Codegen final : public Visitor {
