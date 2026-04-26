@@ -22,7 +22,7 @@
 #include "Default/RegisterNode.h"
 #include "Default/SplitterNode.h"
 #include "Default/UnaryOperator/NotNode.h"
-#include "IconsFontAwesome6.h"
+#include "Lib/IconsFontAwesome6.h"
 
 #define NODE_BTN(name, type)                                                                                           \
     {                                                                                                                  \
@@ -56,6 +56,7 @@ void Toolbox::Render(const std::shared_ptr<Module> &module, const std::shared_pt
     NODE_BTN(ICON_FA_WAVE_SQUARE, ClockNode);
 
     if (new_node) {
+
         config_manager->ConfigureAndAdd(module, new_node);
     }
 

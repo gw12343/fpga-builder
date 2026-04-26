@@ -26,6 +26,7 @@
 #include "Default/SplitterNode.h"
 #include "Default/UnaryOperator/NotNode.h"
 #include "Module.h"
+#include "UI/Lib/ImGuiNotify.h"
 
 
 using json = nlohmann::json;
@@ -139,6 +140,7 @@ std::shared_ptr<Module> CircuitSerializer::LoadModule(const std::string &file_pa
         module->outputs.push_back(j_out.get<std::string>());
     }
 
+    ImGui::InsertNotification({ImGuiToastType::Success, 3000, "Loaded module '%s'", module->name.c_str()});
 
     return module;
 }
@@ -181,7 +183,12 @@ void CircuitSerializer::SaveModule(const std::shared_ptr<Module> &module, const 
         std::cout << "Writing output file..." << std::endl;
         file << j_file.dump(4);
         file.close();
+        ImGui::InsertNotification(
+                {ImGuiToastType::Success, 3000, "Saved module '%s' to %s", module->name.c_str(), file_path.c_str()});
+
     } else {
         std::cerr << "Could not open file \"" << file_path << "\"" << std::endl;
+        ImGui::InsertNotification({ImGuiToastType::Error, 3000, "Failed to save module '%s' to %s",
+                                   module->name.c_str(), file_path.c_str()});
     }
 }

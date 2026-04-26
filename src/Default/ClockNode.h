@@ -4,8 +4,8 @@
 
 #pragma once
 #include "GUID.h"
-#include "IconsFontAwesome6.h"
 #include "Node.h"
+#include "UI/Lib/IconsFontAwesome6.h"
 
 
 class ClockNode final : public Node {

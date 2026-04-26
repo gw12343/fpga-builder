@@ -7,6 +7,7 @@
 #include <imgui.h>
 
 #include "Default/Node.h"
+#include "Lib/ImGuiNotify.h"
 #include "Module.h"
 
 
@@ -26,6 +27,9 @@ void ConfigManager::Render(const std::shared_ptr<Module> &module) {
         if (ImGui::Button("Done")) {
             config_open = false;
 
+            ImGui::InsertNotification({ImGuiToastType::Success, 3000, "Configured and added new node: %s",
+                                       current_node->GetDisplayName().c_str()});
+
             current_node->InitPinsAfterConfig();
             module->nodes.push_back(current_node);
             current_node.reset();
@@ -36,6 +40,8 @@ void ConfigManager::Render(const std::shared_ptr<Module> &module) {
 }
 void ConfigManager::ConfigureAndAdd(const std::shared_ptr<Module> &module, const std::shared_ptr<Node> &node) {
     if (!node->HasConfiguration()) {
+        ImGui::InsertNotification(
+                {ImGuiToastType::Success, 3000, "Added new node: %s", node->GetDisplayName().c_str()});
         module->nodes.push_back(node);
         return;
     }

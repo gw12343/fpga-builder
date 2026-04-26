@@ -41,7 +41,9 @@ void Module::Render(const std::shared_ptr<ErrorManager> &error_manager) {
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
     {
-        ImGui::Begin("Node Editor Win", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoTitleBar);
+        ImGui::Begin("Node Editor Win", nullptr, 0
+                     // ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoTitleBar
+        );
         ed::Begin("Node Editor");
 
 

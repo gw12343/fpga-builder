@@ -4,6 +4,7 @@
 
 #include "ErrorManager.h"
 
+#include "Lib/ImGuiNotify.h"
 #include "Module.h"
 
 #define ERROR_POPUP_TITLE "Error exporting circuit"
@@ -44,4 +45,5 @@ void ErrorManager::ThrowError(const std::string &msg, const Node &node) {
     error_present = true;
     error_msg = msg;
     error_node_guid = node.guid;
+    ImGui::InsertNotification({ImGuiToastType::Error, 3000, msg.c_str()});
 }
