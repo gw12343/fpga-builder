@@ -127,7 +127,7 @@ void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
 // ───── MULTI OUTPUT NODES ────────────────────────────────────────────────────────────────────────────────────────────
 void Codegen::visit(SplitterNode &node, const int output_slot) {
     CHECK_CACHE
-
+    START_CHECK_CYCLES
     std::vector<std::string> out_wire_names;
 
     // Cache each output wire
@@ -163,9 +163,9 @@ void Codegen::visit(SplitterNode &node, const int output_slot) {
     // Return correct output depending on output slot
     // Skip over the input pin (pin 0)
     const int bit_index = output_slot - 1;
+    END_CHECK_CYCLES
     RETURN_REG(out_wire_names[bit_index]);
 }
-
 
 void Codegen::visit(EdgeNode &node, const int output_slot) {
     CHECK_CACHE
@@ -258,7 +258,7 @@ void Codegen::visit(AdderNode &node, const int output_slot) {
 // ───── SINGLE OUTPUT NODES ───────────────────────────────────────────────────────────────────────────────────────────
 void Codegen::visit(CombinerNode &node, const int output_slot) {
     CHECK_CACHE
-
+    START_CHECK_CYCLES
     // Store evaluated pins
     std::vector<std::string> input_pin_values;
 
@@ -291,8 +291,8 @@ void Codegen::visit(CombinerNode &node, const int output_slot) {
     inner.pop_back();
     // End line
     inner += "};\n";
-
-    RETURN_REG(output_reg);
+    END_CHECK_CYCLES
+    CACHE_AND_RETURN(node, output_reg, output_slot)
 }
 
 
@@ -303,14 +303,17 @@ void Codegen::visit(MultiplexerNode &node, const int output_slot) {
     // Store evaluated pins
     std::vector<std::string> input_pin_values;
 
-    // Save each input pin value from msb -> lsb
-    for (int i = node.GetDataWidth() - 1; i >= 0; i--) {
+    // Save each mux imput pin
+    for (int i = 0; i < node.GetNumOptions(); i++) {
+        std::cout << "eval mux pin " << i << std::endl;
         // Input pin
         const auto in = node.GetInputPin(i).GetConnectedPin();
         // Verify connection to input pin
         VERIFY_CONNECTION(in);
         // Get input value
         const auto input_val = EvalNode(in);
+
+        std::cout << " got " << input_val << std::endl;
 
         // Save value
         input_pin_values.push_back(input_val);
@@ -327,7 +330,7 @@ void Codegen::visit(MultiplexerNode &node, const int output_slot) {
 
 
     inner += "\t\tcase (" + select_val + ")\n";
-    for (int i = 0; i < powl(2, node.GetSelectWidth()); i++) {
+    for (int i = 0; i < node.GetNumOptions(); i++) {
         inner += "\t\t\t" + std::to_string(node.GetSelectWidth()) + "'d" + std::to_string(i) + ": " + result_reg +
                  " = " + input_pin_values[i] + ";\n";
     }
@@ -510,13 +513,13 @@ void Codegen::visit(BinaryOpNode &node, const int output_slot) {
     const auto a_val = EvalNode(a);
 
 
-    std::string intermediate_wire_name = GetSafeWireName("bin_op_result");
+    const std::string out_reg = GetSafeWireName("bin_op_result");
 
-    decls += "reg " + intermediate_wire_name + ";\n";
-    inner += "\t\t" + node.GetVerilogAssign(intermediate_wire_name, a_val, b_val);
+    decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + out_reg + ";\n";
+    inner += "\t\t" + node.GetVerilogAssign(out_reg, a_val, b_val);
 
     END_CHECK_CYCLES
-    CACHE_AND_RETURN(node, intermediate_wire_name, output_slot)
+    CACHE_AND_RETURN(node, out_reg, output_slot)
 }
 
 
@@ -531,13 +534,13 @@ void Codegen::visit(UnaryOpNode &node, const int output_slot) {
     const auto a_val = EvalNode(a);
 
 
-    std::string intermediate_wire_name = GetSafeWireName("bin_op_result");
+    const std::string out_reg = GetSafeWireName("bin_op_result");
 
-    decls += "reg " + intermediate_wire_name + ";\n";
-    inner += "\t\t" + node.GetVerilogAssign(intermediate_wire_name, a_val);
+    decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + out_reg + ";\n";
+    inner += "\t\t" + node.GetVerilogAssign(out_reg, a_val);
 
     END_CHECK_CYCLES
-    CACHE_AND_RETURN(node, intermediate_wire_name, output_slot)
+    CACHE_AND_RETURN(node, out_reg, output_slot)
 }
 
 
@@ -613,6 +616,7 @@ bool Codegen::CheckActive(const std::string &guid) {
 
     while (!activeNodes.empty()) {
         if (activeNodes.top() == guid) {
+            std::cout << "Currently evaluating node " << guid << " oh no   " << std::endl;
             found = true;
             break;
         }

@@ -17,5 +17,9 @@ public:
     void accept(Visitor &v, const int output_slot) override { v.visit(*this, output_slot); }
 
 
-    OrNode(Module *parent, const std::string &guid) : BinaryOpNode(parent, guid) { name = "OR"; }
+    // Pre-configured node
+    OrNode(Module *module, const std::string &guid, const int bit_width) :
+        BinaryOpNode(module, guid, "OR", bit_width) {}
+    // New node
+    explicit OrNode(Module *parent) : BinaryOpNode(parent, "OR") {}
 };

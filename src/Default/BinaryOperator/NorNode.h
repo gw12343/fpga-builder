@@ -18,5 +18,9 @@ public:
     void accept(Visitor &v, const int output_slot) override { v.visit(*this, output_slot); }
 
 
-    NorNode(Module *parent, const std::string &guid) : BinaryOpNode(parent, guid) { name = "NOR"; }
+    // Pre-configured node
+    NorNode(Module *module, const std::string &guid, const int bit_width) :
+        BinaryOpNode(module, guid, "NOR", bit_width) {}
+    // New node
+    explicit NorNode(Module *parent) : BinaryOpNode(parent, "NOR") {}
 };

@@ -76,7 +76,7 @@ void Node::Render(const std::shared_ptr<ErrorManager> &error_manager) {
     const auto nodeWidth = static_cast<float>(GetNodeWidth());
     constexpr int padding = 7;
 
-    const char *label = name.c_str();
+    const char *label = GetDisplayName().c_str();
     const ImVec2 labelSize = ImGui::CalcTextSize(label);
     const ImVec2 titleMin = ImGui::GetCursorScreenPos();
     const auto titleMax = ImVec2(titleMin.x + nodeWidth, titleMin.y + labelSize.y + padding);

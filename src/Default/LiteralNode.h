@@ -20,7 +20,7 @@ public:
     }
 
     [[nodiscard]] ImVec4 GetUIColor() const override { return {0.373f, 0.369f, 0.353f, 1.0f}; }
-    [[nodiscard]] int GetNodeWidth() const override { return 75; }
+    [[nodiscard]] int GetNodeWidth() const override { return 125; }
 
     void RenderInternals() override;
 

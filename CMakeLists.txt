@@ -86,7 +86,6 @@
             src/Link.h
             src/Default/OutputNode.cpp
             src/Default/OutputNode.h
-            src/Default/BinaryOperator/BinaryOpNode.cpp
             src/Default/BinaryOperator/BinaryOpNode.h
             src/Default/InputNode.cpp
             src/Default/InputNode.h
@@ -116,7 +115,6 @@
             src/IconsFontAwesome6.h
             src/Default/ClockNode.h
             src/Default/UnaryOperator/UnaryOpNode.h
-            src/Default/UnaryOperator/UnaryOpNode.cpp
             src/Default/UnaryOperator/NotNode.h
             src/Pins/PinDataType.cpp
             src/Default/SplitterNode.h

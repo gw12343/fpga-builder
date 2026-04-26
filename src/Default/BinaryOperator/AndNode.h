@@ -20,5 +20,9 @@ public:
     void accept(Visitor &v, const int output_slot) override { v.visit(*this, output_slot); }
 
 
-    AndNode(Module *parent, const std::string &guid) : BinaryOpNode(parent, guid) { name = "AND"; }
+    // Pre-configured node
+    AndNode(Module *module, const std::string &guid, const int bit_width) :
+        BinaryOpNode(module, guid, "AND", bit_width) {}
+    // New node
+    explicit AndNode(Module *parent) : BinaryOpNode(parent, "AND") {}
 };

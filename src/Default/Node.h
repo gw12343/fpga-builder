@@ -53,6 +53,7 @@ public:
     [[nodiscard]] virtual bool HasConfiguration() const { return false; }
     virtual void RenderConfiguration() {}
     virtual void InitPinsAfterConfig() {}
+    [[nodiscard]] virtual std::string GetDisplayName() const { return name; }
 
     // Serialization
     [[nodiscard]] virtual std::string GetSerializationType() const = 0;

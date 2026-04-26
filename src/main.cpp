@@ -60,23 +60,23 @@ int main(int, char **) {
             std::shared_ptr<Node> new_node;
 
             if (ImGui::Button("OR", ImVec2(150, 150))) {
-                new_node = std::make_shared<OrNode>(main_module.get(), GUID::generate_guid());
+                new_node = std::make_shared<OrNode>(main_module.get());
             }
 
             ImGui::SameLine();
 
             if (ImGui::Button("NOR", ImVec2(150, 150))) {
-                new_node = std::make_shared<NorNode>(main_module.get(), GUID::generate_guid());
+                new_node = std::make_shared<NorNode>(main_module.get());
             }
 
             ImGui::SameLine();
             if (ImGui::Button("AND", ImVec2(150, 150))) {
-                new_node = std::make_shared<AndNode>(main_module.get(), GUID::generate_guid());
+                new_node = std::make_shared<AndNode>(main_module.get());
             }
 
             ImGui::SameLine();
             if (ImGui::Button("XOrNode", ImVec2(150, 150))) {
-                new_node = std::make_shared<XOrNode>(main_module.get(), GUID::generate_guid());
+                new_node = std::make_shared<XOrNode>(main_module.get());
             }
 
             ImGui::SameLine();
@@ -132,7 +132,7 @@ int main(int, char **) {
             }
             ImGui::SameLine();
             if (ImGui::Button("Not Node", ImVec2(150, 150))) {
-                new_node = std::make_shared<NotNode>(main_module.get(), GUID::generate_guid());
+                new_node = std::make_shared<NotNode>(main_module.get());
             }
 
             if (new_node) {
@@ -166,6 +166,8 @@ int main(int, char **) {
             if (ImGui::Button("Load Circuit")) {
                 main_module = CircuitSerializer::LoadModule("../Project/circuit.json");
             }
+
+            ImGui::SameLine();
         }
 
         ImGui::End();

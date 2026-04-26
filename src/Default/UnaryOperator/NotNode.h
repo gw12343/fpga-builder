@@ -18,5 +18,9 @@ public:
     void accept(Visitor &v, const int output_slot) override { v.visit(*this, output_slot); }
 
 
-    NotNode(Module *parent, const std::string &guid) : UnaryOpNode(parent, guid) { name = "NOT"; }
+    // Pre-configured node
+    NotNode(Module *module, const std::string &guid, const int bit_width) :
+        UnaryOpNode(module, guid, "NOT", bit_width) {}
+    // New node
+    explicit NotNode(Module *parent) : UnaryOpNode(parent, "NOT") {}
 };

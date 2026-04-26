@@ -26,6 +26,7 @@ public:
 
     // Override configuration methods
     [[nodiscard]] bool HasConfiguration() const override { return true; }
+
     void RenderConfiguration() override {
         if (ImGui::DragInt("# Data Bits", &bits, 1, 1, 16)) {
             defaultBitsToUse = bits;
@@ -34,6 +35,7 @@ public:
 
     // Helpers
     [[nodiscard]] int GetDataWidth() const { return bits; }
+    [[nodiscard]] std::string GetDisplayName() const override { return name + " (" + std::to_string(bits) + "bit)"; }
 
     static inline int defaultBitsToUse = 4; // TODO save per-project runtime val
 

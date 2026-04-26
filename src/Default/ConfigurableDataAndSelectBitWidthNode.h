@@ -21,7 +21,7 @@ public:
     }
 
 
-    // Save bit width to json
+    // Save bit widths to json
     [[nodiscard]] nlohmann::json ToJson() const override {
         nlohmann::json j = Node::ToJson();
         j["data_bits"] = data_bits;
@@ -43,6 +43,11 @@ public:
     // Helpers
     [[nodiscard]] int GetDataWidth() const { return data_bits; }
     [[nodiscard]] int GetSelectWidth() const { return select_bits; }
+    [[nodiscard]] std::string GetDisplayName() const override {
+        return name + " (" + std::to_string(static_cast<int>(powl(2, select_bits))) + "-to-1 x" +
+               std::to_string(data_bits) + ")";
+    }
+
 
     static inline int defaultDataBitsToUse = 4;
     static inline int defaultSelectBitsToUse = 1;

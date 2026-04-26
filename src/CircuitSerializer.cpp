@@ -41,13 +41,13 @@ std::unique_ptr<Node> CircuitSerializer::NodeFromJson(const json &j, Module *m) 
     auto guid = j.at("guid").get<std::string>();
 
     if (type == "OrNode") {
-        p = std::make_unique<OrNode>(m, guid);
+        p = std::make_unique<OrNode>(m, guid, j.at("bits").get<int>());
     } else if (type == "XOrNode") {
-        p = std::make_unique<XOrNode>(m, guid);
+        p = std::make_unique<XOrNode>(m, guid, j.at("bits").get<int>());
     } else if (type == "NorNode") {
-        p = std::make_unique<NorNode>(m, guid);
+        p = std::make_unique<NorNode>(m, guid, j.at("bits").get<int>());
     } else if (type == "AndNode") {
-        p = std::make_unique<AndNode>(m, guid);
+        p = std::make_unique<AndNode>(m, guid, j.at("bits").get<int>());
     } else if (type == "OutputNode") {
         p = std::make_unique<OutputNode>(m, guid, j.at("slot").get<int>());
     } else if (type == "InputNode") {
@@ -75,7 +75,7 @@ std::unique_ptr<Node> CircuitSerializer::NodeFromJson(const json &j, Module *m) 
     } else if (type == "ClockNode") {
         p = std::make_unique<ClockNode>(m, guid);
     } else if (type == "NotNode") {
-        p = std::make_unique<NotNode>(m, guid);
+        p = std::make_unique<NotNode>(m, guid, j.at("bits").get<int>());
     } else {
         throw std::runtime_error("Unknown node type: " + type);
     }
