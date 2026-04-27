@@ -87,11 +87,11 @@ void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
     failed = false;
     std::string header = "module " + module->GetName() + " (";
     for (const auto &input: module->inputs) {
-        header += "\n\t input wire " + input + ",";
+        header += "\n\tinput wire " + input + ",";
     }
     header += "\n\tinput wire sys_clk,";
     for (const auto &output: module->outputs) {
-        header += "\n\t output reg " + output + ",";
+        header += "\n\toutput reg " + output + ",";
     }
     header.pop_back(); // remove last comma
     header += "\n);\n";
@@ -108,11 +108,11 @@ void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
     }
 
 
-    const std::string out = header + "\n// ─── wire/reg declarations ────────────────────────────────\n" + decls +
-                            "\n// ─── combination logic ────────────────────────────────────\n" +
+    const std::string out = header + "\n// === wire/reg declarations ================================\n" + decls +
+                            "\n// === combination logic ====================================\n" +
 
                             "\talways @(*) begin\n" + inner + "\tend\n\n" +
-                            "\n// ─── clocked logic ────────────────────────────────────────\n" + later + footer;
+                            "\n// === clocked logic ========================================\n" + later + footer;
 
     const std::string out_path = OUTPUT_DIR + module->name + ".v";
 
@@ -125,7 +125,7 @@ void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
     }
 }
 
-// ───── MULTI OUTPUT NODES ────────────────────────────────────────────────────────────────────────────────────────────
+// ===== MULTI OUTPUT NODES ============================================================================================
 void Codegen::visit(SplitterNode &node, const int output_slot) {
     CHECK_CACHE
     START_CHECK_CYCLES
@@ -256,7 +256,7 @@ void Codegen::visit(AdderNode &node, const int output_slot) {
     CircuitError("Invalid connection!", node);
 }
 
-// ───── SINGLE OUTPUT NODES ───────────────────────────────────────────────────────────────────────────────────────────
+// ===== SINGLE OUTPUT NODES ===========================================================================================
 void Codegen::visit(CombinerNode &node, const int output_slot) {
     CHECK_CACHE
     START_CHECK_CYCLES

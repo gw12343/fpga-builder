@@ -4,6 +4,7 @@
 
 #include "Link.h"
 
+#include <intrin.h>
 #include <iostream>
 #include <utility>
 
@@ -38,7 +39,9 @@ void Link::Render() const {
     const Pin &outPin = out.value();
     const Pin &inPin = in.value();
 
-    auto col = BitWidthColor(out->GetDataType().GetBitWidth());
+    const auto link_color = BitWidthColor(out->GetDataType().GetBitWidth());
+    const auto link_thickness = inPin.GetDataType().GetBitWidth();
 
-    ed::Link(id, outPin.GetId(), inPin.GetId(), col, 2.0f);
+
+    ed::Link(id, outPin.GetId(), inPin.GetId(), link_color, static_cast<float>(link_thickness));
 }

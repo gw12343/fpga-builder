@@ -9,6 +9,7 @@
 
 #include "UI/ConfigManager.h"
 #include "UI/ErrorManager.h"
+#include "UI/OutputViewer.h"
 #include "UI/Renderer.h"
 #include "UI/Toolbox.h"
 #include "UI/Topbar.h"
@@ -24,6 +25,7 @@ int main(int, char **) {
     renderer->InitWindow(2000, 1600, "FPGA Builder");
 
     auto main_module = CircuitSerializer::LoadModule("../Project/circuit.json");
+    const auto output_viewer = std::make_shared<OutputViewer>(main_module);
 
 
     // Main loop
@@ -31,9 +33,10 @@ int main(int, char **) {
         renderer->StartFrame();
 
         toolbox->Render(main_module, config_manager);
-        topbar->Render(main_module, error_manager);
+        topbar->Render(main_module, error_manager, output_viewer);
         main_module->Render(error_manager);
         config_manager->Render(main_module);
+        output_viewer->Render();
         error_manager->Render(main_module);
 
         renderer->EndFrame();

@@ -132,6 +132,10 @@
             src/UI/Topbar.cpp
             src/UI/Topbar.h
             src/UI/Lib/ImGuiNotify.h
+            src/UI/Lib/TextEditor.h
+            src/UI/Lib/TextEditor.cpp
+            src/UI/OutputViewer.cpp
+            src/UI/OutputViewer.h
     )
 
     target_include_directories(fpga_builder PUBLIC
