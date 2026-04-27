@@ -206,8 +206,9 @@ std::optional<Pin> Module::GetPin(const ax::NodeEditor::PinId &id) {
 }
 
 void Module::RenderIOList() {
-    ImGui::Begin("IO");
+    ImGui::Begin("Module Settings");
 
+    ImGui::InputText("Module Name", &name);
 
     if (ImGui::BeginTable("IO TABLE", 2,
                           ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerV |

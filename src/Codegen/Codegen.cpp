@@ -81,7 +81,7 @@
 #define END_CHECK_CYCLES activeNodes.pop();
 
 
-Codegen::Codegen(std::shared_ptr<ErrorManager> error_man) : error_manager(std::move(error_man)) {}
+Codegen::Codegen(std::shared_ptr<ErrorManager> error_man) : failed(false), error_manager(std::move(error_man)) {}
 
 void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
     failed = false;

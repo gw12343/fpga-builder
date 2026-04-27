@@ -17,7 +17,7 @@ void Topbar::Render(std::shared_ptr<Module> &module, const std::shared_ptr<Error
                     const std::shared_ptr<OutputViewer> &output_viewer) {
     ImGui::Begin("Options");
 
-    ImGui::InputText("Module Name", &module->name);
+
     {
         if (ImGui::Button("Print Circuit")) {
             TraversePrint v;
