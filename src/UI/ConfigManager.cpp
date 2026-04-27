@@ -14,17 +14,20 @@
 #define NODE_CONFIG_TITLE "Configure Node"
 
 void ConfigManager::Render(const std::shared_ptr<Module> &module) {
+
     if (config_open) {
         ImGui::OpenPopup(NODE_CONFIG_TITLE);
     }
 
     if (ImGui::BeginPopupModal(NODE_CONFIG_TITLE, &config_open, ImGuiWindowFlags_AlwaysAutoResize)) {
+        ImGui::GetStyle().ScaleAllSizes(2.0f);
+        // ImGui::SetWindowFontScale(2.0f);
         ImGui::Text("Configuring new %s node.", current_node->name.c_str());
 
         current_node->RenderConfiguration();
 
         ImGui::Separator();
-        if (ImGui::Button("Done")) {
+        if (ImGui::Button("Done", ImVec2(100, 40))) {
             config_open = false;
 
             ImGui::InsertNotification({ImGuiToastType::Success, 3000, "Configured and added new node: %s",
@@ -35,6 +38,8 @@ void ConfigManager::Render(const std::shared_ptr<Module> &module) {
             current_node.reset();
         }
 
+        // ImGui::SetWindowFontScale(1.0f);
+        ImGui::GetStyle().ScaleAllSizes(0.5f);
         ImGui::EndPopup();
     }
 }

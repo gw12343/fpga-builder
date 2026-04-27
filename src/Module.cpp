@@ -44,6 +44,9 @@ void Module::Render(const std::shared_ptr<ErrorManager> &error_manager) {
         ImGui::Begin("Node Editor Win", nullptr, 0
                      // ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoTitleBar
         );
+
+        ax::NodeEditor::PushStyleColor(ax::NodeEditor::StyleColor_Bg, ImVec4(0.125, 0.125, 0.125, 1));
+
         ed::Begin("Node Editor");
 
 
@@ -125,6 +128,10 @@ void Module::Render(const std::shared_ptr<ErrorManager> &error_manager) {
 
 
         ed::End();
+
+
+        ax::NodeEditor::PopStyleColor();
+
         ImGui::End();
     }
     ImGui::PopStyleVar();

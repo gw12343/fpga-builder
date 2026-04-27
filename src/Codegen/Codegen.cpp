@@ -84,6 +84,7 @@
 Codegen::Codegen(std::shared_ptr<ErrorManager> error_man) : error_manager(std::move(error_man)) {}
 
 void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
+    failed = false;
     std::string header = "module " + module->GetName() + " (";
     for (const auto &input: module->inputs) {
         header += "\n\t input wire " + input + ",";
@@ -604,7 +605,8 @@ std::string Codegen::GetSafeWireName(const std::string &wire_name) {
     return wire_name + "0";
 }
 
-void Codegen::CircuitError(const std::string &msg, const Node &node) const {
+void Codegen::CircuitError(const std::string &msg, const Node &node) {
+    failed = true;
     std::cerr << "ERROR EXPORTING CIRCUIT: " << msg << std::endl;
     std::cerr << "related node: " << node.guid << std::endl;
     error_manager->ThrowError(msg, node);
