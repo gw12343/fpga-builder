@@ -19,8 +19,8 @@ public:
 
     void accept(Visitor &v, const int output_slot) override { v.visit(*this, output_slot); }
 
-
-    [[nodiscard]] ImVec4 GetUIColor() const override { return {0.560f, 0.1f, 0.07f, 1.0f}; }
+    static constexpr ImVec4 color = {0.560f, 0.1f, 0.07f, 1.0f};
+    [[nodiscard]] ImVec4 GetUIColor() const override { return color; }
 
     // Pre-configured
     AdderNode(Module *module, const std::string &guid, const int bit_width) :

@@ -19,8 +19,8 @@ int main(int, char **) {
     const auto renderer = std::make_shared<Renderer>();
     const auto error_manager = std::make_shared<ErrorManager>();
     const auto config_manager = std::make_shared<ConfigManager>();
-    const auto toolbox = std::make_shared<Toolbox>();
     const auto topbar = std::make_shared<Topbar>();
+    const auto toolbox = std::make_shared<Toolbox>();
 
     renderer->InitWindow(2000, 1600, "FPGA Builder");
 

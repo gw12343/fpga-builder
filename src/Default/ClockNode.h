@@ -15,7 +15,8 @@ public:
     void accept(Visitor &v, const int output_slot) override { v.visit(*this, output_slot); }
 
     [[nodiscard]] int GetNodeWidth() const override { return 25; }
-    [[nodiscard]] ImVec4 GetUIColor() const override { return {0, 0, 0, 0}; }
+    static constexpr ImVec4 color = {0.1, 0.1, 0.1, .5};
+    [[nodiscard]] ImVec4 GetUIColor() const override { return color; }
 
 
     explicit ClockNode(Module *module) : ClockNode(module, GUID::generate_guid()) {}

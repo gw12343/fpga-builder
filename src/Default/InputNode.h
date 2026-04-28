@@ -3,6 +3,7 @@
 //
 
 #pragma once
+#include "GUID.h"
 #include "Node.h"
 
 
@@ -16,13 +17,14 @@ public:
         return j;
     }
 
-    [[nodiscard]] ImVec4 GetUIColor() const override { return {0.094f, 0.373f, 0.647f, 1.0f}; }
+    static constexpr ImVec4 color = {0.094f, 0.373f, 0.647f, 1.0f};
+    [[nodiscard]] ImVec4 GetUIColor() const override { return color; }
 
 
     void accept(Visitor &v, const int output_slot) override { v.visit(*this, output_slot); }
 
     void RenderInternals() override;
-    InputNode(Module *module, const std::string &guid, int input);
+    explicit InputNode(Module *module, const std::string &guid = GUID::generate_guid(), int input = 0);
 
     int slot = 0;
 };

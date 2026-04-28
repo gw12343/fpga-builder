@@ -17,19 +17,49 @@
 #include "Default/DFFNode.h"
 #include "Default/DebounceNode.h"
 #include "Default/EdgeNode.h"
+#include "Default/InputNode.h"
 #include "Default/LiteralNode.h"
 #include "Default/MultiplexerNode.h"
+#include "Default/OutputNode.h"
 #include "Default/RegisterNode.h"
 #include "Default/SplitterNode.h"
 #include "Default/UnaryOperator/NotNode.h"
 #include "Lib/IconsFontAwesome6.h"
 
-#define NODE_BTN(name, type)                                                                                           \
-    {                                                                                                                  \
-        if (ImGui::Button(name, ImVec2(150, 150))) {                                                                   \
-            new_node = std::make_shared<type>(module.get());                                                           \
-        }                                                                                                              \
-    }
+
+#define NODE_MIN_BTN_SIZE 150
+
+#define ADD_NODE_TO_CATEGORY(category, name, type)                                                                     \
+                                                                                                                       \
+    categories[category].push_back({name, type::color, [](const std::shared_ptr<Module> &module) {                     \
+                                        return std::make_shared<type>(module.get());                                   \
+                                    }});
+
+Toolbox::Toolbox() {
+    ADD_NODE_TO_CATEGORY("Bitwise Operators", "NOT", NotNode);
+    ADD_NODE_TO_CATEGORY("Bitwise Operators", "AND", AndNode);
+    ADD_NODE_TO_CATEGORY("Bitwise Operators", "OR", OrNode);
+    ADD_NODE_TO_CATEGORY("Bitwise Operators", "NOR", NorNode);
+    ADD_NODE_TO_CATEGORY("Bitwise Operators", "XOR", XOrNode);
+
+    ADD_NODE_TO_CATEGORY("Wiring", "Literal", LiteralNode);
+    ADD_NODE_TO_CATEGORY("Wiring", "Splitter", SplitterNode);
+    ADD_NODE_TO_CATEGORY("Wiring", "Combiner", CombinerNode);
+    ADD_NODE_TO_CATEGORY("Wiring", "Multiplexer", MultiplexerNode);
+
+    ADD_NODE_TO_CATEGORY("IO", "Input", InputNode);
+    ADD_NODE_TO_CATEGORY("IO", "Output", OutputNode);
+
+
+    ADD_NODE_TO_CATEGORY("Memory", "Register", RegisterNode);
+    ADD_NODE_TO_CATEGORY("Memory", "Counter", CounterNode);
+    ADD_NODE_TO_CATEGORY("Memory", "DFF", DFFNode);
+
+    ADD_NODE_TO_CATEGORY("Misc", "Adder", AdderNode);
+    ADD_NODE_TO_CATEGORY("Misc", "Clock " ICON_FA_WAVE_SQUARE, ClockNode);
+    ADD_NODE_TO_CATEGORY("Misc", "Debounce", DebounceNode);
+    ADD_NODE_TO_CATEGORY("Misc", "Edge", EdgeNode);
+}
 
 
 void Toolbox::Render(const std::shared_ptr<Module> &module, const std::shared_ptr<ConfigManager> &config_manager) {
@@ -38,22 +68,61 @@ void Toolbox::Render(const std::shared_ptr<Module> &module, const std::shared_pt
 
     std::shared_ptr<Node> new_node;
 
-    NODE_BTN("NOT", NotNode);
-    NODE_BTN("OR", OrNode);
-    NODE_BTN("NOR", NorNode);
-    NODE_BTN("AND", AndNode);
-    NODE_BTN("XOR", XOrNode);
-    NODE_BTN("MUX", MultiplexerNode);
-    NODE_BTN("ADDER", AdderNode);
-    NODE_BTN("#", LiteralNode);
-    NODE_BTN("SPLITTER", SplitterNode);
-    NODE_BTN("COMBINER", CombinerNode);
-    NODE_BTN("COUNTER", CounterNode);
-    NODE_BTN("REGISTER", RegisterNode);
-    NODE_BTN("DFF", DFFNode);
-    NODE_BTN("DEBOUNCE", DebounceNode);
-    NODE_BTN("EDGE", EdgeNode);
-    NODE_BTN(ICON_FA_WAVE_SQUARE, ClockNode);
+    for (const auto &[category, node_types]: categories) {
+        if (node_types.empty())
+            continue;
+
+        ImGui::SeparatorText(category.c_str());
+        constexpr float node_width = NODE_MIN_BTN_SIZE;
+        const float btn_padding = ImGui::GetStyle().ItemSpacing.x;
+        const float avail_width = ImGui::GetContentRegionAvail().x;
+        const int columns = std::max(1, static_cast<int>((avail_width + btn_padding) / (node_width + btn_padding)));
+
+        const float adjusted_width_extra = (avail_width - columns * (node_width + btn_padding) + btn_padding) / columns;
+
+        int n = 0;
+        int j = 0;
+        for (const auto &[name, color, creator]: node_types) {
+            if (n == columns) {
+                n = 0;
+            } else if (j != 0) {
+                ImGui::SameLine();
+            }
+            n++;
+            j++;
+            ImGui::PushStyleColor(ImGuiCol_Button, color);
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(color.x, color.y + .1, color.z + .1, color.w));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(color.x + .2, color.y + .2, color.z + .2, color.w));
+            if (ImGui::Button(name.c_str(), ImVec2(NODE_MIN_BTN_SIZE + adjusted_width_extra, NODE_MIN_BTN_SIZE))) {
+                new_node = creator(module);
+            }
+            ImGui::PopStyleColor(3);
+        }
+    }
+
+
+    // NODE_BTN("NOT", NotNode);
+    //
+    // NODE_BTN("OR", OrNode);
+    // NODE_BTN("NOR", NorNode);
+    // NODE_BTN("AND", AndNode);
+    // NODE_BTN("XOR", XOrNode);
+
+    // NODE_BTN("MUX", MultiplexerNode);
+    // NODE_BTN("SPLITTER", SplitterNode);
+    // NODE_BTN("COMBINER", CombinerNode);
+    // NODE_BTN("#", LiteralNode);
+
+
+    // NODE_BTN("COUNTER", CounterNode);
+    // NODE_BTN("DFF", DFFNode);
+    // NODE_BTN("REGISTER", RegisterNode);
+
+    // NODE_BTN("ADDER", AdderNode);
+
+    // NODE_BTN("DEBOUNCE", DebounceNode);
+    // NODE_BTN("EDGE", EdgeNode);
+    // NODE_BTN(ICON_FA_WAVE_SQUARE, ClockNode);
 
     if (new_node) {
 
