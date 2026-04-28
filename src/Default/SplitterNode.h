@@ -15,8 +15,12 @@ public:
 
     void accept(Visitor &v, const int output_slot) override { v.visit(*this, output_slot); }
 
+    [[nodiscard]] std::shared_ptr<Node> Clone() const override {
+        return std::make_unique<SplitterNode>(module, GUID::generate_guid(), bits);
+    }
 
-    [[nodiscard]] ImVec4 GetUIColor() const override { return {0.325f, 0.290f, 0.718f, 1.0f}; }
+    static constexpr ImVec4 color = {0.325f, 0.290f, 0.718f, 1.0f};
+    [[nodiscard]] ImVec4 GetUIColor() const override { return color; }
     [[nodiscard]] int GetNodeWidth() const override { return 150; }
 
 

@@ -4,6 +4,7 @@
 
 #include "Link.h"
 
+#include <intrin.h>
 #include <iostream>
 #include <utility>
 
@@ -21,8 +22,8 @@ ImVec4 BitWidthColor(const int bits) {
 Link::Link(Module *module, const std::string &output_guid, const std::string &input_guid) :
     Link(module, GUID::generate_guid(), output_guid, input_guid) {}
 
-Link::Link(Module *module, std::string saved_id, std::string output_guid, const std::string &input_guid) :
-    module(module), output_guid(std::move(output_guid)), input_guid(input_guid) {
+Link::Link(Module *module, std::string saved_id, std::string output_guid, std::string input_guid) :
+    module(module), output_guid(std::move(output_guid)), input_guid(std::move(input_guid)) {
     id = GUID::to_id(std::move(saved_id));
 }
 
@@ -38,7 +39,9 @@ void Link::Render() const {
     const Pin &outPin = out.value();
     const Pin &inPin = in.value();
 
-    auto col = BitWidthColor(out->GetDataType().GetBitWidth());
+    const auto link_color = BitWidthColor(out->GetDataType().GetBitWidth());
+    const auto link_thickness = inPin.GetDataType().GetBitWidth();
 
-    ed::Link(id, outPin.GetId(), inPin.GetId(), col, 2.0f);
+
+    ed::Link(id, outPin.GetId(), inPin.GetId(), link_color, static_cast<float>(link_thickness));
 }

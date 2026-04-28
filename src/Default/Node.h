@@ -43,11 +43,15 @@ public:
 
     virtual void accept(Visitor &v, int output_slot) = 0;
 
+    [[nodiscard]] virtual std::shared_ptr<Node> Clone() const = 0;
+
     // Rendering
     void Render(const std::shared_ptr<ErrorManager> &error_manager);
     virtual void RenderInternals();
     [[nodiscard]] virtual int GetNodeWidth() const { return 175; };
-    [[nodiscard]] virtual ImVec4 GetUIColor() const { return {1.0, 0.5, 0.5, 1.0}; }
+
+    static constexpr ImVec4 color = {1.0, 0.5, 0.5, 1.0};
+    [[nodiscard]] virtual ImVec4 GetUIColor() const { return color; }
 
     // Configuration
     [[nodiscard]] virtual bool HasConfiguration() const { return false; }

@@ -81,16 +81,17 @@
 #define END_CHECK_CYCLES activeNodes.pop();
 
 
-Codegen::Codegen(std::shared_ptr<ErrorManager> error_man) : error_manager(std::move(error_man)) {}
+Codegen::Codegen(std::shared_ptr<ErrorManager> error_man) : failed(false), error_manager(std::move(error_man)) {}
 
 void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
+    failed = false;
     std::string header = "module " + module->GetName() + " (";
     for (const auto &input: module->inputs) {
-        header += "\n\t input wire " + input + ",";
+        header += "\n\tinput wire " + input + ",";
     }
     header += "\n\tinput wire sys_clk,";
     for (const auto &output: module->outputs) {
-        header += "\n\t output reg " + output + ",";
+        header += "\n\toutput reg " + output + ",";
     }
     header.pop_back(); // remove last comma
     header += "\n);\n";
@@ -101,17 +102,17 @@ void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
     for (const auto &node: module->nodes) {
         if (node->GetSerializationType() != "OutputNode")
             continue;
-        inner += "\t\t// Output" + std::to_string(n++) + "\n";
+        inner += "\t\t// Output " + module->outputs[dynamic_cast<OutputNode *>(node.get())->slot] + "\n";
         node->accept(*this, 0);
         returnVals.pop();
     }
 
 
-    const std::string out = header + "\n// ─── wire/reg declarations ────────────────────────────────\n" + decls +
-                            "\n// ─── combination logic ────────────────────────────────────\n" +
+    const std::string out = header + "\n// === wire/reg declarations ================================\n" + decls +
+                            "\n// === combination logic ====================================\n" +
 
                             "\talways @(*) begin\n" + inner + "\tend\n\n" +
-                            "\n// ─── clocked logic ────────────────────────────────────────\n" + later + footer;
+                            "\n// === clocked logic ========================================\n" + later + footer;
 
     const std::string out_path = OUTPUT_DIR + module->name + ".v";
 
@@ -124,7 +125,7 @@ void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
     }
 }
 
-// ───── MULTI OUTPUT NODES ────────────────────────────────────────────────────────────────────────────────────────────
+// ===== MULTI OUTPUT NODES ============================================================================================
 void Codegen::visit(SplitterNode &node, const int output_slot) {
     CHECK_CACHE
     START_CHECK_CYCLES
@@ -255,7 +256,7 @@ void Codegen::visit(AdderNode &node, const int output_slot) {
     CircuitError("Invalid connection!", node);
 }
 
-// ───── SINGLE OUTPUT NODES ───────────────────────────────────────────────────────────────────────────────────────────
+// ===== SINGLE OUTPUT NODES ===========================================================================================
 void Codegen::visit(CombinerNode &node, const int output_slot) {
     CHECK_CACHE
     START_CHECK_CYCLES
@@ -604,7 +605,8 @@ std::string Codegen::GetSafeWireName(const std::string &wire_name) {
     return wire_name + "0";
 }
 
-void Codegen::CircuitError(const std::string &msg, const Node &node) const {
+void Codegen::CircuitError(const std::string &msg, const Node &node) {
+    failed = true;
     std::cerr << "ERROR EXPORTING CIRCUIT: " << msg << std::endl;
     std::cerr << "related node: " << node.guid << std::endl;
     error_manager->ThrowError(msg, node);

@@ -9,13 +9,15 @@
 #include "CircuitSerializer.h"
 #include "Codegen/Codegen.h"
 #include "Codegen/TraversePrint.h"
+#include "OutputViewer.h"
 #include "misc/cpp/imgui_stdlib.h"
 
 
-void Topbar::Render(std::shared_ptr<Module> &module, const std::shared_ptr<ErrorManager> &error_manager) {
+void Topbar::Render(std::shared_ptr<Module> &module, const std::shared_ptr<ErrorManager> &error_manager,
+                    const std::shared_ptr<OutputViewer> &output_viewer) {
     ImGui::Begin("Options");
 
-    ImGui::InputText("Module Name", &module->name);
+
     {
         if (ImGui::Button("Print Circuit")) {
             TraversePrint v;
@@ -26,8 +28,9 @@ void Topbar::Render(std::shared_ptr<Module> &module, const std::shared_ptr<Error
 
         if (ImGui::Button("Export Circuit")) {
             Codegen c(error_manager);
-
             c.GenerateCode(module);
+
+            output_viewer->UpdateOutput(module);
         }
 
         ImGui::SameLine();

@@ -37,7 +37,7 @@ private:
     std::optional<std::string> CheckCache(const std::string &guid);
     bool CheckActive(const std::string &guid);
     std::string GetSafeWireName(const std::string &wire_name);
-    void CircuitError(const std::string &msg, const Node &node) const;
+    void CircuitError(const std::string &msg, const Node &node);
 
     std::string EvalNode(const std::optional<Pin> &pin) {
         pin->GetNode().accept(*this, pin->GetNodeIndex());
@@ -50,6 +50,7 @@ private:
     std::string decls;
     std::string inner;
     std::string later;
+    bool failed;
 
 
     std::stack<std::string> returnVals;

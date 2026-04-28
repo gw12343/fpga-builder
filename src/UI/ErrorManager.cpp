@@ -14,7 +14,15 @@ void ErrorManager::Render(const std::shared_ptr<Module> &module) {
         ImGui::OpenPopup(ERROR_POPUP_TITLE);
     }
 
-    if (ImGui::BeginPopupModal(ERROR_POPUP_TITLE, &error_present, ImGuiWindowFlags_AlwaysAutoResize)) {
+    // Center window
+    ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x / 2 - ImGui::GetWindowWidth() / 2,
+                                   ImGui::GetIO().DisplaySize.y / 2 - ImGui::GetWindowHeight() / 2));
+
+    if (ImGui::BeginPopupModal(ERROR_POPUP_TITLE, &error_present,
+                               ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove)) {
+        ImGui::GetStyle().ScaleAllSizes(2.0f);
+
+
         ImGui::TextColored(ImVec4(1.0, 0.0, 0.0, 1.0), error_msg.c_str());
         ImGui::Separator();
 
@@ -30,6 +38,8 @@ void ErrorManager::Render(const std::shared_ptr<Module> &module) {
             error_present = false;
             ImGui::CloseCurrentPopup();
         }
+
+        ImGui::GetStyle().ScaleAllSizes(0.5f);
 
         ImGui::EndPopup();
     }

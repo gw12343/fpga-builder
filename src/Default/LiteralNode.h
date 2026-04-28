@@ -13,13 +13,18 @@ public:
 
     void accept(Visitor &v, const int output_slot) override { v.visit(*this, output_slot); }
 
+    [[nodiscard]] std::shared_ptr<Node> Clone() const override {
+        return std::make_unique<LiteralNode>(module, GUID::generate_guid(), bits, value);
+    }
+
     [[nodiscard]] nlohmann::json ToJson() const override {
         nlohmann::json j = ConfigurableBitWidthNode::ToJson();
         j["value"] = value;
         return j;
     }
 
-    [[nodiscard]] ImVec4 GetUIColor() const override { return {0.373f, 0.369f, 0.353f, 1.0f}; }
+    static constexpr ImVec4 color = {0.373f, 0.369f, 0.353f, 1.0f};
+    [[nodiscard]] ImVec4 GetUIColor() const override { return color; }
     [[nodiscard]] int GetNodeWidth() const override { return 125; }
 
     void RenderInternals() override;

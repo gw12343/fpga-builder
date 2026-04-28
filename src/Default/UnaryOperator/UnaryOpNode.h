@@ -14,7 +14,9 @@ public:
     void accept(Visitor &v, const int output_slot) override { v.visit(*this, output_slot); }
 
     [[nodiscard]] int GetNodeWidth() const override { return 125; }
-    [[nodiscard]] ImVec4 GetUIColor() const override { return {0.114f, 0.616f, 0.647f, 1.0f}; }
+
+    static constexpr ImVec4 color = {0.114f, 0.616f, 0.647f, 1.0f};
+    [[nodiscard]] ImVec4 GetUIColor() const override { return color; }
 
 
     [[nodiscard]] virtual std::string GetVerilogAssign(const std::string &out, const std::string &a) const {
