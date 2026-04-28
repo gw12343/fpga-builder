@@ -11,6 +11,8 @@
 #include "Link.h"
 #include "imgui_node_editor.h"
 
+
+class CopyPasteManager;
 namespace ed = ax::NodeEditor;
 
 class Module {
@@ -18,7 +20,8 @@ public:
     explicit Module(std::string name);
     ~Module();
 
-    void Render(const std::shared_ptr<ErrorManager> &error_manager);
+    void Render(const std::shared_ptr<ErrorManager> &error_manager,
+                const std::shared_ptr<CopyPasteManager> &copy_paste_manager);
 
 
     std::vector<std::string> inputs;

@@ -11,6 +11,8 @@
 #include <algorithm>
 #include <utility>
 #include <vector>
+
+#include "CopyPasteManager.h"
 #include "misc/cpp/imgui_stdlib.h"
 
 #include "Default/InputNode.h"
@@ -31,11 +33,9 @@ Module::~Module() {
     }
 }
 
-std::vector<ed::NodeId> copied_nodes;
-std::vector<ed::LinkId> selected_nodes;
-std::map<unsigned long long, ImVec2> copied_node_positions;
 
-void Module::Render(const std::shared_ptr<ErrorManager> &error_manager) {
+void Module::Render(const std::shared_ptr<ErrorManager> &error_manager,
+                    const std::shared_ptr<CopyPasteManager> &copy_paste_manager) {
     ed::SetCurrentEditor(context);
 
     ImGuiWindowClass window_class;
@@ -46,115 +46,12 @@ void Module::Render(const std::shared_ptr<ErrorManager> &error_manager) {
     {
         ImGui::Begin("Node Editor Win", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoTitleBar);
 
-        ax::NodeEditor::PushStyleColor(ax::NodeEditor::StyleColor_Bg, ImVec4(0.125, 0.125, 0.125, 1));
+        PushStyleColor(ax::NodeEditor::StyleColor_Bg, ImVec4(0.125, 0.125, 0.125, 1));
 
         ed::Begin("Node Editor");
 
 
-        if (ImGui::GetIO().KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_C)) {
-            copied_nodes.resize(ed::GetSelectedObjectCount());
-            selected_nodes.resize(ed::GetSelectedObjectCount());
-
-            int nodeCount = ed::GetSelectedNodes(copied_nodes.data(), static_cast<int>(copied_nodes.size()));
-            int linkCount = ed::GetSelectedLinks(selected_nodes.data(), static_cast<int>(selected_nodes.size()));
-
-            copied_nodes.resize(nodeCount);
-            selected_nodes.resize(linkCount);
-            copied_node_positions.clear();
-            for (auto n: copied_nodes) {
-                copied_node_positions[n.Get()] = ax::NodeEditor::GetNodePosition(n);
-            }
-
-        } else if (ImGui::GetIO().KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_V)) {
-            std::map<std::string, std::string> guid_map;
-            std::vector<std::string> old_nodes;
-
-
-            ax::NodeEditor::ClearSelection();
-            // copy each node and put in map
-            for (const auto &n: copied_nodes) {
-                const auto &curr_node = GetNode(n);
-                if (!curr_node.has_value())
-                    continue;
-
-                const auto &curr_node_val = curr_node.value();
-                old_nodes.push_back(curr_node_val->guid);
-                auto copy = curr_node_val->Clone();
-
-                copy->start_pos = ImVec2(copied_node_positions[n.Get()].x + 40, copied_node_positions[n.Get()].y + 40);
-                copy->last_pos = {FLT_MAX, FLT_MAX};
-
-                guid_map[curr_node_val->guid] = copy->guid;
-
-                // Render to init node before selecting
-                copy->Render(error_manager);
-                ax::NodeEditor::SelectNode(copy->id.Get(), true);
-
-                nodes.push_back(copy);
-            }
-
-            // get the links that are between only the nodes selected
-            std::vector<std::string> old_links;
-
-            struct link_copy_data {
-                Link l;
-                Node &in;
-                Node &out;
-            };
-
-            std::vector<link_copy_data> links_to_copy;
-            for (const auto &link: links) {
-                const auto &in_pin_op = GetPin(link.input_guid);
-                const auto &out_pin_op = GetPin(link.output_guid);
-                if (!in_pin_op || !out_pin_op)
-                    continue;
-
-                auto &node_in = in_pin_op.value().GetNode();
-                auto &node_out = out_pin_op.value().GetNode();
-
-                if (std::ranges::find(old_nodes, node_in.guid) == old_nodes.end())
-                    continue;
-                if (std::ranges::find(old_nodes, node_out.guid) == old_nodes.end())
-                    continue;
-
-                links_to_copy.push_back({link, node_in, node_out});
-            }
-
-
-            for (const auto &[link, in_node, out_node]: links_to_copy) {
-                std::cout << "copying " << link.id.Get() << " link" << std::endl;
-                std::cout << "i " << link.input_guid << std::endl;
-                std::cout << "o " << link.output_guid << std::endl;
-
-
-                const auto &new_node_input_id = guid_map[in_node.guid];
-                const auto &new_node_output_id = guid_map[out_node.guid];
-
-                const auto &new_node_in_op = GetNode(new_node_input_id);
-                const auto &new_node_out_op = GetNode(new_node_output_id);
-
-                if (!new_node_in_op)
-                    continue;
-                if (!new_node_out_op)
-                    continue;
-
-
-                std::string in_suffix =
-                        link.input_guid.substr(in_node.guid.size(), link.input_guid.size() - in_node.guid.size());
-
-                std::string new_in_id = new_node_in_op.value()->guid + in_suffix;
-
-                std::string out_suffix =
-                        link.output_guid.substr(out_node.guid.size(), link.output_guid.size() - out_node.guid.size());
-
-                std::string new_out_id = new_node_out_op.value()->guid + out_suffix;
-                std::cout << "i " << new_in_id << std::endl;
-                std::cout << "o " << new_out_id << std::endl;
-
-
-                links.emplace_back(this, new_out_id, new_in_id);
-            }
-        }
+        copy_paste_manager->HandleCopyPaste(this, error_manager);
 
 
         if (ed::BeginCreate()) {

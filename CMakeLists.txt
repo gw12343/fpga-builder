@@ -136,6 +136,8 @@
             src/UI/Lib/TextEditor.cpp
             src/UI/OutputViewer.cpp
             src/UI/OutputViewer.h
+            src/CopyPasteManager.cpp
+            src/CopyPasteManager.h
     )
 
     target_include_directories(fpga_builder PUBLIC
