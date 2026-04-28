@@ -14,6 +14,10 @@ public:
 
     void accept(Visitor &v, const int output_slot) override { v.visit(*this, output_slot); }
 
+    [[nodiscard]] std::shared_ptr<Node> Clone() const override {
+        return std::make_unique<MultiplexerNode>(module, GUID::generate_guid(), data_bits, select_bits);
+    }
+
     [[nodiscard]] int GetNodeWidth() const override { return 225; }
 
     static constexpr ImVec4 color = {0.325f, 0.290f, 0.718f, 1.0f};

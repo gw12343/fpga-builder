@@ -17,6 +17,9 @@ public:
 
     void accept(Visitor &v, const int output_slot) override { v.visit(*this, output_slot); }
 
+    [[nodiscard]] std::shared_ptr<Node> Clone() const override {
+        return std::make_unique<NotNode>(module, GUID::generate_guid(), bits);
+    }
 
     // Pre-configured node
     NotNode(Module *module, const std::string &guid, const int bit_width) :

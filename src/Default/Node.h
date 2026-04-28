@@ -43,6 +43,8 @@ public:
 
     virtual void accept(Visitor &v, int output_slot) = 0;
 
+    [[nodiscard]] virtual std::shared_ptr<Node> Clone() const = 0;
+
     // Rendering
     void Render(const std::shared_ptr<ErrorManager> &error_manager);
     virtual void RenderInternals();

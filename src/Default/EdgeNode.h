@@ -18,6 +18,10 @@ public:
 
     void accept(Visitor &v, const int output_slot) override { v.visit(*this, output_slot); }
 
+    [[nodiscard]] std::shared_ptr<Node> Clone() const override {
+        return std::make_unique<EdgeNode>(module, GUID::generate_guid());
+    }
+
     [[nodiscard]] int GetNodeWidth() const override { return 100; }
     static constexpr ImVec4 color = {0.729f, 0.455f, 0.067f, 1.0f};
     [[nodiscard]] ImVec4 GetUIColor() const override { return color; }

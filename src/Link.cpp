@@ -22,8 +22,8 @@ ImVec4 BitWidthColor(const int bits) {
 Link::Link(Module *module, const std::string &output_guid, const std::string &input_guid) :
     Link(module, GUID::generate_guid(), output_guid, input_guid) {}
 
-Link::Link(Module *module, std::string saved_id, std::string output_guid, const std::string &input_guid) :
-    module(module), output_guid(std::move(output_guid)), input_guid(input_guid) {
+Link::Link(Module *module, std::string saved_id, std::string output_guid, std::string input_guid) :
+    module(module), output_guid(std::move(output_guid)), input_guid(std::move(input_guid)) {
     id = GUID::to_id(std::move(saved_id));
 }
 

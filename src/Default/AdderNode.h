@@ -4,6 +4,7 @@
 
 #pragma once
 #include "ConfigurableBitWidthNode.h"
+#include "GUID.h"
 #include "Node.h"
 
 static auto ADDER_IN_PIN_A = "A";
@@ -19,8 +20,13 @@ public:
 
     void accept(Visitor &v, const int output_slot) override { v.visit(*this, output_slot); }
 
+    [[nodiscard]] std::shared_ptr<Node> Clone() const override {
+        return std::make_unique<AdderNode>(module, GUID::generate_guid(), bits);
+    }
+
     static constexpr ImVec4 color = {0.560f, 0.1f, 0.07f, 1.0f};
     [[nodiscard]] ImVec4 GetUIColor() const override { return color; }
+
 
     // Pre-configured
     AdderNode(Module *module, const std::string &guid, const int bit_width) :

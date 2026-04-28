@@ -13,6 +13,10 @@ public:
 
     void accept(Visitor &v, const int output_slot) override { v.visit(*this, output_slot); }
 
+    [[nodiscard]] std::shared_ptr<Node> Clone() const override {
+        return std::make_unique<LiteralNode>(module, GUID::generate_guid(), bits, value);
+    }
+
     [[nodiscard]] nlohmann::json ToJson() const override {
         nlohmann::json j = ConfigurableBitWidthNode::ToJson();
         j["value"] = value;

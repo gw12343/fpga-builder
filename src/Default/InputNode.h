@@ -23,6 +23,10 @@ public:
 
     void accept(Visitor &v, const int output_slot) override { v.visit(*this, output_slot); }
 
+    [[nodiscard]] std::shared_ptr<Node> Clone() const override {
+        return std::make_unique<InputNode>(module, GUID::generate_guid(), slot);
+    }
+
     void RenderInternals() override;
     explicit InputNode(Module *module, const std::string &guid = GUID::generate_guid(), int input = 0);
 

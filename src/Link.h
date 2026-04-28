@@ -16,7 +16,7 @@ public:
     Link(Module *module, const std::string &output_guid, const std::string &input_guid);
 
 
-    Link(Module *module, std::string saved_id, std::string output_guid, const std::string &input_guid);
+    Link(Module *module, std::string saved_id, std::string output_guid, std::string input_guid);
 
     void Render() const;
 
