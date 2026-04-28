@@ -102,7 +102,7 @@ void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
     for (const auto &node: module->nodes) {
         if (node->GetSerializationType() != "OutputNode")
             continue;
-        inner += "\t\t// Output" + std::to_string(n++) + "\n";
+        inner += "\t\t// Output " + module->outputs[dynamic_cast<OutputNode *>(node.get())->slot] + "\n";
         node->accept(*this, 0);
         returnVals.pop();
     }

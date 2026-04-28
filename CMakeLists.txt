@@ -138,6 +138,7 @@
             src/UI/OutputViewer.h
             src/CopyPasteManager.cpp
             src/CopyPasteManager.h
+            src/UI/ModuleUI.cpp
     )
 
     target_include_directories(fpga_builder PUBLIC
