@@ -4,14 +4,14 @@
 
 #pragma once
 #include <memory>
-
+#include <optional>
 
 class Module;
 class Node;
 class ConfigManager {
 public:
     ConfigManager() = default;
-    void Render(const std::shared_ptr<Module> &module);
+    void Render(const std::optional<std::shared_ptr<Module>> &module);
     void ConfigureAndAdd(const std::shared_ptr<Module> &module, const std::shared_ptr<Node> &node);
 
 private:

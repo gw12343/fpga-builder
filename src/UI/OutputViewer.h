@@ -9,7 +9,7 @@
 class Module;
 class OutputViewer {
 public:
-    explicit OutputViewer(const std::shared_ptr<Module> &module);
+    explicit OutputViewer();
     void UpdateOutput(const std::shared_ptr<Module> &module);
     void Render();
 

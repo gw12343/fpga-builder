@@ -13,7 +13,11 @@
 
 #define NODE_CONFIG_TITLE "Configure Node"
 
-void ConfigManager::Render(const std::shared_ptr<Module> &module) {
+void ConfigManager::Render(const std::optional<std::shared_ptr<Module>> &module) {
+    if (!module.has_value()) {
+        config_open = false;
+        return;
+    }
 
     if (config_open) {
         ImGui::OpenPopup(NODE_CONFIG_TITLE);
@@ -39,7 +43,7 @@ void ConfigManager::Render(const std::shared_ptr<Module> &module) {
                                        current_node->GetDisplayName().c_str()});
 
             current_node->InitPinsAfterConfig();
-            module->nodes.push_back(current_node);
+            module.value()->nodes.push_back(current_node);
             current_node.reset();
         }
 

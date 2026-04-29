@@ -19,16 +19,10 @@
 
 void Module::Render(const std::shared_ptr<ErrorManager> &error_manager,
                     const std::shared_ptr<CopyPasteManager> &copy_paste_manager) {
-    ed::SetCurrentEditor(context);
 
-    ImGuiWindowClass window_class;
-    window_class.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoTabBar;
-    ImGui::SetNextWindowClass(&window_class);
 
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
     {
-        ImGui::Begin("Node Editor Win", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoTitleBar);
-
+        ed::SetCurrentEditor(context);
         PushStyleColor(ax::NodeEditor::StyleColor_Bg, ImVec4(0.125, 0.125, 0.125, 1));
 
         ed::Begin("Node Editor");
@@ -108,21 +102,13 @@ void Module::Render(const std::shared_ptr<ErrorManager> &error_manager,
         }
 
         ed::EndDelete(); // Wrap up deletion action
-
         ed::EndCreate();
         RenderNodes(error_manager);
         RenderLinks();
-
-
         ed::End();
-
-
         ax::NodeEditor::PopStyleColor();
-
-        ImGui::End();
     }
-    ImGui::PopStyleVar();
-    ed::SetCurrentEditor(nullptr);
+
 
     RenderModuleSettings();
 }
@@ -185,7 +171,7 @@ void Module::RenderModuleSettings() {
 
 
         if (ImGui::Button("+##INPUTS-PLUS", ImVec2(width, 0))) {
-            inputs.emplace_back("New Input");
+            inputs.emplace_back("New Input", 1);
         }
 
 
@@ -239,7 +225,7 @@ void Module::RenderModuleSettings() {
         ImGui::Separator();
 
         if (ImGui::Button("+##OUTPUTS-PLUS", ImVec2(width, 0))) {
-            outputs.emplace_back("New Output");
+            outputs.emplace_back("New Output", 1);
         }
         ImGui::SameLine();
         if (ImGui::Button("-##OUTPUTS-MINUS", ImVec2(width, 0))) {

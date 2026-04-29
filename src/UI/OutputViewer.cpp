@@ -6,7 +6,7 @@
 #include <fstream>
 #include "Module.h"
 
-OutputViewer::OutputViewer(const std::shared_ptr<Module> &module) {
+OutputViewer::OutputViewer() {
     auto lang = TextEditor::LanguageDefinition::CPlusPlus();
 
     const std::unordered_set<std::string> verilog_keywords = {"always",
@@ -158,7 +158,8 @@ OutputViewer::OutputViewer(const std::shared_ptr<Module> &module) {
 
     editor.SetPalette(palette);
 
-    UpdateOutput(module);
+    editor.SetText("TODO");
+    // UpdateOutput(module);
 }
 void OutputViewer::UpdateOutput(const std::shared_ptr<Module> &module) {
     const std::ifstream file("../Project/Export/" + module->name + ".v");

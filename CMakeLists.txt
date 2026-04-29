@@ -139,6 +139,8 @@
             src/CopyPasteManager.cpp
             src/CopyPasteManager.h
             src/UI/ModuleUI.cpp
+            src/Project/Project.h
+            src/Project/Project.cpp
     )
 
     target_include_directories(fpga_builder PUBLIC

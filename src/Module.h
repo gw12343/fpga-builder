@@ -28,14 +28,13 @@ public:
     void Render(const std::shared_ptr<ErrorManager> &error_manager,
                 const std::shared_ptr<CopyPasteManager> &copy_paste_manager);
 
+    std::string name;
 
     std::vector<IO> inputs;
     std::vector<IO> outputs;
 
-    std::vector<Link> links;
-
     std::vector<std::shared_ptr<Node>> nodes;
-    std::string name;
+    std::vector<Link> links;
 
     bool CreateLink(const Pin &a, const Pin &b);
     void DeleteAllLinksConnected(const std::shared_ptr<Node> &node);

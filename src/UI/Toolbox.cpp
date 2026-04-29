@@ -62,11 +62,13 @@ Toolbox::Toolbox() {
 }
 
 
-void Toolbox::Render(const std::shared_ptr<Module> &module, const std::shared_ptr<ConfigManager> &config_manager) {
+void Toolbox::Render(std::optional<std::shared_ptr<Module>> module,
+                     const std::shared_ptr<ConfigManager> &config_manager) {
     ImGui::Begin("Toolbox");
 
 
     std::shared_ptr<Node> new_node;
+
 
     for (const auto &[category, node_types]: categories) {
         if (node_types.empty())
@@ -94,7 +96,8 @@ void Toolbox::Render(const std::shared_ptr<Module> &module, const std::shared_pt
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(color.x, color.y + .1, color.z + .1, color.w));
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(color.x + .2, color.y + .2, color.z + .2, color.w));
             if (ImGui::Button(name.c_str(), ImVec2(NODE_MIN_BTN_SIZE + adjusted_width_extra, NODE_MIN_BTN_SIZE))) {
-                new_node = creator(module);
+                if (module.has_value())
+                    new_node = creator(module.value());
             }
             ImGui::PopStyleColor(3);
         }
@@ -125,8 +128,8 @@ void Toolbox::Render(const std::shared_ptr<Module> &module, const std::shared_pt
     // NODE_BTN(ICON_FA_WAVE_SQUARE, ClockNode);
 
     if (new_node) {
-
-        config_manager->ConfigureAndAdd(module, new_node);
+        if (module.has_value())
+            config_manager->ConfigureAndAdd(module.value(), new_node);
     }
 
 
