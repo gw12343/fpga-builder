@@ -30,5 +30,7 @@ public:
     void RenderInternals() override;
     explicit InputNode(Module *module, const std::string &guid = GUID::generate_guid(), int input = 0);
 
+    void UpdateBits(int bits);
+
     int slot = 0;
 };

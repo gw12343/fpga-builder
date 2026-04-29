@@ -11,5 +11,5 @@
 class GUID {
 public:
     static std::string generate_guid();
-    static uint32_t to_id(std::string guid);
+    static uint32_t to_id(const std::string& guid);
 };

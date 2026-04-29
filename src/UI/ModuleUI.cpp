@@ -123,11 +123,12 @@ void Module::Render(const std::shared_ptr<ErrorManager> &error_manager,
     }
     ImGui::PopStyleVar();
     ed::SetCurrentEditor(nullptr);
-    RenderIOList();
+
+    RenderModuleSettings();
 }
 
 
-void Module::RenderIOList() {
+void Module::RenderModuleSettings() {
     ImGui::Begin("Module Settings");
 
     ImGui::InputText("Module Name", &name);
@@ -145,11 +146,30 @@ void Module::RenderIOList() {
 
 
         for (int i = 0; i < inputs.size(); ++i) {
-            std::string name = inputs[i];
+            std::string name = inputs[i].name;
 
             if (ImGui::InputText(("##INPUT" + std::to_string(i)).c_str(), &name)) {
-                inputs[i] = name;
+                inputs[i].name = name;
             }
+            ImGui::SameLine();
+
+            ImGui::PushItemWidth(30);
+            if (ImGui::InputInt(("##INPUTS-BITS" + std::to_string(i)).c_str(), &inputs.at(i).bits, 0, 0)) {
+                for (const auto &node: nodes) {
+                    if (node->GetSerializationType() != "InputNode")
+                        continue;
+
+                    const auto &input_node = std::dynamic_pointer_cast<InputNode>(node);
+                    if (input_node->slot != i)
+                        continue;
+
+                    DeleteAllLinksConnected(input_node);
+
+                    input_node->UpdateBits(inputs.at(i).bits);
+                }
+            }
+
+            ImGui::PopItemWidth();
 
             ImGui::SameLine();
             if (ImGui::Button(("+##INPUTS-INSTANTIATE" + std::to_string(i)).c_str(), ImVec2(0, 0))) {
@@ -167,6 +187,8 @@ void Module::RenderIOList() {
         if (ImGui::Button("+##INPUTS-PLUS", ImVec2(width, 0))) {
             inputs.emplace_back("New Input");
         }
+
+
         ImGui::SameLine();
         if (ImGui::Button("-##INPUTS-MINUS", ImVec2(width, 0))) {
             if (!inputs.empty())
@@ -177,15 +199,33 @@ void Module::RenderIOList() {
 
 
         ImGui::BeginChild("Outputs", ImVec2(0, -footer_height), false);
-        ImGui::Text("%d Output/s", outputs.size());
+        ImGui::Text("%d Output/s      |        Bits", outputs.size());
 
 
         for (int i = 0; i < outputs.size(); i++) {
-            std::string name = outputs.at(i);
+            std::string name = outputs.at(i).name;
             if (ImGui::InputText(("##OUTPUT" + std::to_string(i)).c_str(), &name)) {
 
-                outputs[i] = name;
+                outputs[i].name = name;
             }
+            ImGui::SameLine();
+
+            ImGui::PushItemWidth(30);
+            if (ImGui::InputInt(("##OUTPUTS-BITS" + std::to_string(i)).c_str(), &outputs.at(i).bits, 0, 0)) {
+                for (const auto &node: nodes) {
+                    if (node->GetSerializationType() != "OutputNode")
+                        continue;
+
+                    const auto &output_node = std::dynamic_pointer_cast<OutputNode>(node);
+                    if (output_node->slot != i)
+                        continue;
+
+                    DeleteAllLinksConnected(output_node);
+
+                    output_node->UpdateBits(outputs.at(i).bits);
+                }
+            }
+            ImGui::PopItemWidth();
 
             ImGui::SameLine();
             if (ImGui::Button(("+##OUTPUTS-INSTANTIATE" + std::to_string(i)).c_str(), ImVec2(0, 0))) {

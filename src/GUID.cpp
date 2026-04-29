@@ -28,7 +28,7 @@ std::string GUID::generate_guid() {
     return ss.str();
 }
 
-uint32_t GUID::to_id(std::string guid) {
+uint32_t GUID::to_id(const std::string &guid) {
     uint32_t hash = 2166136261u;
     for (const char c: guid) {
         hash ^= static_cast<uint8_t>(c);

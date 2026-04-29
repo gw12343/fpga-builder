@@ -15,6 +15,11 @@
 class CopyPasteManager;
 namespace ed = ax::NodeEditor;
 
+struct IO {
+    std::string name;
+    int bits;
+};
+
 class Module {
 public:
     explicit Module(std::string name);
@@ -24,8 +29,8 @@ public:
                 const std::shared_ptr<CopyPasteManager> &copy_paste_manager);
 
 
-    std::vector<std::string> inputs;
-    std::vector<std::string> outputs;
+    std::vector<IO> inputs;
+    std::vector<IO> outputs;
 
     std::vector<Link> links;
 
@@ -33,6 +38,7 @@ public:
     std::string name;
 
     bool CreateLink(const Pin &a, const Pin &b);
+    void DeleteAllLinksConnected(const std::shared_ptr<Node> &node);
 
     [[nodiscard]] std::optional<Node *> GetNode(const std::string &guid) const;
     [[nodiscard]] std::optional<Node *> GetNode(const ax::NodeEditor::NodeId &id) const;
@@ -43,7 +49,7 @@ public:
     [[nodiscard]] std::string GetName() const { return name; }
 
 private:
-    void RenderIOList();
+    void RenderModuleSettings();
     void RenderNodes(const std::shared_ptr<ErrorManager> &error_manager) const;
     void RenderLinks() const;
 

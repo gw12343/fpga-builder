@@ -4,7 +4,6 @@
 
 #include "CopyPasteManager.h"
 
-#include <iostream>
 
 void CopyPasteManager::CopySelection(Module *module) {
     auto &[copied_nodes, selected_nodes, copied_node_positions] = data[module];

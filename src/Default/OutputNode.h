@@ -34,5 +34,7 @@ public:
 
     explicit OutputNode(Module *module, const std::string &guid = GUID::generate_guid(), int output = 0);
 
+    void UpdateBits(int bits);
+
     int slot = 0;
 };

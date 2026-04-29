@@ -55,6 +55,14 @@ bool Module::CreateLink(const Pin &a, const Pin &b) {
     return false;
 }
 
+
+void Module::DeleteAllLinksConnected(const std::shared_ptr<Node> &node) {
+    for (const auto &pin: node->pins) {
+        const std::string &pin_guid = pin.GetGuid();
+        std::erase_if(links, [&](const Link &l) { return l.input_guid == pin_guid || l.output_guid == pin_guid; });
+    }
+}
+
 std::optional<Node *> Module::GetNode(const std::string &guid) const {
     for (const auto &node: nodes) {
         if (node->guid == guid) {

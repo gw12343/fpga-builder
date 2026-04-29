@@ -122,6 +122,14 @@ std::shared_ptr<Module> CircuitSerializer::LoadModule(const std::string &file_pa
     // Create Module
     auto module = std::make_shared<Module>(j["name"].get<std::string>());
 
+    for (json j_inputs = j["inputs"]; const auto &j_in: j_inputs) {
+        module->inputs.push_back({j_in["name"].get<std::string>(), j_in["bits"].get<int>()});
+    }
+
+    for (json j_outputs = j["outputs"]; const auto &j_out: j_outputs) {
+        module->outputs.push_back({j_out["name"].get<std::string>(), j_out["bits"].get<int>()});
+    }
+
     for (json j_nodes = j["nodes"]; const auto &j_node: j_nodes) {
         auto node = NodeFromJson(j_node, module.get());
         module->nodes.push_back(std::move(node));
@@ -132,13 +140,6 @@ std::shared_ptr<Module> CircuitSerializer::LoadModule(const std::string &file_pa
         module->links.push_back(link);
     }
 
-    for (json j_inputs = j["inputs"]; const auto &j_in: j_inputs) {
-        module->inputs.push_back(j_in.get<std::string>());
-    }
-
-    for (json j_outputs = j["outputs"]; const auto &j_out: j_outputs) {
-        module->outputs.push_back(j_out.get<std::string>());
-    }
 
     ImGui::InsertNotification({ImGuiToastType::Success, 3000, "Loaded module '%s'", module->name.c_str()});
 
@@ -162,13 +163,17 @@ void CircuitSerializer::SaveModule(const std::shared_ptr<Module> &module, const 
         j_links.push_back(j);
     }
 
-    for (const auto &in: module->inputs) {
-        json j = in;
+    for (const auto &[name, bits]: module->inputs) {
+        json j;
+        j["name"] = name;
+        j["bits"] = bits;
         j_inputs.push_back(j);
     }
 
-    for (const auto &out: module->outputs) {
-        json j = out;
+    for (const auto &[name, bits]: module->outputs) {
+        json j;
+        j["name"] = name;
+        j["bits"] = bits;
         j_outputs.push_back(j);
     }
 

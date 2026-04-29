@@ -77,12 +77,12 @@ void TraversePrint::visit(LiteralNode &node, int output_slot) {
 
 void TraversePrint::visit(InputNode &node, int output_slot) {
     std::cout << std::string(indent * 3, ' ').c_str() << "Visiting " << node.name << "("
-              << node.module->inputs[node.slot] << ")" << std::endl;
+              << node.module->inputs[node.slot].name << ")" << std::endl;
 }
 
 void TraversePrint::visit(OutputNode &node, int output_slot) {
     std::cout << std::string(indent * 3, ' ').c_str() << "Visiting " << node.name << "("
-              << node.module->outputs[node.slot] << ")" << std::endl;
+              << node.module->outputs[node.slot].name << ")" << std::endl;
 
 
     auto pin = node.GetValueInputPin();

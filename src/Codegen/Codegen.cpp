@@ -86,23 +86,28 @@ Codegen::Codegen(std::shared_ptr<ErrorManager> error_man) : failed(false), error
 void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
     failed = false;
     std::string header = "module " + module->GetName() + " (";
-    for (const auto &input: module->inputs) {
-        header += "\n\tinput wire " + input + ",";
+    for (const auto &[name, bits]: module->inputs) {
+        if (bits == 1)
+            header += "\n\tinput wire " + name + ",";
+        else
+            header += "\n\tinput wire [" + std::to_string(bits - 1) + ":0] " + name + ",";
     }
     header += "\n\tinput wire sys_clk,";
-    for (const auto &output: module->outputs) {
-        header += "\n\toutput reg " + output + ",";
+    for (const auto &[name, bits]: module->outputs) {
+        if (bits == 1)
+            header += "\n\toutput reg " + name + ",";
+        else
+            header += "\n\toutput reg [" + std::to_string(bits - 1) + ":0] " + name + ",";
     }
     header.pop_back(); // remove last comma
     header += "\n);\n";
 
     const std::string footer = "endmodule";
 
-    int n = 1;
     for (const auto &node: module->nodes) {
         if (node->GetSerializationType() != "OutputNode")
             continue;
-        inner += "\t\t// Output " + module->outputs[dynamic_cast<OutputNode *>(node.get())->slot] + "\n";
+        inner += "\t\t// Output " + module->outputs[dynamic_cast<OutputNode *>(node.get())->slot].name + "\n";
         node->accept(*this, 0);
         returnVals.pop();
     }
@@ -569,7 +574,7 @@ void Codegen::visit(InputNode &node, const int output_slot) {
     START_CHECK_CYCLES
 
     END_CHECK_CYCLES
-    CACHE_AND_RETURN(node, node.module->inputs[node.slot], output_slot)
+    CACHE_AND_RETURN(node, node.module->inputs[node.slot].name, output_slot)
 }
 
 
@@ -582,7 +587,7 @@ void Codegen::visit(OutputNode &node, const int output_slot) {
 
     const auto in_val = EvalNode(in);
 
-    inner += "\t\t" + node.module->outputs[node.slot] + " = " + in_val + ";\n";
+    inner += "\t\t" + node.module->outputs[node.slot].name + " = " + in_val + ";\n";
 
     END_CHECK_CYCLES
     CACHE_AND_RETURN(node, "", output_slot);
