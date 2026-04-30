@@ -13,6 +13,7 @@
 #include "Default/ClockNode.h"
 #include "Default/CombinerNode.h"
 #include "Default/CounterNode.h"
+#include "Default/CustomModuleNode.h"
 #include "Default/DFFNode.h"
 #include "Default/DebounceNode.h"
 #include "Default/EdgeNode.h"
@@ -114,6 +115,7 @@ void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
 
 
     const std::string out = header + "\n// === wire/reg declarations ================================\n" + decls +
+                            "\n// === module instances =====================================\n" + instances +
                             "\n// === combination logic ====================================\n" +
 
                             "\talways @(*) begin\n" + inner + "\tend\n\n" +
@@ -131,6 +133,75 @@ void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
 }
 
 // ===== MULTI OUTPUT NODES ============================================================================================
+void Codegen::visit(CustomModuleNode &node, const int output_slot) {
+    CHECK_CACHE
+    START_CHECK_CYCLES
+
+    if (!node.module_ref.has_value()) {
+        CircuitError("Refrence to missing module in custom node!", node);
+        ERROR_AND_RETURN
+    }
+
+    const auto &node_module = node.module_ref.value();
+    const int num_inputs = static_cast<int>(node_module->inputs.size());
+    const int num_outputs = static_cast<int>(node_module->outputs.size());
+
+    std::vector<IO> output_wires;
+    std::vector<std::string> output_net_name;
+    // Cache each output wires name
+    for (int i = 0; i < num_outputs; i++) {
+        // Input pin
+        const int pin_number = num_inputs + i;
+        const auto output_name = GetSafeWireName(node_module->name + "_custom_out_" + node.pins[pin_number].GetName());
+
+        output_wires.push_back({output_name, node.pins[pin_number].GetDataType().GetBitWidth()});
+        output_net_name.push_back(node.pins[pin_number].GetName());
+        visitedNodes[NODE_KEY(pin_number)] = output_name;
+    }
+
+
+    std::vector<std::string> input_pin_values;
+    std::vector<std::string> input_pin_names;
+
+    // Evaluate and cache all inputs
+    for (int i = 0; i < num_inputs; i++) {
+        // Input pin
+        const auto in = node.pins[i].GetConnectedPin();
+        // Verify connection to input pin
+        VERIFY_CONNECTION(in);
+        // Get input value
+        const auto input_val = EvalNode(in);
+
+        // Save value
+        input_pin_values.push_back(input_val);
+        input_pin_names.push_back(node.pins[i].GetName());
+    }
+
+    // Create output wires
+    for (const auto &[name, bits]: output_wires) {
+        decls += "wire [" + std::to_string(bits - 1) + ":0] " + name + ";\n";
+    }
+
+    // Instantiate module and connect labeled inputs
+    instances += node_module->name + " " + GetSafeWireName("custom_node") + " (\n";
+    instances += "\t.sys_clk(sys_clk),\n";
+    for (int i = 0; i < num_inputs; i++) {
+        instances += "\t." + input_pin_names[i] + "(" + input_pin_values[i] + "),\n";
+    }
+    for (int i = 0; i < num_outputs; i++) {
+        instances += "\t." + output_net_name[i] + "(" + output_wires[i].name + "),\n";
+    }
+    instances.pop_back();
+    instances.pop_back();
+    instances += "\n);\n";
+
+    RETURN_REG(output_wires[output_slot - num_inputs].name);
+
+    END_CHECK_CYCLES
+    // TODO retunnr??
+}
+
+
 void Codegen::visit(SplitterNode &node, const int output_slot) {
     CHECK_CACHE
     START_CHECK_CYCLES
