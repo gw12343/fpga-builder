@@ -15,6 +15,6 @@ class Topbar {
 public:
     Topbar() = default;
 
-    static void Render(std::shared_ptr<Project> project, const std::shared_ptr<ErrorManager> &error_manager,
+    static void Render(const std::shared_ptr<Project> &project, const std::shared_ptr<ErrorManager> &error_manager,
                        const std::shared_ptr<OutputViewer> &output_viewer);
 };

@@ -12,7 +12,6 @@
 
 
 class Node;
-namespace ed = ax::NodeEditor;
 
 class Pin {
 

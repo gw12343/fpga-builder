@@ -15,6 +15,7 @@
 #include "Default/Node.h"
 #include "Default/OutputNode.h"
 #include "GUID.h"
+#include "Link.h"
 
 
 void Module::Render(const std::shared_ptr<ErrorManager> &error_manager,
@@ -22,18 +23,18 @@ void Module::Render(const std::shared_ptr<ErrorManager> &error_manager,
 
 
     {
-        ed::SetCurrentEditor(context);
+        ax::NodeEditor::SetCurrentEditor(context);
         PushStyleColor(ax::NodeEditor::StyleColor_Bg, ImVec4(0.125, 0.125, 0.125, 1));
 
-        ed::Begin("Node Editor");
+        ax::NodeEditor::Begin("Node Editor");
 
 
         copy_paste_manager->HandleCopyPaste(this, error_manager);
 
 
-        if (ed::BeginCreate()) {
-            ed::PinId inputPinId, outputPinId;
-            if (ed::QueryNewLink(&inputPinId, &outputPinId)) {
+        if (ax::NodeEditor::BeginCreate()) {
+            ax::NodeEditor::PinId inputPinId, outputPinId;
+            if (ax::NodeEditor::QueryNewLink(&inputPinId, &outputPinId)) {
 
 
                 if (inputPinId && outputPinId) // both are valid, let's accept link
@@ -43,12 +44,12 @@ void Module::Render(const std::shared_ptr<ErrorManager> &error_manager,
                     auto in = GetPin(inputPinId);
                     if (out && in) {
                         if (!out->CanConnect(in.value())) {
-                            ed::RejectNewItem(ImColor(255, 0, 0), 2.0f);
+                            ax::NodeEditor::RejectNewItem(ImColor(255, 0, 0), 2.0f);
 
                         } else {
 
-                            // ed::AcceptNewItem() return true when user release mouse button.
-                            if (ed::AcceptNewItem()) {
+                            // ax::NodeEditor::AcceptNewItem() return true when user release mouse button.
+                            if (ax::NodeEditor::AcceptNewItem()) {
 
                                 Pin outPin = out.value();
                                 Pin inPin = in.value();
@@ -67,13 +68,13 @@ void Module::Render(const std::shared_ptr<ErrorManager> &error_manager,
         }
 
 
-        if (ed::BeginDelete()) {
-            ed::LinkId deletedLinkId;
-            ed::NodeId deletedNodeId;
+        if (ax::NodeEditor::BeginDelete()) {
+            ax::NodeEditor::LinkId deletedLinkId;
+            ax::NodeEditor::NodeId deletedNodeId;
 
 
             while (QueryDeletedNode(&deletedNodeId)) {
-                if (ed::AcceptDeletedItem()) {
+                if (ax::NodeEditor::AcceptDeletedItem()) {
                     for (auto &node: nodes) {
                         if (node->id == deletedNodeId) {
 
@@ -93,7 +94,7 @@ void Module::Render(const std::shared_ptr<ErrorManager> &error_manager,
             }
 
             while (QueryDeletedLink(&deletedLinkId)) {
-                if (ed::AcceptDeletedItem()) {
+                if (ax::NodeEditor::AcceptDeletedItem()) {
 
                     std::erase_if(links, [deletedLinkId](const Link &l) { return l.id == deletedLinkId; });
                     break;
@@ -101,11 +102,11 @@ void Module::Render(const std::shared_ptr<ErrorManager> &error_manager,
             }
         }
 
-        ed::EndDelete(); // Wrap up deletion action
-        ed::EndCreate();
+        ax::NodeEditor::EndDelete(); // Wrap up deletion action
+        ax::NodeEditor::EndCreate();
         RenderNodes(error_manager);
         RenderLinks();
-        ed::End();
+        ax::NodeEditor::End();
         ax::NodeEditor::PopStyleColor();
     }
 

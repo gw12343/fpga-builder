@@ -4,6 +4,7 @@
 
 #pragma once
 #include <imgui.h>
+#include <imgui_node_editor.h>
 #include <optional>
 #include <vector>
 
@@ -75,7 +76,7 @@ public:
 
     Module *module;
     std::string name;
-    ed::NodeId id;
+    ax::NodeEditor::NodeId id;
     std::string guid;
     std::vector<Pin> pins;
 

@@ -52,29 +52,14 @@
             "output_guid": "292c84b91a6f4e1e98fc034d607570f7node1"
         },
         {
-            "id": 18446744072485768609,
-            "input_guid": "c731d01d44e448818efa90ab7ebfa5d7node2",
-            "output_guid": "f7d7f10188384111b4146238eb843ec2node0"
-        },
-        {
-            "id": 18446744072845947443,
-            "input_guid": "f7d7f10188384111b4146238eb843ec2node2",
-            "output_guid": "292c84b91a6f4e1e98fc034d607570f7node0"
-        },
-        {
-            "id": 18446744071591240566,
+            "id": 35260189,
             "input_guid": "0018b68f0721419495d3ae3a8e6cdf5dnode0",
-            "output_guid": "c731d01d44e448818efa90ab7ebfa5d7node0"
+            "output_guid": "d445d2dc0ba6472f91fc86e4a1a9a454node0"
         },
         {
-            "id": 1056693425,
-            "input_guid": "d89a0ea58d7a493e87cf9e59f07e802cnode0",
-            "output_guid": "c731d01d44e448818efa90ab7ebfa5d7node1"
-        },
-        {
-            "id": 18446744073365690752,
-            "input_guid": "d89a0ea58d7a493e87cf9e59f07e802cnode0",
-            "output_guid": "f7d7f10188384111b4146238eb843ec2node1"
+            "id": 791075448,
+            "input_guid": "d445d2dc0ba6472f91fc86e4a1a9a454node1",
+            "output_guid": "292c84b91a6f4e1e98fc034d607570f7node0"
         }
     ],
     "name": "test_circ",
@@ -158,32 +143,25 @@
             "name": "Literal",
             "type": "LiteralNode",
             "value": 1,
-            "x": -539.0,
-            "y": 331.0
+            "x": -283.0,
+            "y": 363.0
         },
         {
             "guid": "d89a0ea58d7a493e87cf9e59f07e802c",
             "id": 70685976,
             "name": "",
             "type": "ClockNode",
-            "x": -356.0,
-            "y": 293.0
+            "x": -100.0,
+            "y": 325.0
         },
         {
-            "guid": "c731d01d44e448818efa90ab7ebfa5d7",
-            "id": 757372687,
-            "name": "Debounce",
-            "type": "DebounceNode",
-            "x": -181.0,
+            "guid": "d445d2dc0ba6472f91fc86e4a1a9a454",
+            "id": 3703263927,
+            "module_guid": "5308bdda9ee54c228b43ea54bcc7f698",
+            "name": "Custom",
+            "type": "CustomNode",
+            "x": -196.0,
             "y": 197.0
-        },
-        {
-            "guid": "f7d7f10188384111b4146238eb843ec2",
-            "id": 18446744072101066889,
-            "name": "Edge",
-            "type": "EdgeNode",
-            "x": 1.0,
-            "y": 245.0
         }
     ],
     "outputs": [

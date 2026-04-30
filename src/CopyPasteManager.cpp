@@ -4,13 +4,17 @@
 
 #include "CopyPasteManager.h"
 
+#include "Default/ConfigurableDataAndSelectBitWidthNode.h"
+#include "Link.h"
+#include "Pins/Pin.h"
+
 
 void CopyPasteManager::CopySelection(Module *module) {
     auto &[copied_nodes, selected_nodes, copied_node_positions] = data[module];
 
 
-    copied_nodes.resize(ed::GetSelectedObjectCount());
-    selected_nodes.resize(ed::GetSelectedObjectCount());
+    copied_nodes.resize(ax::NodeEditor::GetSelectedObjectCount());
+    selected_nodes.resize(ax::NodeEditor::GetSelectedObjectCount());
 
     const int node_count = GetSelectedNodes(copied_nodes.data(), static_cast<int>(copied_nodes.size()));
     const int link_count = GetSelectedLinks(selected_nodes.data(), static_cast<int>(selected_nodes.size()));

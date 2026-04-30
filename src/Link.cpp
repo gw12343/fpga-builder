@@ -8,10 +8,11 @@
 #include <iostream>
 #include <utility>
 
+#include <imgui.h>
+#include <nlohmann/json.hpp>
 #include "GUID.h"
 #include "Module.h"
 #include "Pins/Pin.h"
-
 
 ImVec4 BitWidthColor(const int bits) {
     const float t = log2f(static_cast<float>(bits)) / 7.0f;
@@ -43,5 +44,5 @@ void Link::Render() const {
     const auto link_thickness = inPin.GetDataType().GetBitWidth();
 
 
-    ed::Link(id, outPin.GetId(), inPin.GetId(), link_color, static_cast<float>(link_thickness));
+    ax::NodeEditor::Link(id, outPin.GetId(), inPin.GetId(), link_color, static_cast<float>(link_thickness));
 }

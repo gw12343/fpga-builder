@@ -9,12 +9,12 @@
 #include "CircuitSerializer.h"
 #include "Codegen/Codegen.h"
 #include "Codegen/TraversePrint.h"
+#include "GUID.h"
 #include "OutputViewer.h"
 #include "Project/Project.h"
-#include "misc/cpp/imgui_stdlib.h"
 
 
-void Topbar::Render(std::shared_ptr<Project> project, const std::shared_ptr<ErrorManager> &error_manager,
+void Topbar::Render(const std::shared_ptr<Project> &project, const std::shared_ptr<ErrorManager> &error_manager,
                     const std::shared_ptr<OutputViewer> &output_viewer) {
     ImGui::Begin("Options");
 
@@ -48,6 +48,13 @@ void Topbar::Render(std::shared_ptr<Project> project, const std::shared_ptr<Erro
         // }
 
         ImGui::SameLine();
+
+        ImGui::SameLine();
+
+        if (ImGui::Button("New Module")) {
+            const auto m = std::make_shared<Module>(project.get(), "new_module", GUID::generate_guid());
+            project->RegisterModule(m);
+        }
     }
 
     ImGui::End();

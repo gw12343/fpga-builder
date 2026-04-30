@@ -99,9 +99,11 @@ void Renderer::InitWindow(const int w, const int h, const std::string &title) {
     colors[ImGuiCol_CheckMark] = ImVec4(0.84f, 0.84f, 0.84f, 1.00f);
     colors[ImGuiCol_SliderGrab] = ImVec4(0.43f, 0.43f, 0.43f, 1.00f);
     colors[ImGuiCol_SliderGrabActive] = ImVec4(0.55f, 0.55f, 0.55f, 1.00f);
-    colors[ImGuiCol_Button] = ImVec4(0.55f, 0.55f, 0.55f, 0.40f);
-    colors[ImGuiCol_ButtonHovered] = ImVec4(0.15f, 0.15f, 0.15f, 0.62f);
-    colors[ImGuiCol_ButtonActive] = ImVec4(0.60f, 0.60f, 0.60f, 1.00f);
+
+    colors[ImGuiCol_Button] = ImVec4(0.3, 0.3, 0.3, 1.0);
+    colors[ImGuiCol_ButtonHovered] = ImVec4(0.35, 0.35, 0.35, 1.0);
+    colors[ImGuiCol_ButtonActive] = ImVec4(0.4, 0.4, 0.4, 1.0);
+
     colors[ImGuiCol_Header] = ImVec4(0.84f, 0.36f, 0.05f, 0.00f);
     colors[ImGuiCol_HeaderHovered] = ImVec4(0.25f, 0.25f, 0.25f, 0.80f);
     colors[ImGuiCol_HeaderActive] = ImVec4(0.42f, 0.42f, 0.42f, 1.00f);

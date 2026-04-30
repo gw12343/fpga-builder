@@ -5,7 +5,7 @@
 #pragma once
 #include "Default/ConfigurableBitWidthNode.h"
 #include "Default/Node.h"
-#include "GUID.h"
+#include "Pins/Pin.h"
 
 #define BINARY_OP_IN_PIN_A "A"
 #define BINARY_OP_IN_PIN_B "B"

@@ -16,13 +16,18 @@
 #include "Default/CustomModuleNode.h"
 #include "Default/Node.h"
 #include "GUID.h"
+#include "Link.h"
+#include "imgui_node_editor.h"
 
+
+Module::Module(Project *parent, const std::string &name) : Module(parent, name, GUID::generate_guid()) {}
 
 Module::Module(Project *parent, std::string name, std::string saved_guid) :
     name(std::move(name)), guid(std::move(saved_guid)), project(parent) {
 
-    config.SettingsFile = (name + ".json").c_str();
-    context = CreateEditor(&config);
+    config = new ax::NodeEditor::Config();
+    config->SettingsFile = (name + ".json").c_str();
+    context = CreateEditor(config);
 }
 
 Module::~Module() {

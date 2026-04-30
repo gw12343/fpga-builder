@@ -59,8 +59,10 @@ void Node::Render(const std::shared_ptr<ErrorManager> &error_manager) {
     const bool is_error = error_manager->GetErrorNodeGuid() == guid;
 
     if (is_error) {
-        PushStyleColor(ed::StyleColor_NodeBg, ImVec4(160 / 255.0, 60 / 255.0, 90 / 255.0, 255 / 255.0));
-        PushStyleColor(ed::StyleColor_NodeBorder, ImVec4(200 / 255.0, 100 / 255.0, 140 / 255.0, 255 / 255.0));
+        ax::NodeEditor::PushStyleColor(ax::NodeEditor::StyleColor_NodeBg,
+                                       ImVec4(160 / 255.0, 60 / 255.0, 90 / 255.0, 255 / 255.0));
+        ax::NodeEditor::PushStyleColor(ax::NodeEditor::StyleColor_NodeBorder,
+                                       ImVec4(200 / 255.0, 100 / 255.0, 140 / 255.0, 255 / 255.0));
     }
 
     PushStyleColor(ax::NodeEditor::StyleColor_PinRectBorder, ImVec4(160 / 255.0, 60 / 255.0, 90 / 255.0, 255 / 255.0));
@@ -122,11 +124,11 @@ void Node::Render(const std::shared_ptr<ErrorManager> &error_manager) {
     ImGui::EndGroup();
 
 
-    ed::EndNode();
+    ax::NodeEditor::EndNode();
 
-    ed::PopStyleColor(1);
+    ax::NodeEditor::PopStyleColor(1);
     if (is_error) {
-        ed::PopStyleColor(2);
+        ax::NodeEditor::PopStyleColor(2);
     }
 }
 

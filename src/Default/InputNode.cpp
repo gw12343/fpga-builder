@@ -5,6 +5,7 @@
 #include "InputNode.h"
 
 #include "Module.h"
+#include "Pins/Pin.h"
 
 void InputNode::RenderInternals() {
     ImGui::PushItemWidth(60);

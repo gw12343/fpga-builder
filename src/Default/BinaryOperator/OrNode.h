@@ -5,7 +5,7 @@
 #pragma once
 
 #include "BinaryOpNode.h"
-
+#include "GUID.h"
 
 class OrNode final : public BinaryOpNode {
 public:

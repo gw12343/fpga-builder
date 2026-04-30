@@ -4,9 +4,8 @@
 
 #include "OutputNode.h"
 
-#include <iostream>
-
 #include "Module.h"
+#include "Pins/Pin.h"
 
 #define IN_PIN_VALUE "Value"
 

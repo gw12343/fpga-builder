@@ -8,15 +8,21 @@
 #include <string>
 #include <vector>
 
-#include "Default/Node.h"
-#include "GUID.h"
-#include "Link.h"
-#include "imgui_node_editor.h"
 
-
+class Pin;
+class Link;
+class Node;
+class ErrorManager;
 class Project;
 class CopyPasteManager;
-namespace ed = ax::NodeEditor;
+
+
+namespace ax::NodeEditor {
+    struct Config;
+    struct EditorContext;
+    struct PinId;
+    struct NodeId;
+} // namespace ax::NodeEditor
 
 struct IO {
     std::string name;
@@ -25,7 +31,8 @@ struct IO {
 
 class Module {
 public:
-    Module(Project *parent, std::string name, std::string saved_guid = GUID::generate_guid());
+    Module(Project *parent, const std::string &name);
+    Module(Project *parent, std::string name, std::string saved_guid);
     ~Module();
 
     void Render(const std::shared_ptr<ErrorManager> &error_manager,
@@ -60,6 +67,6 @@ private:
     void RenderNodes(const std::shared_ptr<ErrorManager> &error_manager) const;
     void RenderLinks() const;
 
-    ed::EditorContext *context = nullptr;
-    ed::Config config;
+    ax::NodeEditor::EditorContext *context = nullptr;
+    ax::NodeEditor::Config *config;
 };

@@ -13,7 +13,6 @@
 #include "Default/OutputNode.h"
 #include "Module.h"
 
-
 static int indent = 0;
 
 void TraversePrint::visit(BinaryOpNode &node, int output_slot) {

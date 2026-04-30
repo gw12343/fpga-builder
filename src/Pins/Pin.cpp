@@ -5,6 +5,7 @@
 #include "Pin.h"
 #include "Default/Node.h"
 #include "GUID.h"
+#include "Link.h"
 #include "Module.h"
 
 #include <utility>
@@ -22,7 +23,7 @@ Pin::Pin(std::string name, const ax::NodeEditor::PinKind direction, Node &parent
 void Pin::Render() const {
     BeginPin(id, direction);
     ImGui::Text(name.c_str());
-    ed::EndPin();
+    ax::NodeEditor::EndPin();
 }
 
 bool Pin::CanConnect(const Pin &other) const {
