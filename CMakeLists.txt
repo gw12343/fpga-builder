@@ -141,6 +141,7 @@
             src/UI/ModuleUI.cpp
             src/Project/Project.h
             src/Project/Project.cpp
+            src/Default/CustomModuleNode.h
     )
 
     target_include_directories(fpga_builder PUBLIC

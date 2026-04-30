@@ -15,6 +15,7 @@
 #include "Default/ClockNode.h"
 #include "Default/CombinerNode.h"
 #include "Default/CounterNode.h"
+#include "Default/CustomModuleNode.h"
 #include "Default/DFFNode.h"
 #include "Default/DebounceNode.h"
 #include "Default/EdgeNode.h"
@@ -26,6 +27,7 @@
 #include "Default/SplitterNode.h"
 #include "Default/UnaryOperator/NotNode.h"
 #include "Module.h"
+#include "Project/Project.h"
 #include "UI/Lib/ImGuiNotify.h"
 
 
@@ -43,6 +45,8 @@ std::unique_ptr<Node> CircuitSerializer::NodeFromJson(const json &j, Module *m) 
 
     if (type == "OrNode") {
         p = std::make_unique<OrNode>(m, guid, j.at("bits").get<int>());
+    } else if (type == "CustomNode") {
+        p = std::make_unique<CustomModuleNode>(m, guid, j.at("module_guid").get<std::string>());
     } else if (type == "XOrNode") {
         p = std::make_unique<XOrNode>(m, guid, j.at("bits").get<int>());
     } else if (type == "NorNode") {
@@ -111,7 +115,9 @@ Link CircuitSerializer::LinkFromJson(const json &j, Module *m) {
 
 CircuitSerializer::CircuitSerializer() = default;
 
-std::shared_ptr<Module> CircuitSerializer::LoadModule(const std::string &file_path) {
+std::shared_ptr<Module> CircuitSerializer::LoadModule(Project *project, const std::string &file_path) {
+    std::cout << "loading module " << file_path << std::endl;
+
     // Open and read file
     std::ifstream file(file_path);
     std::stringstream buffer;
@@ -120,7 +126,7 @@ std::shared_ptr<Module> CircuitSerializer::LoadModule(const std::string &file_pa
     json j = json::parse(buffer.str());
 
     // Create Module
-    auto module = std::make_shared<Module>(j["name"].get<std::string>());
+    auto module = std::make_shared<Module>(project, j["name"].get<std::string>(), j["guid"].get<std::string>());
 
     for (json j_inputs = j["inputs"]; const auto &j_in: j_inputs) {
         module->inputs.push_back({j_in["name"].get<std::string>(), j_in["bits"].get<int>()});
@@ -146,7 +152,7 @@ std::shared_ptr<Module> CircuitSerializer::LoadModule(const std::string &file_pa
     return module;
 }
 
-void CircuitSerializer::SaveModule(const std::shared_ptr<Module> &module, const std::string &file_path) {
+void CircuitSerializer::SaveModule(Project *project, const std::shared_ptr<Module> &module) {
     json j_file;
     json j_nodes = json::array();
     json j_links = json::array();
@@ -183,6 +189,9 @@ void CircuitSerializer::SaveModule(const std::shared_ptr<Module> &module, const 
     j_file["inputs"] = j_inputs;
     j_file["outputs"] = j_outputs;
     j_file["name"] = module->GetName();
+    j_file["guid"] = module->GetGuid();
+
+    const std::string file_path = project->GetWorkspacePath() + "/" + module->GetName() + ".json";
 
     if (std::ofstream file(file_path); file.is_open()) {
         std::cout << "Writing output file..." << std::endl;
@@ -190,7 +199,6 @@ void CircuitSerializer::SaveModule(const std::shared_ptr<Module> &module, const 
         file.close();
         ImGui::InsertNotification(
                 {ImGuiToastType::Success, 3000, "Saved module '%s' to %s", module->name.c_str(), file_path.c_str()});
-
     } else {
         std::cerr << "Could not open file \"" << file_path << "\"" << std::endl;
         ImGui::InsertNotification({ImGuiToastType::Error, 3000, "Failed to save module '%s' to %s",

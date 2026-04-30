@@ -24,17 +24,12 @@ int main(int, char **) {
 
     renderer->InitWindow(2000, 1600, "FPGA Builder");
 
-    // auto main_module = CircuitSerializer::LoadModule("../Project/circuit.json");
-    // auto main_module2 = CircuitSerializer::LoadModule("../Project/circuit2.json");
 
     const auto output_viewer = std::make_shared<OutputViewer>();
     const auto topbar = std::make_shared<Topbar>();
     const auto toolbox = std::make_shared<Toolbox>();
 
-    Project p("../Project");
-
-    // p.RegisterModule(main_module);
-    // p.RegisterModule(main_module2);
+    const auto p = std::make_shared<Project>("../Project");
 
 
     // Main loop
@@ -42,14 +37,14 @@ int main(int, char **) {
         renderer->StartFrame();
 
 
-        toolbox->Render(p.GetSelectedModule(), config_manager);
-        topbar->Render(p.GetSelectedModule(), error_manager, output_viewer);
+        toolbox->Render(p->GetSelectedModule(), config_manager);
+        topbar->Render(p, error_manager, output_viewer);
 
-        p.Render(error_manager, cp_manager);
+        p->Render(error_manager, cp_manager);
 
-        config_manager->Render(p.GetSelectedModule());
+        config_manager->Render(p->GetSelectedModule());
         output_viewer->Render();
-        error_manager->Render(p.GetSelectedModule());
+        error_manager->Render(p->GetSelectedModule());
 
         renderer->EndFrame();
     }

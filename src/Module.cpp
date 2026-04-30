@@ -13,11 +13,14 @@
 #include <vector>
 
 #include "CopyPasteManager.h"
+#include "Default/CustomModuleNode.h"
 #include "Default/Node.h"
 #include "GUID.h"
 
 
-Module::Module(std::string name) : name(std::move(name)) {
+Module::Module(Project *parent, std::string name, std::string saved_guid) :
+    name(std::move(name)), guid(std::move(saved_guid)), project(parent) {
+
     config.SettingsFile = (name + ".json").c_str();
     context = CreateEditor(&config);
 }
@@ -101,6 +104,23 @@ std::optional<Pin> Module::GetPin(const ax::NodeEditor::PinId &id) {
         }
     }
     return std::nullopt;
+}
+
+// TODO call on module io change
+void Module::RefreshAllCustomModuleNodes(const std::shared_ptr<Module> &updated_module) {
+    for (const auto &node: nodes) {
+        if (node->GetSerializationType() != "CustomNode")
+            continue;
+
+        auto custom_node = std::dynamic_pointer_cast<CustomModuleNode>(node);
+        if (custom_node->module_guid != updated_module->GetGuid())
+            continue;
+
+        std::cout << "updating ref in module " << name << "  for module guid: " << updated_module->name << std::endl;
+
+        custom_node->module_ref = updated_module;
+        custom_node->InitPinsAfterConfig();
+    }
 }
 
 

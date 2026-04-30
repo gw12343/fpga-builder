@@ -20,7 +20,11 @@ public:
 
     void RegisterModule(const std::shared_ptr<Module> &m);
 
-    std::optional<std::shared_ptr<Module>> GetSelectedModule();
+    [[nodiscard]] std::optional<std::shared_ptr<Module>> GetSelectedModule();
+    [[nodiscard]] std::optional<std::shared_ptr<Module>> GetModule(const std::string &guid) const;
+
+    [[nodiscard]] const std::string &GetWorkspacePath() const { return workspace_path; }
+    [[nodiscard]] const std::string &GetTopLevelNodeGuid() const { return top_level_node_guid; }
 
 private:
     void SaveConfigFile();
@@ -32,6 +36,8 @@ private:
 
     long long time_created;
     long long last_saved;
+
+    std::string top_level_node_guid;
 
     std::string workspace_path;
     std::string name;

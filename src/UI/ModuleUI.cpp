@@ -118,6 +118,7 @@ void Module::RenderModuleSettings() {
     ImGui::Begin("Module Settings");
 
     ImGui::InputText("Module Name", &name);
+    ImGui::InputText("Module GUID", &guid);
 
     if (ImGui::BeginTable("IO TABLE", 2,
                           ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersInnerV |

@@ -57,7 +57,10 @@ void Project::Render(const std::shared_ptr<ErrorManager> &error_manager,
 
     int i = 0;
     for (const auto &module: modules) {
-        if (ImGui::Button(module->name.c_str(), ImVec2(ImGui::GetContentRegionAvail().x, 0.0f))) {
+        const bool is_top_level = top_level_node_guid == module->guid;
+
+        if (std::string prefix = is_top_level ? ICON_FA_STAR : "";
+            ImGui::Button((prefix + module->name).c_str(), ImVec2(ImGui::GetContentRegionAvail().x, 0.0f))) {
             selected_module = i;
         }
         i++;
@@ -93,7 +96,12 @@ void Project::Render(const std::shared_ptr<ErrorManager> &error_manager,
 
 void Project::RegisterModule(const std::shared_ptr<Module> &m) {
     modules.push_back(m);
-    // selected_module = modules.size() - 1;
+    for (const auto &module: modules) {
+        module->RefreshAllCustomModuleNodes(m);
+    }
+
+    if (m->guid == top_level_node_guid)
+        selected_module = modules.size() - 1;
 }
 
 std::optional<std::shared_ptr<Module>> Project::GetSelectedModule() {
@@ -102,7 +110,14 @@ std::optional<std::shared_ptr<Module>> Project::GetSelectedModule() {
     }
     return std::nullopt;
 }
-
+std::optional<std::shared_ptr<Module>> Project::GetModule(const std::string &guid) const {
+    for (const auto &module: modules) {
+        if (module->guid == guid) {
+            return module;
+        }
+    }
+    return std::nullopt;
+}
 
 void Project::SaveConfigFile() {
     nlohmann::json j_file;
@@ -112,6 +127,7 @@ void Project::SaveConfigFile() {
     j_file["workspace_path"] = workspace_path;
 
     j_file["selected_module"] = selected_module;
+    j_file["top_level_node_guid"] = top_level_node_guid;
     j_file["time_created"] = time_created;
     j_file["last_saved"] =
             std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())
@@ -137,6 +153,7 @@ void Project::SaveConfigFile() {
 
 void Project::LoadConfigFile() {
     const auto &config_path = workspace_path + CONFIG_FILE;
+    std::cout << "loading project " << config_path << std::endl;
 
 
     // Open and read config file
@@ -154,6 +171,7 @@ void Project::LoadConfigFile() {
     name = j["name"].get<std::string>();
     author = j["author"].get<std::string>();
     workspace_path = j["workspace_path"].get<std::string>();
+    top_level_node_guid = j["top_level_node_guid"].get<std::string>();
 
     time_created = j["time_created"].get<long long>();
     last_saved = j["last_saved"].get<long long>();
@@ -164,7 +182,7 @@ void Project::LoadConfigFile() {
     auto module_files = j["module_files"].get<std::vector<std::string>>();
 
     for (const auto &path: module_files) {
-        auto m = CircuitSerializer::LoadModule(workspace_path + "/" + path);
+        auto m = CircuitSerializer::LoadModule(this, workspace_path + "/" + path);
         RegisterModule(m);
     }
 

@@ -1,0 +1,75 @@
+{
+    "guid": "6bced53ce52b4b0cb1c7f670e9566257",
+    "inputs": [
+        {
+            "bits": 4,
+            "name": "in1"
+        },
+        {
+            "bits": 4,
+            "name": "in2"
+        }
+    ],
+    "links": [
+        {
+            "id": 4276296028,
+            "input_guid": "0018b68f0721419495d3ae3a8e6cdf5dnode0",
+            "output_guid": "93f3bf57038d453094bea75f64015f58node0"
+        },
+        {
+            "id": 3322900279,
+            "input_guid": "377dfd38abbe41f6846e6953c2587832node0",
+            "output_guid": "93f3bf57038d453094bea75f64015f58node1"
+        },
+        {
+            "id": 3433113406,
+            "input_guid": "93f3bf57038d453094bea75f64015f58node2",
+            "output_guid": "44e2e843f9b74d2d941b1aea212be41anode0"
+        }
+    ],
+    "name": "test_circ",
+    "nodes": [
+        {
+            "guid": "0018b68f0721419495d3ae3a8e6cdf5d",
+            "id": 738133694,
+            "name": "Input",
+            "slot": 1,
+            "type": "InputNode",
+            "x": 0.0,
+            "y": 0.0
+        },
+        {
+            "guid": "44e2e843f9b74d2d941b1aea212be41a",
+            "id": 3861721198,
+            "name": "Output",
+            "slot": 0,
+            "type": "OutputNode",
+            "x": 654.0,
+            "y": -19.0
+        },
+        {
+            "guid": "377dfd38abbe41f6846e6953c2587832",
+            "id": 787003378,
+            "name": "Input",
+            "slot": 1,
+            "type": "InputNode",
+            "x": 3.0,
+            "y": 189.0
+        },
+        {
+            "bits": 4,
+            "guid": "93f3bf57038d453094bea75f64015f58",
+            "id": 2254777915,
+            "name": "XOR",
+            "type": "XOrNode",
+            "x": 337.0,
+            "y": 85.0
+        }
+    ],
+    "outputs": [
+        {
+            "bits": 4,
+            "name": "out"
+        }
+    ]
+}

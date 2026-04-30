@@ -10,12 +10,15 @@
 #include "Codegen/Codegen.h"
 #include "Codegen/TraversePrint.h"
 #include "OutputViewer.h"
+#include "Project/Project.h"
 #include "misc/cpp/imgui_stdlib.h"
 
 
-void Topbar::Render(std::optional<std::shared_ptr<Module>> module, const std::shared_ptr<ErrorManager> &error_manager,
+void Topbar::Render(std::shared_ptr<Project> project, const std::shared_ptr<ErrorManager> &error_manager,
                     const std::shared_ptr<OutputViewer> &output_viewer) {
     ImGui::Begin("Options");
+
+    const auto module = project->GetSelectedModule();
 
     if (module.has_value()) {
         if (ImGui::Button("Print Circuit")) {
@@ -35,14 +38,14 @@ void Topbar::Render(std::optional<std::shared_ptr<Module>> module, const std::sh
         ImGui::SameLine();
 
         if (ImGui::Button("Save Circuit")) {
-            CircuitSerializer::SaveModule(module.value(), "../Project/circuit.json");
+            CircuitSerializer::SaveModule(project.get(), module.value());
         }
 
         ImGui::SameLine();
 
-        if (ImGui::Button("Load Circuit")) {
-            module = CircuitSerializer::LoadModule("../Project/circuit.json");
-        }
+        // if (ImGui::Button("Load Circuit")) {
+        //     module = CircuitSerializer::LoadModule("../Project/circuit.json");
+        // }
 
         ImGui::SameLine();
     }

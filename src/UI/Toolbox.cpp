@@ -14,6 +14,7 @@
 #include "Default/ClockNode.h"
 #include "Default/CombinerNode.h"
 #include "Default/CounterNode.h"
+#include "Default/CustomModuleNode.h"
 #include "Default/DFFNode.h"
 #include "Default/DebounceNode.h"
 #include "Default/EdgeNode.h"
@@ -36,6 +37,7 @@
                                     }});
 
 Toolbox::Toolbox() {
+    ADD_NODE_TO_CATEGORY("Bitwise Operators", "Custom", CustomModuleNode);
     ADD_NODE_TO_CATEGORY("Bitwise Operators", "NOT", NotNode);
     ADD_NODE_TO_CATEGORY("Bitwise Operators", "AND", AndNode);
     ADD_NODE_TO_CATEGORY("Bitwise Operators", "OR", OrNode);

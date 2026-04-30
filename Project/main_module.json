@@ -1,4 +1,5 @@
 {
+    "guid": "274503748e194d7397018655226b8573",
     "inputs": [
         {
             "bits": 4,
@@ -237,6 +238,15 @@
             "type": "SplitterNode",
             "x": -1049.0,
             "y": 677.0
+        },
+        {
+            "guid": "c2fa260e4b8844e5be90d67412b10fbf",
+            "id": 415529915,
+            "module_guid": "6bced53ce52b4b0cb1c7f670e9566257",
+            "name": "Custom",
+            "type": "CustomNode",
+            "x": 32.0,
+            "y": 352.0
         }
     ],
     "outputs": [
