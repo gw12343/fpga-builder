@@ -3,6 +3,7 @@
 //
 
 #pragma once
+#include <regex>
 #include "Lib/TextEditor.h"
 
 

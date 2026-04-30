@@ -4,20 +4,12 @@
 
 #include "Module.h"
 
-#include <imgui_internal.h>
-#include <iostream>
-#include <optional>
-
-#include <algorithm>
-#include <utility>
-#include <vector>
 
 #include "CopyPasteManager.h"
 #include "Default/CustomModuleNode.h"
 #include "Default/Node.h"
 #include "GUID.h"
 #include "Link.h"
-#include "imgui_node_editor.h"
 
 
 Module::Module(Project *parent, const std::string &name) : Module(parent, name, GUID::generate_guid()) {}

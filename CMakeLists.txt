@@ -142,6 +142,10 @@
             src/Project/Project.h
             src/Project/Project.cpp
             src/Default/CustomModuleNode.h
+            src/UI/ProjectUI.cpp
+            src/UI/NodeUI.cpp
+            src/pch.h
+            src/pch.h
     )
 
     target_include_directories(fpga_builder PUBLIC
@@ -156,6 +160,8 @@
             imgui_node_editor
             nlohmann_json::nlohmann_json
     )
+
+    target_precompile_headers(fpga_builder PRIVATE ${CMAKE_SOURCE_DIR}/src/pch.h)
 
     if (WIN32)
         target_link_libraries(fpga_builder PRIVATE

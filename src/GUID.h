@@ -3,9 +3,7 @@
 //
 
 #pragma once
-#include <string>
 
-#include <cstdint>
 
 class GUID {
 public:

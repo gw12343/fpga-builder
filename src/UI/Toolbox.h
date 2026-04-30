@@ -3,7 +3,6 @@
 //
 
 #pragma once
-#include <memory>
 
 #include "ConfigManager.h"
 #include "Default/Node.h"
