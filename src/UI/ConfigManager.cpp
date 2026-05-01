@@ -3,10 +3,7 @@
 //
 
 #include "ConfigManager.h"
-
-
 #include "Default/Node.h"
-
 #include "Module.h"
 
 
@@ -42,7 +39,7 @@ void ConfigManager::Render(const std::optional<std::shared_ptr<Module>> &module)
                                        current_node->GetDisplayName().c_str()});
 
             current_node->InitPinsAfterConfig();
-            module.value()->nodes.push_back(current_node);
+            module.value()->AddNode(current_node);
             current_node.reset();
         }
 
@@ -60,7 +57,7 @@ void ConfigManager::ConfigureAndAdd(const std::shared_ptr<Module> &module, const
     if (!node->HasConfiguration()) {
         ImGui::InsertNotification(
                 {ImGuiToastType::Success, 3000, "Added new node: %s", node->GetDisplayName().c_str()});
-        module->nodes.push_back(node);
+        module->AddNode(node);
         return;
     }
 

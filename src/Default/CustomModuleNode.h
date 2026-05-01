@@ -11,7 +11,6 @@
 #include "Module.h"
 #include "Node.h"
 #include "Project/Project.h"
-#include "misc/cpp/imgui_stdlib.h"
 
 class Module;
 class CustomModuleNode : public Node {
@@ -39,10 +38,10 @@ public:
         const auto &target_module = module_ref.value();
 
         int n = 0;
-        for (const auto &[name, bits]: target_module->inputs) {
+        for (const auto &[name, bits]: target_module->GetInputs()) {
             pins.push_back((Pin){name, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(bits)});
         }
-        for (const auto &[name, bits]: target_module->outputs) {
+        for (const auto &[name, bits]: target_module->GetOutputs()) {
             pins.push_back((Pin){name, ax::NodeEditor::PinKind::Output, *this, n++, PinDataType(bits)});
         }
     }
@@ -68,16 +67,16 @@ public:
     void RenderConfiguration() override {
 
         if (ImGui::InputText("Module GUID", &module_guid)) {
-            module_ref = module->project->GetModule(module_guid);
+            module_ref = module->GetProject()->GetModule(module_guid);
 
-            std::cout << "updated node ref to " + (module_ref.has_value() ? module_ref.value()->name : "missing")
+            std::cout << "updated node ref to " + (module_ref.has_value() ? module_ref.value()->GetName() : "missing")
                       << std::endl;
         }
     }
 
     // Helpers
     [[nodiscard]] std::string GetDisplayName() const override {
-        return name + " (" + (module_ref.has_value() ? module_ref.value()->GetName() : "missing") + ")";
+        return module_ref.has_value() ? module_ref.value()->GetName() : "missing";
     }
 
 

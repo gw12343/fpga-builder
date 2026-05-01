@@ -8,12 +8,7 @@
 #include "Node.h"
 
 #include "GUID.h"
-#include "Module.h"
 #include "Pins/Pin.h"
-#include "UI/ErrorManager.h"
-
-
-#include "imgui.h"
 
 
 Node::Node(Module *parent, const std::string &name, const std::vector<PinCreationData> &inputs,

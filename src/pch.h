@@ -19,8 +19,9 @@
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <imgui_node_editor.h>
+#include "UI/Lib/ImGuiNotify.h"
+#include "misc/cpp/imgui_stdlib.h"
 
 #include <nlohmann/json.hpp>
-#include "UI/Lib/ImGuiNotify.h"
 
 #endif // PCH_H

@@ -3,13 +3,8 @@
 //
 
 
-#include <imgui_internal.h>
 #include <iostream>
-#include <optional>
-#include <vector>
-
 #include "CopyPasteManager.h"
-#include "misc/cpp/imgui_stdlib.h"
 
 #include "Default/InputNode.h"
 #include "Default/Node.h"
@@ -23,7 +18,7 @@ void Module::Render(const std::shared_ptr<ErrorManager> &error_manager,
 
 
     {
-        ax::NodeEditor::SetCurrentEditor(context);
+        SetCurrentEditor(context);
         PushStyleColor(ax::NodeEditor::StyleColor_Bg, ImVec4(0.125, 0.125, 0.125, 1));
 
         ax::NodeEditor::Begin("Node Editor");
@@ -34,15 +29,14 @@ void Module::Render(const std::shared_ptr<ErrorManager> &error_manager,
 
         if (ax::NodeEditor::BeginCreate()) {
             ax::NodeEditor::PinId inputPinId, outputPinId;
-            if (ax::NodeEditor::QueryNewLink(&inputPinId, &outputPinId)) {
+            if (QueryNewLink(&inputPinId, &outputPinId)) {
 
 
                 if (inputPinId && outputPinId) // both are valid, let's accept link
                 {
 
                     auto out = GetPin(outputPinId);
-                    auto in = GetPin(inputPinId);
-                    if (out && in) {
+                    if (auto in = GetPin(inputPinId); out && in) {
                         if (!out->CanConnect(in.value())) {
                             ax::NodeEditor::RejectNewItem(ImColor(255, 0, 0), 2.0f);
 
@@ -118,7 +112,13 @@ void Module::Render(const std::shared_ptr<ErrorManager> &error_manager,
 void Module::RenderModuleSettings() {
     ImGui::Begin("Module Settings");
 
-    ImGui::InputText("Module Name", &name);
+    std::string new_name = name;
+
+    if (ImGui::InputText("Module Name", &new_name)) {
+        Rename(new_name);
+        std::cout << "rename module" << std::endl;
+    }
+
     ImGui::InputText("Module GUID", &guid);
 
     if (ImGui::BeginTable("IO TABLE", 2,

@@ -128,27 +128,40 @@ std::shared_ptr<Module> CircuitSerializer::LoadModule(Project *project, const st
     auto module = std::make_shared<Module>(project, j["name"].get<std::string>(), j["guid"].get<std::string>());
 
     for (json j_inputs = j["inputs"]; const auto &j_in: j_inputs) {
-        module->inputs.push_back({j_in["name"].get<std::string>(), j_in["bits"].get<int>()});
+        module->AddInput({j_in["name"].get<std::string>(), j_in["bits"].get<int>()});
     }
 
     for (json j_outputs = j["outputs"]; const auto &j_out: j_outputs) {
-        module->outputs.push_back({j_out["name"].get<std::string>(), j_out["bits"].get<int>()});
+        module->AddOutput({j_out["name"].get<std::string>(), j_out["bits"].get<int>()});
     }
 
     for (json j_nodes = j["nodes"]; const auto &j_node: j_nodes) {
         auto node = NodeFromJson(j_node, module.get());
-        module->nodes.push_back(std::move(node));
+        module->AddNode(std::move(node));
     }
 
     for (json j_links = j["links"]; const auto &j_link: j_links) {
         auto link = LinkFromJson(j_link, module.get());
-        module->links.push_back(link);
+        module->AddLink(link);
     }
 
 
-    ImGui::InsertNotification({ImGuiToastType::Success, 3000, "Loaded module '%s'", module->name.c_str()});
+    ImGui::InsertNotification({ImGuiToastType::Success, 3000, "Loaded module '%s'", module->GetName().c_str()});
 
     return module;
+}
+
+void CircuitSerializer::RenameModuleFile(const Project *project, const Module *module, const std::string &new_name) {
+    const auto old_path = project->GetWorkspacePath() + "/" + module->GetName() + ".json";
+    const auto new_path = project->GetWorkspacePath() + "/" + new_name + ".json";
+
+    // Move old file
+    try {
+        std::filesystem::rename(old_path, new_path);
+        ImGui::InsertNotification({ImGuiToastType::Success, 500, "Renamed module to '%s'", new_path.c_str()});
+    } catch (const std::filesystem::filesystem_error &e) {
+        ImGui::InsertNotification({ImGuiToastType::Error, 500, "Failed to rename module"});
+    }
 }
 
 void CircuitSerializer::SaveModule(Project *project, const std::shared_ptr<Module> &module) {
@@ -158,24 +171,24 @@ void CircuitSerializer::SaveModule(Project *project, const std::shared_ptr<Modul
     json j_inputs = json::array();
     json j_outputs = json::array();
 
-    for (const auto &node: module->nodes) {
+    for (const auto &node: module->GetNodes()) {
         json j = node->ToJson();
         j_nodes.push_back(j);
     }
 
-    for (const auto &link: module->links) {
+    for (const auto &link: module->GetLinks()) {
         json j = link.to_json();
         j_links.push_back(j);
     }
 
-    for (const auto &[name, bits]: module->inputs) {
+    for (const auto &[name, bits]: module->GetInputs()) {
         json j;
         j["name"] = name;
         j["bits"] = bits;
         j_inputs.push_back(j);
     }
 
-    for (const auto &[name, bits]: module->outputs) {
+    for (const auto &[name, bits]: module->GetOutputs()) {
         json j;
         j["name"] = name;
         j["bits"] = bits;
@@ -196,11 +209,11 @@ void CircuitSerializer::SaveModule(Project *project, const std::shared_ptr<Modul
         std::cout << "Writing output file..." << std::endl;
         file << j_file.dump(4);
         file.close();
-        ImGui::InsertNotification(
-                {ImGuiToastType::Success, 3000, "Saved module '%s' to %s", module->name.c_str(), file_path.c_str()});
+        ImGui::InsertNotification({ImGuiToastType::Success, 3000, "Saved module '%s' to %s", module->GetName().c_str(),
+                                   file_path.c_str()});
     } else {
         std::cerr << "Could not open file \"" << file_path << "\"" << std::endl;
         ImGui::InsertNotification({ImGuiToastType::Error, 3000, "Failed to save module '%s' to %s",
-                                   module->name.c_str(), file_path.c_str()});
+                                   module->GetName().c_str(), file_path.c_str()});
     }
 }

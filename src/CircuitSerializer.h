@@ -18,6 +18,7 @@ public:
 
     static std::shared_ptr<Module> LoadModule(Project *project, const std::string &file_path);
     static void SaveModule(Project *project, const std::shared_ptr<Module> &module);
+    static void RenameModuleFile(const Project *project, const Module *module, const std::string &new_name);
 
 private:
     static std::unique_ptr<Node> NodeFromJson(const json &j, Module *m);

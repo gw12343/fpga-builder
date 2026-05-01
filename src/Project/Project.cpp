@@ -53,7 +53,7 @@ void Project::RegisterModule(const std::shared_ptr<Module> &m) {
         module->RefreshAllCustomModuleNodes(m);
     }
 
-    if (m->guid == top_level_node_guid)
+    if (m->GetGuid() == top_level_node_guid)
         selected_module = modules.size() - 1;
 }
 
@@ -65,7 +65,7 @@ std::optional<std::shared_ptr<Module>> Project::GetSelectedModule() {
 }
 std::optional<std::shared_ptr<Module>> Project::GetModule(const std::string &guid) const {
     for (const auto &module: modules) {
-        if (module->guid == guid) {
+        if (module->GetGuid() == guid) {
             return module;
         }
     }

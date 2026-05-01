@@ -4,8 +4,6 @@
 
 #include "Topbar.h"
 
-#include <imgui.h>
-
 #include "CircuitSerializer.h"
 #include "Codegen/Codegen.h"
 #include "Codegen/TraversePrint.h"
@@ -23,7 +21,7 @@ void Topbar::Render(const std::shared_ptr<Project> &project, const std::shared_p
     if (module.has_value()) {
         if (ImGui::Button("Print Circuit")) {
             TraversePrint v;
-            module.value()->nodes[0]->accept(v, 0);
+            module.value()->GetNodes()[0]->accept(v, 0);
         }
 
         ImGui::SameLine();

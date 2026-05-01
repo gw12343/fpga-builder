@@ -162,7 +162,7 @@ OutputViewer::OutputViewer() {
     // UpdateOutput(module);
 }
 void OutputViewer::UpdateOutput(const std::shared_ptr<Module> &module) {
-    const std::ifstream file("../Project/Export/" + module->name + ".v");
+    const std::ifstream file("../Project/Export/" + module->GetName() + ".v");
     std::stringstream buffer;
     buffer << file.rdbuf();
 

@@ -5,6 +5,7 @@
 #include "Module.h"
 
 
+#include "CircuitSerializer.h"
 #include "CopyPasteManager.h"
 #include "Default/CustomModuleNode.h"
 #include "Default/Node.h"
@@ -120,6 +121,16 @@ void Module::RefreshAllCustomModuleNodes(const std::shared_ptr<Module> &updated_
     }
 }
 
+
+void Module::AddInput(const IO &io) { inputs.push_back(io); }
+void Module::AddOutput(const IO &io) { outputs.push_back(io); }
+void Module::AddNode(const std::shared_ptr<Node> &node) { nodes.push_back(node); }
+void Module::AddLink(const Link &link) { links.push_back(link); }
+
+void Module::Rename(const std::string &new_name) {
+    CircuitSerializer::RenameModuleFile(project, this, new_name);
+    name = new_name;
+}
 
 void Module::RenderNodes(const std::shared_ptr<ErrorManager> &error_manager) const {
     for (const auto &node: nodes)

@@ -36,7 +36,7 @@ bool Pin::CanConnect(const Pin &other) const {
 }
 
 std::optional<Pin> Pin::GetConnectedPin() const {
-    for (const auto module = node.module; const auto &link: module->links) {
+    for (const auto module = node.module; const auto &link: module->GetLinks()) {
         if (link.input_guid == guid) {
             return module->GetPin(link.output_guid);
         }

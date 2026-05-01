@@ -86,14 +86,14 @@ Codegen::Codegen(std::shared_ptr<ErrorManager> error_man) : failed(false), error
 void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
     failed = false;
     std::string header = "module " + module->GetName() + " (";
-    for (const auto &[name, bits]: module->inputs) {
+    for (const auto &[name, bits]: module->GetInputs()) {
         if (bits == 1)
             header += "\n\tinput wire " + name + ",";
         else
             header += "\n\tinput wire [" + std::to_string(bits - 1) + ":0] " + name + ",";
     }
     header += "\n\tinput wire sys_clk,";
-    for (const auto &[name, bits]: module->outputs) {
+    for (const auto &[name, bits]: module->GetOutputs()) {
         if (bits == 1)
             header += "\n\toutput reg " + name + ",";
         else
@@ -104,10 +104,10 @@ void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
 
     const std::string footer = "endmodule";
 
-    for (const auto &node: module->nodes) {
+    for (const auto &node: module->GetNodes()) {
         if (node->GetSerializationType() != "OutputNode")
             continue;
-        inner += "\t\t// Output " + module->outputs[dynamic_cast<OutputNode *>(node.get())->slot].name + "\n";
+        inner += "\t\t// Output " + module->GetOutputs()[dynamic_cast<OutputNode *>(node.get())->slot].name + "\n";
         node->accept(*this, 0);
         returnVals.pop();
     }
@@ -120,7 +120,7 @@ void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
                             "\talways @(*) begin\n" + inner + "\tend\n\n" +
                             "\n// === clocked logic ========================================\n" + later + footer;
 
-    const std::string out_path = OUTPUT_DIR + module->name + ".v";
+    const std::string out_path = OUTPUT_DIR + module->GetName() + ".v";
 
     if (std::ofstream file(out_path); file.is_open()) {
         std::cout << "Writing output file..." << std::endl;
@@ -142,8 +142,8 @@ void Codegen::visit(CustomModuleNode &node, const int output_slot) {
     }
 
     const auto &node_module = node.module_ref.value();
-    const int num_inputs = static_cast<int>(node_module->inputs.size());
-    const int num_outputs = static_cast<int>(node_module->outputs.size());
+    const int num_inputs = static_cast<int>(node_module->GetInputs().size());
+    const int num_outputs = static_cast<int>(node_module->GetOutputs().size());
 
     std::vector<IO> output_wires;
     std::vector<std::string> output_net_name;
@@ -151,7 +151,8 @@ void Codegen::visit(CustomModuleNode &node, const int output_slot) {
     for (int i = 0; i < num_outputs; i++) {
         // Input pin
         const int pin_number = num_inputs + i;
-        const auto output_name = GetSafeWireName(node_module->name + "_custom_out_" + node.pins[pin_number].GetName());
+        const auto output_name =
+                GetSafeWireName(node_module->GetName() + "_custom_out_" + node.pins[pin_number].GetName());
 
         output_wires.push_back({output_name, node.pins[pin_number].GetDataType().GetBitWidth()});
         output_net_name.push_back(node.pins[pin_number].GetName());
@@ -182,7 +183,7 @@ void Codegen::visit(CustomModuleNode &node, const int output_slot) {
     }
 
     // Instantiate module and connect labeled inputs
-    instances += node_module->name + " " + GetSafeWireName("custom_node") + " (\n";
+    instances += node_module->GetName() + " " + GetSafeWireName("custom_node") + " (\n";
     instances += "\t.sys_clk(sys_clk),\n";
     for (int i = 0; i < num_inputs; i++) {
         instances += "\t." + input_pin_names[i] + "(" + input_pin_values[i] + "),\n";
@@ -644,7 +645,7 @@ void Codegen::visit(InputNode &node, const int output_slot) {
     START_CHECK_CYCLES
 
     END_CHECK_CYCLES
-    CACHE_AND_RETURN(node, node.module->inputs[node.slot].name, output_slot)
+    CACHE_AND_RETURN(node, node.module->GetInputs()[node.slot].name, output_slot)
 }
 
 
@@ -657,7 +658,7 @@ void Codegen::visit(OutputNode &node, const int output_slot) {
 
     const auto in_val = EvalNode(in);
 
-    inner += "\t\t" + node.module->outputs[node.slot].name + " = " + in_val + ";\n";
+    inner += "\t\t" + node.module->GetOutputs()[node.slot].name + " = " + in_val + ";\n";
 
     END_CHECK_CYCLES
     CACHE_AND_RETURN(node, "", output_slot);

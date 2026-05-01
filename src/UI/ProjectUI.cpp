@@ -2,9 +2,8 @@
 // Created by Gabe on 4/30/2026.
 //
 
-#include "Project/Project.h"
-
 #include "Default/CustomModuleNode.h"
+#include "Project/Project.h"
 
 void Project::Render(const std::shared_ptr<ErrorManager> &error_manager,
                      const std::shared_ptr<CopyPasteManager> &copy_paste_manager) {
@@ -15,7 +14,7 @@ void Project::Render(const std::shared_ptr<ErrorManager> &error_manager,
 
     int i = 0;
     for (const auto &module: modules) {
-        const bool is_top_level = top_level_node_guid == module->guid;
+        const bool is_top_level = top_level_node_guid == module->GetGuid();
 
 
         std::string prefix = is_top_level ? ICON_FA_STAR "  " : "";
@@ -30,7 +29,7 @@ void Project::Render(const std::shared_ptr<ErrorManager> &error_manager,
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.6, 0.15, 0.15, 1.0));
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.6, 0.15, 0.15, 1.0));
         }
-        if (ImGui::Button((prefix + module->name).c_str(), ImVec2(btn_width, 0.0f))) {
+        if (ImGui::Button((prefix + module->GetName()).c_str(), ImVec2(btn_width, 0.0f))) {
             selected_module = i;
         }
         if (is_selected) {
@@ -40,23 +39,24 @@ void Project::Render(const std::shared_ptr<ErrorManager> &error_manager,
         if (!is_top_level) {
             ImGui::SameLine();
             if (is_selected) {
-                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.15, 0.15, 0.15, 1.0));
-                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.15, 0.15, 0.15, 1.0));
-                ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.15, 0.15, 0.15, 1.0));
+                ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.5, 0.20, 0.20, 1.0));
+                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.25, 0.10, 0.10, 1.0));
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.25, 0.10, 0.10, 1.0));
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.25, 0.10, 0.10, 1.0));
             }
             if (ImGui::Button(("+##addmodulenode" + std::to_string(i)).c_str(), ImVec2(25, 0))) {
                 if (!is_selected && GetSelectedModule().has_value()) {
                     const auto &sel = GetSelectedModule().value();
-                    auto n = std::make_shared<CustomModuleNode>(sel.get(), GUID::generate_guid(), module->guid);
+                    auto n = std::make_shared<CustomModuleNode>(sel.get(), GUID::generate_guid(), module->GetGuid());
                     n->module_ref = module;
                     n->InitPinsAfterConfig();
-                    sel->nodes.push_back(n);
-                    std::cout << "making custom node w module guid: " << module->guid << std::endl;
+                    sel->AddNode(n);
+                    std::cout << "making custom node w module guid: " << module->GetGuid() << std::endl;
                 }
                 // if selected module add
             }
             if (is_selected) {
-                ImGui::PopStyleColor(3);
+                ImGui::PopStyleColor(4);
             }
         }
         i++;

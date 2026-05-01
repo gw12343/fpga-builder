@@ -3,8 +3,6 @@
 //
 
 #include "ErrorManager.h"
-
-#include "Lib/ImGuiNotify.h"
 #include "Module.h"
 
 #define ERROR_POPUP_TITLE "Error exporting circuit"

@@ -55,7 +55,7 @@ void CopyPasteManager::PasteSelection(Module *module, const std::shared_ptr<Erro
         copy->Render(error_manager);
         ax::NodeEditor::SelectNode(copy->id.Get(), true);
 
-        module->nodes.push_back(copy);
+        module->AddNode(copy);
     }
 
     // get the links that are between only the nodes selected
@@ -68,7 +68,7 @@ void CopyPasteManager::PasteSelection(Module *module, const std::shared_ptr<Erro
     };
 
     std::vector<link_copy_data> links_to_copy;
-    for (const auto &link: module->links) {
+    for (const auto &link: module->GetLinks()) {
         const auto &in_pin_op = module->GetPin(link.input_guid);
         const auto &out_pin_op = module->GetPin(link.output_guid);
         if (!in_pin_op || !out_pin_op)
@@ -110,7 +110,7 @@ void CopyPasteManager::PasteSelection(Module *module, const std::shared_ptr<Erro
         std::string new_out_id = new_node_out_op.value()->guid + out_suffix;
 
 
-        module->links.emplace_back(module, new_out_id, new_in_id);
+        module->AddLink({module, new_out_id, new_in_id});
     }
 }
 

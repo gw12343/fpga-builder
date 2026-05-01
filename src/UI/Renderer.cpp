@@ -7,13 +7,9 @@
 
 #include <SDL3/SDL_init.h>
 #include <SDL3/SDL_opengl.h>
-#include <imgui.h>
 #include <imgui_impl_opengl3.h>
 #include <imgui_impl_sdl3.h>
 #include <iostream>
-
-#include "Lib/IconsFontAwesome6.h"
-#include "Lib/ImGuiNotify.h"
 
 
 void Renderer::InitWindow(const int w, const int h, const std::string &title) {
