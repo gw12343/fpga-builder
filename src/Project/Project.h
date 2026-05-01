@@ -23,6 +23,8 @@ public:
     [[nodiscard]] const std::string &GetWorkspacePath() const { return m_workspace_path; }
     [[nodiscard]] const std::string &GetTopLevelNodeGuid() const { return m_top_level_node_guid; }
 
+    void Save();
+
 private:
     void SaveConfigFile();
     void LoadConfigFile();

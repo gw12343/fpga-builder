@@ -70,8 +70,8 @@
             "name": "Output",
             "slot": 0,
             "type": "OutputNode",
-            "x": 654.0,
-            "y": -67.0
+            "x": 1278.0,
+            "y": 317.0
         },
         {
             "guid": "c70ea91458864b5d88b863e0af4757d8",
@@ -79,8 +79,8 @@
             "name": "Input",
             "slot": 1,
             "type": "InputNode",
-            "x": -429.0,
-            "y": -67.0
+            "x": 195.0,
+            "y": 317.0
         },
         {
             "bits": 4,
@@ -88,8 +88,8 @@
             "id": 18446744073210366073,
             "name": "Splitter",
             "type": "SplitterNode",
-            "x": -194.0,
-            "y": 21.0
+            "x": 430.0,
+            "y": 405.0
         },
         {
             "guid": "c2fa260e4b8844e5be90d67412b10fbf",
@@ -97,8 +97,8 @@
             "module_guid": "6bced53ce52b4b0cb1c7f670e9566257",
             "name": "Custom",
             "type": "CustomNode",
-            "x": 62.0,
-            "y": 117.0
+            "x": 686.0,
+            "y": 501.0
         },
         {
             "bits": 4,
@@ -106,8 +106,8 @@
             "id": 18446744073532921137,
             "name": "Combiner",
             "type": "CombinerNode",
-            "x": 451.0,
-            "y": 5.0
+            "x": 1075.0,
+            "y": 389.0
         },
         {
             "guid": "2ee3e352fec9495989ad0a8683a90133",
@@ -115,8 +115,8 @@
             "module_guid": "6bced53ce52b4b0cb1c7f670e9566257",
             "name": "Custom",
             "type": "CustomNode",
-            "x": 62.0,
-            "y": -91.0
+            "x": 686.0,
+            "y": 293.0
         }
     ],
     "outputs": [

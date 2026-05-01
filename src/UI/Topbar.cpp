@@ -33,8 +33,8 @@ void Topbar::Render(const std::shared_ptr<Project> &project, const std::shared_p
 
         ImGui::SameLine();
 
-        if (ImGui::Button("Save Circuit")) {
-            CircuitSerializer::SaveModule(project.get(), module.value());
+        if (ImGui::Button("Save Project")) {
+            project->Save();
         }
 
         ImGui::SameLine();

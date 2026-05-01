@@ -72,16 +72,36 @@ std::optional<std::shared_ptr<Module>> Project::GetModule(const std::string &gui
     return std::nullopt;
 }
 
+void Project::Save() {
+    for (const auto &module: m_modules) {
+        CircuitSerializer::SaveModule(this, module);
+    }
+    SaveConfigFile();
+}
+
+
 void Project::SaveConfigFile() {
     nlohmann::json j_file;
 
     j_file["name"] = m_name;
+
+
+    auto dirs = json::array();
+    dirs = json::array();
+
+    for (const auto &module: m_modules) {
+        const auto &module_path = module->GetName() + ".json";
+        dirs.push_back(module_path);
+    }
+
+
     j_file["author"] = m_author;
     j_file["workspace_path"] = m_workspace_path;
 
     j_file["selected_module"] = m_selected_module;
     j_file["top_level_node_guid"] = m_top_level_node_guid;
     j_file["time_created"] = m_time_created;
+    j_file["module_files"] = dirs;
     j_file["last_saved"] =
             std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch())
                     .count();

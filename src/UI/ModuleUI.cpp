@@ -15,8 +15,6 @@
 
 void Module::Render(const std::shared_ptr<ErrorManager> &error_manager,
                     const std::shared_ptr<CopyPasteManager> &copy_paste_manager) {
-
-
     {
         SetCurrentEditor(m_context);
         PushStyleColor(ax::NodeEditor::StyleColor_Bg, ImVec4(0.125, 0.125, 0.125, 1));
