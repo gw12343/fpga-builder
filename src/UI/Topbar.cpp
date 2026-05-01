@@ -16,9 +16,7 @@ void Topbar::Render(const std::shared_ptr<Project> &project, const std::shared_p
                     const std::shared_ptr<OutputViewer> &output_viewer) {
     ImGui::Begin("Options");
 
-    const auto module = project->GetSelectedModule();
-
-    if (module.has_value()) {
+    if (const auto module = project->GetSelectedModule(); module.has_value()) {
         if (ImGui::Button("Print Circuit")) {
             TraversePrint v;
             module.value()->GetNodes()[0]->accept(v, 0);

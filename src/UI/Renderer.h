@@ -15,10 +15,10 @@ public:
     void StartFrame();
     void EndFrame() const;
 
-    [[nodiscard]] bool IsRunning() const { return running; };
+    [[nodiscard]] bool IsRunning() const { return m_running; }
 
 private:
-    bool running = true;
-    SDL_Window *window = nullptr;
-    SDL_GLContext gl_context = nullptr;
+    bool m_running = true;
+    SDL_Window *m_window = nullptr;
+    SDL_GLContext m_gl_context = nullptr;
 };

@@ -13,7 +13,7 @@
 #include "Project/Project.h"
 
 class Module;
-class CustomModuleNode : public Node {
+class CustomModuleNode final : public Node {
 public:
     [[nodiscard]] std::string GetSerializationType() const override { return "CustomNode"; }
 
@@ -50,8 +50,8 @@ public:
         return std::make_unique<CustomModuleNode>(module, GUID::generate_guid(), module_guid);
     }
 
-    static constexpr ImVec4 color = {1.0f, 84.0f / 255.0f, 252.0f / 255.0f, 1.0f};
-    [[nodiscard]] ImVec4 GetUIColor() const override { return color; }
+    static constexpr ImVec4 COLOR = {1.0f, 84.0f / 255.0f, 252.0f / 255.0f, 1.0f};
+    [[nodiscard]] ImVec4 GetUIColor() const override { return COLOR; }
     [[nodiscard]] int GetNodeWidth() const override { return 250; }
 
     // Save bit width to json

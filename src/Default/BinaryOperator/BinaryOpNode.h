@@ -16,8 +16,8 @@ public:
 
     [[nodiscard]] int GetNodeWidth() const override { return 125; }
 
-    static constexpr ImVec4 color = {0.059f, 0.431f, 0.333f, 1.0f};
-    [[nodiscard]] ImVec4 GetUIColor() const override { return color; }
+    static constexpr ImVec4 COLOR = {0.059f, 0.431f, 0.333f, 1.0f};
+    [[nodiscard]] ImVec4 GetUIColor() const override { return COLOR; }
 
 
     [[nodiscard]] virtual std::string GetVerilogAssign(const std::string &out, const std::string &a,

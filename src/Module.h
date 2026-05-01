@@ -3,8 +3,6 @@
 //
 
 #pragma once
-#include <intrin.h>
-
 
 class Pin;
 class Link;
@@ -46,17 +44,17 @@ public:
 
     void RefreshAllCustomModuleNodes(const std::shared_ptr<Module> &updated_module);
 
-    [[nodiscard]] std::string GetName() const { return name; }
-    [[nodiscard]] std::string GetGuid() const { return guid; }
-    [[nodiscard]] Project *GetProject() const { return project; }
-    [[nodiscard]] const std::vector<IO> &GetInputs() const { return inputs; }
-    [[nodiscard]] const std::vector<IO> &GetOutputs() const { return outputs; }
+    [[nodiscard]] std::string GetName() const { return m_name; }
+    [[nodiscard]] std::string GetGuid() const { return m_guid; }
+    [[nodiscard]] Project *GetProject() const { return m_project; }
+    [[nodiscard]] const std::vector<IO> &GetInputs() const { return m_inputs; }
+    [[nodiscard]] const std::vector<IO> &GetOutputs() const { return m_outputs; }
 
     void AddInput(const IO &io);
     void AddOutput(const IO &io);
 
-    [[nodiscard]] const std::vector<Link> &GetLinks() const { return links; }
-    [[nodiscard]] const std::vector<std::shared_ptr<Node>> &GetNodes() const { return nodes; }
+    [[nodiscard]] const std::vector<Link> &GetLinks() const { return m_links; }
+    [[nodiscard]] const std::vector<std::shared_ptr<Node>> &GetNodes() const { return m_nodes; }
 
     void AddNode(const std::shared_ptr<Node> &node);
     void AddLink(const Link &link);
@@ -67,17 +65,17 @@ private:
     void RenderNodes(const std::shared_ptr<ErrorManager> &error_manager) const;
     void RenderLinks() const;
 
-    std::vector<std::shared_ptr<Node>> nodes;
-    std::vector<Link> links;
+    std::vector<std::shared_ptr<Node>> m_nodes;
+    std::vector<Link> m_links;
 
-    Project *project;
+    Project *m_project;
 
-    std::string name;
-    std::string guid;
+    std::string m_name;
+    std::string m_guid;
 
-    std::vector<IO> inputs;
-    std::vector<IO> outputs;
+    std::vector<IO> m_inputs;
+    std::vector<IO> m_outputs;
 
-    ax::NodeEditor::EditorContext *context = nullptr;
-    ax::NodeEditor::Config *config;
+    ax::NodeEditor::EditorContext *m_context = nullptr;
+    ax::NodeEditor::Config *m_config;
 };

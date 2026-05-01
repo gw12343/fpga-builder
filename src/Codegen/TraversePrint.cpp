@@ -84,7 +84,7 @@ void TraversePrint::visit(OutputNode &node, int output_slot) {
               << node.module->GetOutputs()[node.slot].name << ")" << std::endl;
 
 
-    auto pin = node.GetValueInputPin();
+    const auto pin = node.GetValueInputPin();
 
     if (const auto connected = pin.GetConnectedPin()) {
         indent++;

@@ -42,24 +42,24 @@ private:
 
     std::string EvalNode(const std::optional<Pin> &pin) {
         pin->GetNode().accept(*this, pin->GetNodeIndex());
-        auto _val = returnVals.top();
-        returnVals.pop();
+        auto _val = m_return_vals.top();
+        m_return_vals.pop();
         return _val;
     }
 
 
-    std::string decls;
-    std::string instances;
-    std::string inner;
-    std::string later;
-    bool failed;
+    std::string m_decls;
+    std::string m_instances;
+    std::string m_inner;
+    std::string m_later;
+    bool m_failed;
 
 
-    std::stack<std::string> returnVals;
-    std::stack<std::string> activeNodes;
+    std::stack<std::string> m_return_vals;
+    std::stack<std::string> m_active_nodes;
 
-    std::map<std::string, int> wireNameCounts;
-    std::map<std::string, std::string> visitedNodes;
+    std::map<std::string, int> m_wire_name_counts;
+    std::map<std::string, std::string> m_visited_nodes;
 
-    std::shared_ptr<ErrorManager> error_manager;
+    std::shared_ptr<ErrorManager> m_error_manager;
 };

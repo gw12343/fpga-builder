@@ -11,11 +11,11 @@
 
 void ConfigManager::Render(const std::optional<std::shared_ptr<Module>> &module) {
     if (!module.has_value()) {
-        config_open = false;
+        m_config_open = false;
         return;
     }
 
-    if (config_open) {
+    if (m_config_open) {
         ImGui::OpenPopup(NODE_CONFIG_TITLE);
     }
 
@@ -23,30 +23,30 @@ void ConfigManager::Render(const std::optional<std::shared_ptr<Module>> &module)
     ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x / 2 - ImGui::GetWindowWidth() / 2,
                                    ImGui::GetIO().DisplaySize.y / 2 - ImGui::GetWindowHeight() / 2));
 
-    if (ImGui::BeginPopupModal(NODE_CONFIG_TITLE, &config_open,
+    if (ImGui::BeginPopupModal(NODE_CONFIG_TITLE, &m_config_open,
                                ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove)) {
         ImGui::GetStyle().ScaleAllSizes(2.0f);
         // ImGui::SetWindowFontScale(2.0f);
-        ImGui::Text("Configuring new %s node.", current_node->name.c_str());
+        ImGui::Text("Configuring new %s node.", m_current_node->name.c_str());
 
-        current_node->RenderConfiguration();
+        m_current_node->RenderConfiguration();
 
         ImGui::Separator();
         if (ImGui::Button("Done", ImVec2(100, 40))) {
-            config_open = false;
+            m_config_open = false;
 
             ImGui::InsertNotification({ImGuiToastType::Success, 3000, "Configured and added new node: %s",
-                                       current_node->GetDisplayName().c_str()});
+                                       m_current_node->GetDisplayName().c_str()});
 
-            current_node->InitPinsAfterConfig();
-            module.value()->AddNode(current_node);
-            current_node.reset();
+            m_current_node->InitPinsAfterConfig();
+            module.value()->AddNode(m_current_node);
+            m_current_node.reset();
         }
 
         ImGui::SameLine(145);
 
         if (ImGui::Button("Cancel", ImVec2(100, 40)) || ImGui::IsKeyPressed(ImGuiKey_Escape)) {
-            config_open = false;
+            m_config_open = false;
         }
         // ImGui::SetWindowFontScale(1.0f);
         ImGui::GetStyle().ScaleAllSizes(0.5f);
@@ -61,6 +61,6 @@ void ConfigManager::ConfigureAndAdd(const std::shared_ptr<Module> &module, const
         return;
     }
 
-    config_open = true;
-    current_node = node;
+    m_config_open = true;
+    m_current_node = node;
 }

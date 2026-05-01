@@ -10,7 +10,7 @@
 
 
 void CopyPasteManager::CopySelection(Module *module) {
-    auto &[copied_nodes, selected_nodes, copied_node_positions] = data[module];
+    auto &[copied_nodes, selected_nodes, copied_node_positions] = m_data[module];
 
 
     copied_nodes.resize(ax::NodeEditor::GetSelectedObjectCount());
@@ -29,7 +29,7 @@ void CopyPasteManager::CopySelection(Module *module) {
 
 
 void CopyPasteManager::PasteSelection(Module *module, const std::shared_ptr<ErrorManager> &error_manager) {
-    auto &[copied_nodes, selected_nodes, copied_node_positions] = data[module];
+    auto &[copied_nodes, selected_nodes, copied_node_positions] = m_data[module];
 
     std::map<std::string, std::string> guid_map;
     std::vector<std::string> old_nodes;

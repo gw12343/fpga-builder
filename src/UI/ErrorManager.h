@@ -11,10 +11,10 @@ class ErrorManager {
 public:
     void Render(const std::optional<std::shared_ptr<Module>> &module);
     void ThrowError(const std::string &msg, const Node &node);
-    [[nodiscard]] const std::string &GetErrorNodeGuid() const { return error_node_guid; };
+    [[nodiscard]] const std::string &GetErrorNodeGuid() const { return m_error_node_guid; }
 
 private:
-    bool error_present = false;
-    std::string error_msg;
-    std::string error_node_guid;
+    bool m_error_present = false;
+    std::string m_error_msg;
+    std::string m_error_node_guid;
 };

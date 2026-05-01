@@ -8,18 +8,18 @@
 void Project::Render(const std::shared_ptr<ErrorManager> &error_manager,
                      const std::shared_ptr<CopyPasteManager> &copy_paste_manager) {
     ImGui::Begin("Project Viewer");
-    ImGui::Text("Project Name: '%s'", name.c_str());
-    ImGui::Text("Author: %s", author.c_str());
+    ImGui::Text("Project Name: '%s'", m_name.c_str());
+    ImGui::Text("Author: %s", m_author.c_str());
     ImGui::SeparatorText("MODULES");
 
     int i = 0;
-    for (const auto &module: modules) {
-        const bool is_top_level = top_level_node_guid == module->GetGuid();
+    for (const auto &module: m_modules) {
+        const bool is_top_level = m_top_level_node_guid == module->GetGuid();
 
 
         std::string prefix = is_top_level ? ICON_FA_STAR "  " : "";
 
-        const bool is_selected = i == selected_module;
+        const bool is_selected = i == m_selected_module;
 
         const float btn_width = is_top_level ? ImGui::GetContentRegionAvail().x
                                              : ImGui::GetContentRegionAvail().x - ImGui::GetStyle().ItemSpacing.x - 25;
@@ -30,7 +30,7 @@ void Project::Render(const std::shared_ptr<ErrorManager> &error_manager,
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.6, 0.15, 0.15, 1.0));
         }
         if (ImGui::Button((prefix + module->GetName()).c_str(), ImVec2(btn_width, 0.0f))) {
-            selected_module = i;
+            m_selected_module = i;
         }
         if (is_selected) {
             ImGui::PopStyleColor(3);

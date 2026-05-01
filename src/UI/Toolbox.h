@@ -19,8 +19,8 @@ struct NodeToolboxData {
 class Toolbox {
 public:
     Toolbox();
-    void Render(std::optional<std::shared_ptr<Module>> module, const std::shared_ptr<ConfigManager> &config_manager);
+    void Render(const std::optional<std::shared_ptr<Module>> &module, const std::shared_ptr<ConfigManager> &config_manager);
 
 private:
-    std::map<std::string, std::vector<NodeToolboxData>> categories;
+    std::map<std::string, std::vector<NodeToolboxData>> m_categories;
 };

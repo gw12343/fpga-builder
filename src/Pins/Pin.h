@@ -21,20 +21,20 @@ public:
     [[nodiscard]] std::optional<Pin> GetConnectedPin() const;
 
 
-    [[nodiscard]] std::string GetName() const { return name; }
-    [[nodiscard]] std::string GetGuid() const { return guid; }
-    [[nodiscard]] ax::NodeEditor::PinKind GetDirection() const { return direction; }
-    [[nodiscard]] ax::NodeEditor::PinId GetId() const { return id; }
-    [[nodiscard]] PinDataType GetDataType() const { return data_type; }
+    [[nodiscard]] std::string GetName() const { return m_name; }
+    [[nodiscard]] std::string GetGuid() const { return m_guid; }
+    [[nodiscard]] ax::NodeEditor::PinKind GetDirection() const { return m_direction; }
+    [[nodiscard]] ax::NodeEditor::PinId GetId() const { return m_id; }
+    [[nodiscard]] PinDataType GetDataType() const { return m_data_type; }
 
-    [[nodiscard]] Node &GetNode() const { return node; }
+    [[nodiscard]] Node &GetNode() const { return m_node; }
     [[nodiscard]] int GetNodeIndex() const;
 
 private:
-    PinDataType data_type;
-    Node &node;
-    ax::NodeEditor::PinId id;
-    ax::NodeEditor::PinKind direction;
-    std::string name;
-    std::string guid;
+    PinDataType m_data_type;
+    Node &m_node;
+    ax::NodeEditor::PinId m_id;
+    ax::NodeEditor::PinKind m_direction;
+    std::string m_name;
+    std::string m_guid;
 };

@@ -20,8 +20,8 @@ public:
 
     [[nodiscard]] int GetNodeWidth() const override { return 225; }
 
-    static constexpr ImVec4 color = {0.325f, 0.290f, 0.718f, 1.0f};
-    [[nodiscard]] ImVec4 GetUIColor() const override { return color; }
+    static constexpr ImVec4 COLOR = {0.325f, 0.290f, 0.718f, 1.0f};
+    [[nodiscard]] ImVec4 GetUIColor() const override { return COLOR; }
 
 
     MultiplexerNode(Module *module, const std::string &guid, const int data_bits, const int select_bits) :

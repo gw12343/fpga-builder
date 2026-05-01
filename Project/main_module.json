@@ -42,22 +42,22 @@
             "output_guid": "c2fa260e4b8844e5be90d67412b10fbfnode1"
         },
         {
-            "id": 3412891961,
+            "id": 18446744072827476281,
             "input_guid": "2d98ba7be8fb446fa798d0e18b32b6fdnode2",
             "output_guid": "2ee3e352fec9495989ad0a8683a90133node0"
         },
         {
-            "id": 3758181617,
+            "id": 18446744073172765937,
             "input_guid": "2d98ba7be8fb446fa798d0e18b32b6fdnode4",
             "output_guid": "2ee3e352fec9495989ad0a8683a90133node1"
         },
         {
-            "id": 4187497552,
+            "id": 18446744073602081872,
             "input_guid": "2ee3e352fec9495989ad0a8683a90133node2",
             "output_guid": "87799e6c74df4c9c93b75c052e83dbe1node3"
         },
         {
-            "id": 3286725497,
+            "id": 18446744072701309817,
             "input_guid": "2ee3e352fec9495989ad0a8683a90133node3",
             "output_guid": "87799e6c74df4c9c93b75c052e83dbe1node4"
         }
@@ -71,7 +71,7 @@
             "slot": 0,
             "type": "OutputNode",
             "x": 654.0,
-            "y": 125.0
+            "y": -67.0
         },
         {
             "guid": "c70ea91458864b5d88b863e0af4757d8",
@@ -79,8 +79,8 @@
             "name": "Input",
             "slot": 1,
             "type": "InputNode",
-            "x": -452.0,
-            "y": -3.0
+            "x": -429.0,
+            "y": -67.0
         },
         {
             "bits": 4,
@@ -88,8 +88,8 @@
             "id": 18446744073210366073,
             "name": "Splitter",
             "type": "SplitterNode",
-            "x": -217.0,
-            "y": 85.0
+            "x": -194.0,
+            "y": 21.0
         },
         {
             "guid": "c2fa260e4b8844e5be90d67412b10fbf",
@@ -106,8 +106,8 @@
             "id": 18446744073532921137,
             "name": "Combiner",
             "type": "CombinerNode",
-            "x": 444.0,
-            "y": 21.0
+            "x": 451.0,
+            "y": 5.0
         },
         {
             "guid": "2ee3e352fec9495989ad0a8683a90133",

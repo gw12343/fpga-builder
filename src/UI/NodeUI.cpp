@@ -25,15 +25,15 @@ void Node::Render(const std::shared_ptr<ErrorManager> &error_manager) {
     ImDrawList *drawList = ImGui::GetWindowDrawList();
 
     const auto nodeWidth = static_cast<float>(GetNodeWidth());
-    constexpr int padding = 7;
+    constexpr int PADDING = 7;
 
     const char *label = GetDisplayName().c_str();
     const ImVec2 labelSize = ImGui::CalcTextSize(label);
     const ImVec2 titleMin = ImGui::GetCursorScreenPos();
-    const auto titleMax = ImVec2(titleMin.x + nodeWidth, titleMin.y + labelSize.y + padding);
+    const auto titleMax = ImVec2(titleMin.x + nodeWidth, titleMin.y + labelSize.y + PADDING);
 
     // reserve space
-    ImGui::Dummy(ImVec2(nodeWidth, labelSize.y + padding));
+    ImGui::Dummy(ImVec2(nodeWidth, labelSize.y + PADDING));
 
     // draw background directly onto the node's draw list
     drawList->AddRectFilled(
@@ -42,7 +42,7 @@ void Node::Render(const std::shared_ptr<ErrorManager> &error_manager) {
 
     // draw centered label on top
     const float labelX = titleMin.x + (nodeWidth - labelSize.x) * 0.5f;
-    const float labelY = titleMin.y + padding * 0.5f;
+    const float labelY = titleMin.y + PADDING * 0.5f;
     drawList->AddText(ImGui::GetFont(), ImGui::GetFontSize(), ImVec2(labelX, labelY), IM_COL32(255, 255, 255, 255),
                       label);
 

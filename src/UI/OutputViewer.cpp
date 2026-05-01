@@ -134,8 +134,8 @@ OutputViewer::OutputViewer() {
 
 
     lang.mKeywords = verilog_keywords;
-    editor.SetLanguageDefinition(lang);
-    editor.SetReadOnly(true);
+    m_editor.SetLanguageDefinition(lang);
+    m_editor.SetReadOnly(true);
 
 
     auto palette = TextEditor::GetDarkPalette();
@@ -156,9 +156,9 @@ OutputViewer::OutputViewer() {
     palette[static_cast<int>(TextEditor::PaletteIndex::ErrorMarker)] = ImColor(255, 60, 60);
     palette[static_cast<int>(TextEditor::PaletteIndex::Breakpoint)] = ImColor(180, 40, 40);
 
-    editor.SetPalette(palette);
+    m_editor.SetPalette(palette);
 
-    editor.SetText("TODO");
+    m_editor.SetText("TODO");
     // UpdateOutput(module);
 }
 void OutputViewer::UpdateOutput(const std::shared_ptr<Module> &module) {
@@ -166,12 +166,12 @@ void OutputViewer::UpdateOutput(const std::shared_ptr<Module> &module) {
     std::stringstream buffer;
     buffer << file.rdbuf();
 
-    editor.SetText(buffer.str());
+    m_editor.SetText(buffer.str());
 }
 
 
 void OutputViewer::Render() {
     ImGui::Begin("Output");
-    editor.Render("TextEditor");
+    m_editor.Render("TextEditor");
     ImGui::End();
 }

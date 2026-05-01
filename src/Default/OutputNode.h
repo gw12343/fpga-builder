@@ -18,8 +18,8 @@ public:
         return j;
     }
 
-    static constexpr ImVec4 color = {0.094f, 0.373f, 0.647f, 1.0f};
-    [[nodiscard]] ImVec4 GetUIColor() const override { return color; }
+    static constexpr ImVec4 COLOR = {0.094f, 0.373f, 0.647f, 1.0f};
+    [[nodiscard]] ImVec4 GetUIColor() const override { return COLOR; }
 
 
     void accept(Visitor &v, const int output_slot) override { v.visit(*this, output_slot); }

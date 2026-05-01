@@ -20,23 +20,23 @@ public:
     [[nodiscard]] std::optional<std::shared_ptr<Module>> GetSelectedModule();
     [[nodiscard]] std::optional<std::shared_ptr<Module>> GetModule(const std::string &guid) const;
 
-    [[nodiscard]] const std::string &GetWorkspacePath() const { return workspace_path; }
-    [[nodiscard]] const std::string &GetTopLevelNodeGuid() const { return top_level_node_guid; }
+    [[nodiscard]] const std::string &GetWorkspacePath() const { return m_workspace_path; }
+    [[nodiscard]] const std::string &GetTopLevelNodeGuid() const { return m_top_level_node_guid; }
 
 private:
     void SaveConfigFile();
     void LoadConfigFile();
 
 
-    std::vector<std::shared_ptr<Module>> modules;
-    int selected_module = -1;
+    std::vector<std::shared_ptr<Module>> m_modules;
+    int m_selected_module = -1;
 
-    long long time_created;
-    long long last_saved;
+    long long m_time_created;
+    long long m_last_saved;
 
-    std::string top_level_node_guid;
+    std::string m_top_level_node_guid;
 
-    std::string workspace_path;
-    std::string name;
-    std::string author;
+    std::string m_workspace_path;
+    std::string m_name;
+    std::string m_author;
 };

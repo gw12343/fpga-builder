@@ -3,8 +3,6 @@
 //
 
 #define SDL_MAIN_HANDLED
-
-#include "CircuitSerializer.h"
 #include "CopyPasteManager.h"
 #include "Project/Project.h"
 

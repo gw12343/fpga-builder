@@ -15,6 +15,6 @@ public:
     void Render();
 
 private:
-    TextEditor::ErrorMarkers markers;
-    TextEditor editor;
+    TextEditor::ErrorMarkers m_markers;
+    TextEditor m_editor;
 };

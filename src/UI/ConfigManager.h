@@ -13,6 +13,6 @@ public:
     void ConfigureAndAdd(const std::shared_ptr<Module> &module, const std::shared_ptr<Node> &node);
 
 private:
-    std::shared_ptr<Node> current_node;
-    bool config_open = false;
+    std::shared_ptr<Node> m_current_node;
+    bool m_config_open = false;
 };

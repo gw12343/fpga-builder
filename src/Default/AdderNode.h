@@ -24,8 +24,8 @@ public:
         return std::make_unique<AdderNode>(module, GUID::generate_guid(), bits);
     }
 
-    static constexpr ImVec4 color = {0.560f, 0.1f, 0.07f, 1.0f};
-    [[nodiscard]] ImVec4 GetUIColor() const override { return color; }
+    static constexpr ImVec4 COLOR = {0.560f, 0.1f, 0.07f, 1.0f};
+    [[nodiscard]] ImVec4 GetUIColor() const override { return COLOR; }
 
 
     // Pre-configured

@@ -30,5 +30,5 @@ private:
     void PasteSelection(Module *module, const std::shared_ptr<ErrorManager> &error_manager);
 
 
-    std::map<Module *, CopiedNodeData> data;
+    std::map<Module *, CopiedNodeData> m_data;
 };

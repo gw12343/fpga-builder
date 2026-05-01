@@ -32,9 +32,9 @@
 
 #define ADD_NODE_TO_CATEGORY(category, name, type)                                                                     \
                                                                                                                        \
-    categories[category].push_back({name, type::color, [](const std::shared_ptr<Module> &module) {                     \
-                                        return std::make_shared<type>(module.get());                                   \
-                                    }});
+    m_categories[category].push_back({name, type::COLOR, [](const std::shared_ptr<Module> &module) {                   \
+                                          return std::make_shared<type>(module.get());                                 \
+                                      }});
 
 Toolbox::Toolbox() {
     ADD_NODE_TO_CATEGORY("Bitwise Operators", "Custom", CustomModuleNode);
@@ -64,7 +64,7 @@ Toolbox::Toolbox() {
 }
 
 
-void Toolbox::Render(std::optional<std::shared_ptr<Module>> module,
+void Toolbox::Render(const std::optional<std::shared_ptr<Module>> &module,
                      const std::shared_ptr<ConfigManager> &config_manager) {
     ImGui::Begin("Toolbox");
 
@@ -72,17 +72,17 @@ void Toolbox::Render(std::optional<std::shared_ptr<Module>> module,
     std::shared_ptr<Node> new_node;
 
 
-    for (const auto &[category, node_types]: categories) {
+    for (const auto &[category, node_types]: m_categories) {
         if (node_types.empty())
             continue;
 
         ImGui::SeparatorText(category.c_str());
-        constexpr float node_width = NODE_MIN_BTN_SIZE;
+        constexpr float NODE_WIDTH = NODE_MIN_BTN_SIZE;
         const float btn_padding = ImGui::GetStyle().ItemSpacing.x;
         const float avail_width = ImGui::GetContentRegionAvail().x;
-        const int columns = std::max(1, static_cast<int>((avail_width + btn_padding) / (node_width + btn_padding)));
+        const int columns = std::max(1, static_cast<int>((avail_width + btn_padding) / (NODE_WIDTH + btn_padding)));
 
-        const float adjusted_width_extra = (avail_width - columns * (node_width + btn_padding) + btn_padding) / columns;
+        const float adjusted_width_extra = (avail_width - columns * (NODE_WIDTH + btn_padding) + btn_padding) / columns;
 
         int n = 0;
         int j = 0;

@@ -35,29 +35,29 @@
     {                                                                                                                  \
         auto memo = CheckCache(NODE_KEY(output_slot));                                                                 \
         if (memo.has_value()) {                                                                                        \
-            returnVals.emplace(memo.value());                                                                          \
+            m_return_vals.emplace(memo.value());                                                                       \
             std::cout << "used cache: " << node.name << std::endl;                                                     \
             return;                                                                                                    \
         }                                                                                                              \
     }
 #define CACHE_AND_RETURN(node, val, slot)                                                                              \
     {                                                                                                                  \
-        visitedNodes[NODE_KEY(slot)] = val;                                                                            \
-        returnVals.emplace(val);                                                                                       \
+        m_visited_nodes[NODE_KEY(slot)] = val;                                                                         \
+        m_return_vals.emplace(val);                                                                                    \
         return;                                                                                                        \
     }
 
 
 #define RETURN_REG(val)                                                                                                \
     {                                                                                                                  \
-        returnVals.emplace(val);                                                                                       \
+        m_return_vals.emplace(val);                                                                                    \
         return;                                                                                                        \
     }
 
 #define ERROR_AND_RETURN                                                                                               \
     {                                                                                                                  \
-        visitedNodes[NODE_KEY(output_slot)] = "err";                                                                   \
-        returnVals.emplace("err");                                                                                     \
+        m_visited_nodes[NODE_KEY(output_slot)] = "err";                                                                \
+        m_return_vals.emplace("err");                                                                                  \
         return;                                                                                                        \
     }
 
@@ -76,15 +76,15 @@
             CircuitError("Cycle detected!", node);                                                                     \
             ERROR_AND_RETURN                                                                                           \
         }                                                                                                              \
-        activeNodes.emplace(node.guid);                                                                                \
+        m_active_nodes.emplace(node.guid);                                                                             \
     }
-#define END_CHECK_CYCLES activeNodes.pop();
+#define END_CHECK_CYCLES m_active_nodes.pop();
 
 
-Codegen::Codegen(std::shared_ptr<ErrorManager> error_man) : failed(false), error_manager(std::move(error_man)) {}
+Codegen::Codegen(std::shared_ptr<ErrorManager> error_man) : m_failed(false), m_error_manager(std::move(error_man)) {}
 
 void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
-    failed = false;
+    m_failed = false;
     std::string header = "module " + module->GetName() + " (";
     for (const auto &[name, bits]: module->GetInputs()) {
         if (bits == 1)
@@ -107,18 +107,18 @@ void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
     for (const auto &node: module->GetNodes()) {
         if (node->GetSerializationType() != "OutputNode")
             continue;
-        inner += "\t\t// Output " + module->GetOutputs()[dynamic_cast<OutputNode *>(node.get())->slot].name + "\n";
+        m_inner += "\t\t// Output " + module->GetOutputs()[dynamic_cast<OutputNode *>(node.get())->slot].name + "\n";
         node->accept(*this, 0);
-        returnVals.pop();
+        m_return_vals.pop();
     }
 
 
-    const std::string out = header + "\n// === wire/reg declarations ================================\n" + decls +
-                            "\n// === module instances =====================================\n" + instances +
+    const std::string out = header + "\n// === wire/reg declarations ================================\n" + m_decls +
+                            "\n// === module m_instances =====================================\n" + m_instances +
                             "\n// === combination logic ====================================\n" +
 
-                            "\talways @(*) begin\n" + inner + "\tend\n\n" +
-                            "\n// === clocked logic ========================================\n" + later + footer;
+                            "\talways @(*) begin\n" + m_inner + "\tend\n\n" +
+                            "\n// === clocked logic ========================================\n" + m_later + footer;
 
     const std::string out_path = OUTPUT_DIR + module->GetName() + ".v";
 
@@ -156,7 +156,7 @@ void Codegen::visit(CustomModuleNode &node, const int output_slot) {
 
         output_wires.push_back({output_name, node.pins[pin_number].GetDataType().GetBitWidth()});
         output_net_name.push_back(node.pins[pin_number].GetName());
-        visitedNodes[NODE_KEY(pin_number)] = output_name;
+        m_visited_nodes[NODE_KEY(pin_number)] = output_name;
     }
 
 
@@ -179,21 +179,21 @@ void Codegen::visit(CustomModuleNode &node, const int output_slot) {
 
     // Create output wires
     for (const auto &[name, bits]: output_wires) {
-        decls += "wire [" + std::to_string(bits - 1) + ":0] " + name + ";\n";
+        m_decls += "wire [" + std::to_string(bits - 1) + ":0] " + name + ";\n";
     }
 
     // Instantiate module and connect labeled inputs
-    instances += node_module->GetName() + " " + GetSafeWireName("custom_node") + " (\n";
-    instances += "\t.sys_clk(sys_clk),\n";
+    m_instances += node_module->GetName() + " " + GetSafeWireName("custom_node") + " (\n";
+    m_instances += "\t.sys_clk(sys_clk),\n";
     for (int i = 0; i < num_inputs; i++) {
-        instances += "\t." + input_pin_names[i] + "(" + input_pin_values[i] + "),\n";
+        m_instances += "\t." + input_pin_names[i] + "(" + input_pin_values[i] + "),\n";
     }
     for (int i = 0; i < num_outputs; i++) {
-        instances += "\t." + output_net_name[i] + "(" + output_wires[i].name + "),\n";
+        m_instances += "\t." + output_net_name[i] + "(" + output_wires[i].name + "),\n";
     }
-    instances.pop_back();
-    instances.pop_back();
-    instances += "\n);\n";
+    m_instances.pop_back();
+    m_instances.pop_back();
+    m_instances += "\n);\n";
 
     RETURN_REG(output_wires[output_slot - num_inputs].name);
 
@@ -211,7 +211,7 @@ void Codegen::visit(SplitterNode &node, const int output_slot) {
     for (int i = 0; i < node.GetDataWidth(); i++) {
         const std::string bit_output = GetSafeWireName("splitter_b" + std::to_string(i) + "_out");
         out_wire_names.push_back(bit_output);
-        visitedNodes[NODE_KEY(i + 1)] = bit_output;
+        m_visited_nodes[NODE_KEY(i + 1)] = bit_output;
     }
 
     // Input pin
@@ -222,19 +222,19 @@ void Codegen::visit(SplitterNode &node, const int output_slot) {
     const auto input_val = EvalNode(in);
 
     // Declare each individual bit as a wire
-    decls += "reg ";
+    m_decls += "reg ";
     for (int i = 0; i < node.GetDataWidth(); i++) {
-        decls += out_wire_names[i] + ", ";
+        m_decls += out_wire_names[i] + ", ";
     }
     // Remove extra trailing comma and space
-    decls.pop_back();
-    decls.pop_back();
+    m_decls.pop_back();
+    m_decls.pop_back();
     // End line
-    decls += ";\n";
+    m_decls += ";\n";
 
     // Assign each wire to single bit
     for (int i = 0; i < node.GetDataWidth(); i++) {
-        inner += "\t\t" + out_wire_names[i] + " = " + input_val + "[" + std::to_string(i) + "];\n";
+        m_inner += "\t\t" + out_wire_names[i] + " = " + input_val + "[" + std::to_string(i) + "];\n";
     }
 
     // Return correct output depending on output slot
@@ -250,8 +250,8 @@ void Codegen::visit(EdgeNode &node, const int output_slot) {
     const std::string output_reg_rise = GetSafeWireName("edge_rise");
     const std::string output_reg_fall = GetSafeWireName("edge_fall");
 
-    visitedNodes[NODE_KEY(node.EDGE_OUT_Q_ID)] = output_reg_rise;
-    visitedNodes[NODE_KEY(node.EDGE_OUT_NQ_ID)] = output_reg_fall;
+    m_visited_nodes[NODE_KEY(node.EDGE_OUT_Q_ID)] = output_reg_rise;
+    m_visited_nodes[NODE_KEY(node.EDGE_OUT_NQ_ID)] = output_reg_fall;
 
     // Input pins
     const auto d = node.GetDPin().GetConnectedPin();
@@ -266,17 +266,17 @@ void Codegen::visit(EdgeNode &node, const int output_slot) {
     // declare output register and previous register
     const std::string previous_reg = GetSafeWireName("edge_prev");
 
-    decls += "reg " + output_reg_rise + ";\n";
-    decls += "reg " + output_reg_fall + ";\n";
-    decls += "reg " + previous_reg + ";\n";
+    m_decls += "reg " + output_reg_rise + ";\n";
+    m_decls += "reg " + output_reg_fall + ";\n";
+    m_decls += "reg " + previous_reg + ";\n";
 
 
     // edge block
-    later += "\talways @(posedge " + clk_val + ") begin\n";
-    later += "\t\t" + output_reg_rise + " <= " + d_val + " & ~" + previous_reg + ";\n";
-    later += "\t\t" + output_reg_fall + " <= ~" + d_val + " & " + previous_reg + ";\n";
-    later += "\t\t" + previous_reg + " <= " + d_val + ";\n";
-    later += "\tend\n\n";
+    m_later += "\talways @(posedge " + clk_val + ") begin\n";
+    m_later += "\t\t" + output_reg_rise + " <= " + d_val + " & ~" + previous_reg + ";\n";
+    m_later += "\t\t" + output_reg_fall + " <= ~" + d_val + " & " + previous_reg + ";\n";
+    m_later += "\t\t" + previous_reg + " <= " + d_val + ";\n";
+    m_later += "\tend\n\n";
 
 
     // Rising edge option
@@ -298,8 +298,8 @@ void Codegen::visit(AdderNode &node, const int output_slot) {
     const std::string output_value = GetSafeWireName("adder_out");
     const std::string output_carry = GetSafeWireName("adder_carry_out");
 
-    visitedNodes[NODE_KEY(node.ADDER_Q_ID)] = output_value;
-    visitedNodes[NODE_KEY(node.ADDER_COUT_ID)] = output_carry;
+    m_visited_nodes[NODE_KEY(node.ADDER_Q_ID)] = output_value;
+    m_visited_nodes[NODE_KEY(node.ADDER_COUT_ID)] = output_carry;
 
     // Input pins
     const auto a = node.GetAInputPin().GetConnectedPin();
@@ -314,10 +314,10 @@ void Codegen::visit(AdderNode &node, const int output_slot) {
     const auto b_val = EvalNode(b);
     const auto cin_val = EvalNode(cin);
 
-    decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + output_value + ";\n";
-    decls += "reg " + output_carry + ";\n";
+    m_decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + output_value + ";\n";
+    m_decls += "reg " + output_carry + ";\n";
 
-    inner += "\t\t{" + output_carry + ", " + output_value + "} = " + a_val + " + " + b_val + " + " + cin_val + ";\n";
+    m_inner += "\t\t{" + output_carry + ", " + output_value + "} = " + a_val + " + " + b_val + " + " + cin_val + ";\n";
 
     // Rising edge option
     if (output_slot == node.ADDER_Q_ID) {
@@ -354,20 +354,20 @@ void Codegen::visit(CombinerNode &node, const int output_slot) {
 
     const std::string output_reg = GetSafeWireName("combiner_out");
     // Declare output bus
-    decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + output_reg + ";\n";
+    m_decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + output_reg + ";\n";
 
 
     // Assignment statement in always
-    inner += "\t\t" + output_reg + " = {";
+    m_inner += "\t\t" + output_reg + " = {";
     for (const auto &val: input_pin_values) {
-        inner += val + ", ";
+        m_inner += val + ", ";
     }
 
     // Remove extra trailing comma and space
-    inner.pop_back();
-    inner.pop_back();
+    m_inner.pop_back();
+    m_inner.pop_back();
     // End line
-    inner += "};\n";
+    m_inner += "};\n";
     END_CHECK_CYCLES
     CACHE_AND_RETURN(node, output_reg, output_slot)
 }
@@ -403,15 +403,15 @@ void Codegen::visit(MultiplexerNode &node, const int output_slot) {
 
 
     std::string result_reg = GetSafeWireName("mux_result");
-    decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + result_reg + ";\n";
+    m_decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + result_reg + ";\n";
 
 
-    inner += "\t\tcase (" + select_val + ")\n";
+    m_inner += "\t\tcase (" + select_val + ")\n";
     for (int i = 0; i < node.GetNumOptions(); i++) {
-        inner += "\t\t\t" + std::to_string(node.GetSelectWidth()) + "'d" + std::to_string(i) + ": " + result_reg +
-                 " = " + input_pin_values[i] + ";\n";
+        m_inner += "\t\t\t" + std::to_string(node.GetSelectWidth()) + "'d" + std::to_string(i) + ": " + result_reg +
+                   " = " + input_pin_values[i] + ";\n";
     }
-    inner += "\t\tendcase\n\n";
+    m_inner += "\t\tendcase\n\n";
 
 
     END_CHECK_CYCLES
@@ -423,7 +423,7 @@ void Codegen::visit(DebounceNode &node, const int output_slot) {
     CHECK_CACHE
 
     std::string output_reg = GetSafeWireName("debounce_out");
-    visitedNodes[NODE_KEY(output_slot)] = output_reg;
+    m_visited_nodes[NODE_KEY(output_slot)] = output_reg;
 
     // Input pins
     const auto d = node.GetDPin().GetConnectedPin();
@@ -438,22 +438,22 @@ void Codegen::visit(DebounceNode &node, const int output_slot) {
 
     // declare output register and shift register
     const std::string output_sr = GetSafeWireName("debounce_sr");
-    decls += "reg [15:0]" + output_sr + ";\n";
-    decls += "reg " + output_reg + ";\n";
+    m_decls += "reg [15:0]" + output_sr + ";\n";
+    m_decls += "reg " + output_reg + ";\n";
 
 
     // debounce shift block
-    later += "\talways @(posedge " + clk_val + ") begin\n";
-    later += "\t\t" + output_sr + " <= { " + output_sr + "[14:0], " + d_val + " };\n";
-    later += "\tend\n\n";
+    m_later += "\talways @(posedge " + clk_val + ") begin\n";
+    m_later += "\t\t" + output_sr + " <= { " + output_sr + "[14:0], " + d_val + " };\n";
+    m_later += "\tend\n\n";
 
     // debounce output register set
-    later += "\talways @(posedge " + clk_val + ") begin\n";
-    later += "\t\tif (" + output_sr + " == 16'hFFFF)\n";
-    later += "\t\t\t" + output_reg + " <= 1'b1;\n";
-    later += "\t\telse if (" + output_sr + " == 16'h0000)\n";
-    later += "\t\t\t" + output_reg + " <= 1'b0;\n";
-    later += "\tend\n\n";
+    m_later += "\talways @(posedge " + clk_val + ") begin\n";
+    m_later += "\t\tif (" + output_sr + " == 16'hFFFF)\n";
+    m_later += "\t\t\t" + output_reg + " <= 1'b1;\n";
+    m_later += "\t\telse if (" + output_sr + " == 16'h0000)\n";
+    m_later += "\t\t\t" + output_reg + " <= 1'b0;\n";
+    m_later += "\tend\n\n";
 
 
     RETURN_REG(output_reg)
@@ -464,7 +464,7 @@ void Codegen::visit(RegisterNode &node, const int output_slot) {
     CHECK_CACHE
 
     std::string output_reg = GetSafeWireName("register_value");
-    visitedNodes[NODE_KEY(output_slot)] = output_reg;
+    m_visited_nodes[NODE_KEY(output_slot)] = output_reg;
 
     // Input pins
     const auto enb = node.GetEnablePin().GetConnectedPin();
@@ -484,15 +484,15 @@ void Codegen::visit(RegisterNode &node, const int output_slot) {
     const auto clk_val = EvalNode(clk);
     const auto rst_val = EvalNode(rst);
 
-    decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + output_reg + ";\n";
+    m_decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + output_reg + ";\n";
 
     // counter block
-    later += "\talways @(posedge " + clk_val + ") begin\n";
-    later += "\t\tif (" + rst_val + ") \n";
-    later += "\t\t\t" + output_reg + " <= " + std::to_string(node.GetDataWidth()) + "'b0;\n";
-    later += "\t\telse if (" + enb_val + " )\n";
-    later += "\t\t\t" + output_reg + " <= " + d_val + ";\n";
-    later += "\tend\n\n";
+    m_later += "\talways @(posedge " + clk_val + ") begin\n";
+    m_later += "\t\tif (" + rst_val + ") \n";
+    m_later += "\t\t\t" + output_reg + " <= " + std::to_string(node.GetDataWidth()) + "'b0;\n";
+    m_later += "\t\telse if (" + enb_val + " )\n";
+    m_later += "\t\t\t" + output_reg + " <= " + d_val + ";\n";
+    m_later += "\tend\n\n";
 
     RETURN_REG(output_reg)
 }
@@ -502,7 +502,7 @@ void Codegen::visit(CounterNode &node, const int output_slot) {
     CHECK_CACHE
 
     std::string output_reg = GetSafeWireName("counter_out");
-    visitedNodes[NODE_KEY(output_slot)] = output_reg;
+    m_visited_nodes[NODE_KEY(output_slot)] = output_reg;
 
     // Input pins
     const auto enb = node.GetEnablePin().GetConnectedPin();
@@ -522,17 +522,17 @@ void Codegen::visit(CounterNode &node, const int output_slot) {
     const auto clk_val = EvalNode(clk);
     const auto rst_val = EvalNode(rst);
 
-    decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + output_reg + ";\n";
+    m_decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + output_reg + ";\n";
 
     // counter block
-    later += "\talways @(posedge " + clk_val + ") begin\n";
-    later += "\t\tif (" + rst_val + ") \n";
-    later += "\t\t\t" + output_reg + " <= " + std::to_string(node.GetDataWidth()) + "'b0;\n";
-    later += "\t\telse if (" + enb_val + " & " + cup_val + " )\n";
-    later += "\t\t\t" + output_reg + " <= " + output_reg + " + 1;\n";
-    later += "\t\telse if (" + enb_val + " & ~" + cup_val + " )\n";
-    later += "\t\t\t" + output_reg + " <= " + output_reg + " - 1;\n";
-    later += "\tend\n\n";
+    m_later += "\talways @(posedge " + clk_val + ") begin\n";
+    m_later += "\t\tif (" + rst_val + ") \n";
+    m_later += "\t\t\t" + output_reg + " <= " + std::to_string(node.GetDataWidth()) + "'b0;\n";
+    m_later += "\t\telse if (" + enb_val + " & " + cup_val + " )\n";
+    m_later += "\t\t\t" + output_reg + " <= " + output_reg + " + 1;\n";
+    m_later += "\t\telse if (" + enb_val + " & ~" + cup_val + " )\n";
+    m_later += "\t\t\t" + output_reg + " <= " + output_reg + " - 1;\n";
+    m_later += "\tend\n\n";
 
     RETURN_REG(output_reg)
 }
@@ -542,7 +542,7 @@ void Codegen::visit(DFFNode &node, const int output_slot) {
     CHECK_CACHE
 
     std::string output_reg = GetSafeWireName("dff_out");
-    visitedNodes[NODE_KEY(output_slot)] = output_reg;
+    m_visited_nodes[NODE_KEY(output_slot)] = output_reg;
 
     // Input pins
     const auto set = node.GetSetPin().GetConnectedPin();
@@ -562,15 +562,15 @@ void Codegen::visit(DFFNode &node, const int output_slot) {
     const auto clk_val = EvalNode(clk);
 
     // declare output register
-    decls += "reg " + output_reg + ";\n";
+    m_decls += "reg " + output_reg + ";\n";
 
     // Declare clocked logic
-    later += "\talways @(posedge " + clk_val + ") begin\n";
-    later += "\t\tif (" + rst_val + ")\n";
-    later += "\t\t\t" + output_reg + " <= 1'b0;\n"; // TODO add option for reset value to node
-    later += "\t\telse if (" + set_val + ")\n";
-    later += "\t\t\t" + output_reg + " <= " + d_val + ";\n";
-    later += "\tend\n\n";
+    m_later += "\talways @(posedge " + clk_val + ") begin\n";
+    m_later += "\t\tif (" + rst_val + ")\n";
+    m_later += "\t\t\t" + output_reg + " <= 1'b0;\n"; // TODO add option for reset value to node
+    m_later += "\t\telse if (" + set_val + ")\n";
+    m_later += "\t\t\t" + output_reg + " <= " + d_val + ";\n";
+    m_later += "\tend\n\n";
 
     RETURN_REG(output_reg);
 }
@@ -592,8 +592,8 @@ void Codegen::visit(BinaryOpNode &node, const int output_slot) {
 
     const std::string out_reg = GetSafeWireName("bin_op_result");
 
-    decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + out_reg + ";\n";
-    inner += "\t\t" + node.GetVerilogAssign(out_reg, a_val, b_val);
+    m_decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + out_reg + ";\n";
+    m_inner += "\t\t" + node.GetVerilogAssign(out_reg, a_val, b_val);
 
     END_CHECK_CYCLES
     CACHE_AND_RETURN(node, out_reg, output_slot)
@@ -613,8 +613,8 @@ void Codegen::visit(UnaryOpNode &node, const int output_slot) {
 
     const std::string out_reg = GetSafeWireName("bin_op_result");
 
-    decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + out_reg + ";\n";
-    inner += "\t\t" + node.GetVerilogAssign(out_reg, a_val);
+    m_decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + out_reg + ";\n";
+    m_inner += "\t\t" + node.GetVerilogAssign(out_reg, a_val);
 
     END_CHECK_CYCLES
     CACHE_AND_RETURN(node, out_reg, output_slot)
@@ -632,8 +632,8 @@ void Codegen::visit(LiteralNode &node, const int output_slot) {
     START_CHECK_CYCLES
 
     std::string wire_name = GetSafeWireName("number_literal");
-    decls += "wire [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + wire_name + " = " +
-             std::to_string(node.GetDataWidth()) + "'d" + std::to_string(node.value) + ";\n";
+    m_decls += "wire [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + wire_name + " = " +
+               std::to_string(node.GetDataWidth()) + "'d" + std::to_string(node.value) + ";\n";
 
     END_CHECK_CYCLES
     CACHE_AND_RETURN(node, wire_name, output_slot)
@@ -658,7 +658,7 @@ void Codegen::visit(OutputNode &node, const int output_slot) {
 
     const auto in_val = EvalNode(in);
 
-    inner += "\t\t" + node.module->GetOutputs()[node.slot].name + " = " + in_val + ";\n";
+    m_inner += "\t\t" + node.module->GetOutputs()[node.slot].name + " = " + in_val + ";\n";
 
     END_CHECK_CYCLES
     CACHE_AND_RETURN(node, "", output_slot);
@@ -666,44 +666,44 @@ void Codegen::visit(OutputNode &node, const int output_slot) {
 
 
 std::optional<std::string> Codegen::CheckCache(const std::string &guid) {
-    if (!visitedNodes.contains(guid))
+    if (!m_visited_nodes.contains(guid))
         return std::nullopt;
 
-    return visitedNodes[guid];
+    return m_visited_nodes[guid];
 }
 
 std::string Codegen::GetSafeWireName(const std::string &wire_name) {
-    if (wireNameCounts.contains(wire_name)) {
-        return wire_name + std::to_string(wireNameCounts[wire_name]++);
+    if (m_wire_name_counts.contains(wire_name)) {
+        return wire_name + std::to_string(m_wire_name_counts[wire_name]++);
     }
 
-    wireNameCounts[wire_name] = 1;
+    m_wire_name_counts[wire_name] = 1;
     return wire_name + "0";
 }
 
 void Codegen::CircuitError(const std::string &msg, const Node &node) {
-    failed = true;
+    m_failed = true;
     std::cerr << "ERROR EXPORTING CIRCUIT: " << msg << std::endl;
     std::cerr << "related node: " << node.guid << std::endl;
-    error_manager->ThrowError(msg, node);
+    m_error_manager->ThrowError(msg, node);
 }
 
 bool Codegen::CheckActive(const std::string &guid) {
     std::stack<std::string> tmp;
     bool found = false;
 
-    while (!activeNodes.empty()) {
-        if (activeNodes.top() == guid) {
+    while (!m_active_nodes.empty()) {
+        if (m_active_nodes.top() == guid) {
             std::cout << "Currently evaluating node " << guid << " oh no   " << std::endl;
             found = true;
             break;
         }
-        tmp.push(activeNodes.top());
-        activeNodes.pop();
+        tmp.push(m_active_nodes.top());
+        m_active_nodes.pop();
     }
 
     while (!tmp.empty()) {
-        activeNodes.push(tmp.top());
+        m_active_nodes.push(tmp.top());
         tmp.pop();
     }
     return found;

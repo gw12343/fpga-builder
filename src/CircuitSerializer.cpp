@@ -159,7 +159,7 @@ void CircuitSerializer::RenameModuleFile(const Project *project, const Module *m
     try {
         std::filesystem::rename(old_path, new_path);
         ImGui::InsertNotification({ImGuiToastType::Success, 500, "Renamed module to '%s'", new_path.c_str()});
-    } catch (const std::filesystem::filesystem_error &e) {
+    } catch ([[maybe_unused]] const std::filesystem::filesystem_error &e) {
         ImGui::InsertNotification({ImGuiToastType::Error, 500, "Failed to rename module"});
     }
 }
