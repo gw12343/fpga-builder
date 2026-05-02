@@ -90,8 +90,6 @@
             src/Default/InputNode.cpp
             src/Default/InputNode.h
             src/Codegen/Visitor.h
-            src/Codegen/TraversePrint.cpp
-            src/Codegen/TraversePrint.h
             src/Codegen/Codegen.cpp
             src/Codegen/Codegen.h
             src/Default/BinaryOperator/OrNode.h

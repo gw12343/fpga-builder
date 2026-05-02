@@ -4,9 +4,7 @@
 
 #include "Topbar.h"
 
-#include "CircuitSerializer.h"
 #include "Codegen/Codegen.h"
-#include "Codegen/TraversePrint.h"
 #include "GUID.h"
 #include "OutputViewer.h"
 #include "Project/Project.h"
@@ -17,12 +15,7 @@ void Topbar::Render(const std::shared_ptr<Project> &project, const std::shared_p
     ImGui::Begin("Options");
 
     if (const auto module = project->GetSelectedModule(); module.has_value()) {
-        if (ImGui::Button("Print Circuit")) {
-            TraversePrint v;
-            module.value()->GetNodes()[0]->accept(v, 0);
-        }
 
-        ImGui::SameLine();
 
         if (ImGui::Button("Export Circuit")) {
             Codegen c(error_manager);
@@ -39,13 +32,6 @@ void Topbar::Render(const std::shared_ptr<Project> &project, const std::shared_p
 
         ImGui::SameLine();
 
-        // if (ImGui::Button("Load Circuit")) {
-        //     module = CircuitSerializer::LoadModule("../Project/circuit.json");
-        // }
-
-        ImGui::SameLine();
-
-        ImGui::SameLine();
 
         if (ImGui::Button("New Module")) {
             const auto m = std::make_shared<Module>(project.get(), "new_module", GUID::generate_guid());
