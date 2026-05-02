@@ -43,15 +43,15 @@ std::unique_ptr<Node> CircuitSerializer::NodeFromJson(const json &j, Module *m) 
     auto guid = j.at("guid").get<std::string>();
 
     if (type == "OrNode") {
-        p = std::make_unique<OrNode>(m, guid, j.at("bits").get<int>());
+        p = std::make_unique<OrNode>(m, guid, j.at("bits").get<int>(), j.at("num_inputs").get<int>());
     } else if (type == "CustomNode") {
         p = std::make_unique<CustomModuleNode>(m, guid, j.at("module_guid").get<std::string>());
     } else if (type == "XOrNode") {
-        p = std::make_unique<XOrNode>(m, guid, j.at("bits").get<int>());
+        p = std::make_unique<XOrNode>(m, guid, j.at("bits").get<int>(), j.at("num_inputs").get<int>());
     } else if (type == "NorNode") {
-        p = std::make_unique<NorNode>(m, guid, j.at("bits").get<int>());
+        p = std::make_unique<NorNode>(m, guid, j.at("bits").get<int>(), j.at("num_inputs").get<int>());
     } else if (type == "AndNode") {
-        p = std::make_unique<AndNode>(m, guid, j.at("bits").get<int>());
+        p = std::make_unique<AndNode>(m, guid, j.at("bits").get<int>(), j.at("num_inputs").get<int>());
     } else if (type == "OutputNode") {
         p = std::make_unique<OutputNode>(m, guid, j.at("slot").get<int>());
     } else if (type == "InputNode") {

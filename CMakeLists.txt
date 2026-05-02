@@ -144,6 +144,7 @@
             src/UI/NodeUI.cpp
             src/pch.h
             src/pch.h
+            src/Default/ConfigurableDataAndNumInputsNode.h
     )
 
     target_include_directories(fpga_builder PUBLIC

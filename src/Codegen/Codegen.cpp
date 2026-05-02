@@ -580,20 +580,26 @@ void Codegen::visit(BinaryOpNode &node, const int output_slot) {
     CHECK_CACHE
     START_CHECK_CYCLES
 
-    const auto a = node.GetAInputPin().GetConnectedPin();
-    const auto b = node.GetBInputPin().GetConnectedPin();
+    std::vector<std::string> input_pin_values;
 
-    VERIFY_CONNECTION(a);
-    VERIFY_CONNECTION(b);
+    // Save each input pin value
+    for (int i = 0; i < node.GetNumInputs(); i++) {
+        // Input pin
+        const auto in = node.GetInputPin(i).GetConnectedPin();
+        // Verify connection to input pin
+        VERIFY_CONNECTION(in);
+        // Get input value
+        const auto input_val = EvalNode(in);
 
-    const auto b_val = EvalNode(b);
-    const auto a_val = EvalNode(a);
+        // Save value
+        input_pin_values.push_back(input_val);
+    }
 
 
     const std::string out_reg = GetSafeWireName("bin_op_result");
 
     m_decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + out_reg + ";\n";
-    m_inner += "\t\t" + node.GetVerilogAssign(out_reg, a_val, b_val);
+    m_inner += "\t\t" + node.GetVerilogAssign(out_reg, input_pin_values);
 
     END_CHECK_CYCLES
     CACHE_AND_RETURN(node, out_reg, output_slot)

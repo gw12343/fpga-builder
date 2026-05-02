@@ -3,14 +3,12 @@
 //
 
 #pragma once
-#include "Default/ConfigurableBitWidthNode.h"
+#include "Default/ConfigurableDataAndNumInputsNode.h"
 #include "Default/Node.h"
 #include "Pins/Pin.h"
 
-#define BINARY_OP_IN_PIN_A "A"
-#define BINARY_OP_IN_PIN_B "B"
 
-class BinaryOpNode : public ConfigurableBitWidthNode {
+class BinaryOpNode : public ConfigurableDataAndNumInputsNode {
 public:
     void accept(Visitor &v, const int output_slot) override { v.visit(*this, output_slot); }
 
@@ -20,31 +18,35 @@ public:
     [[nodiscard]] ImVec4 GetUIColor() const override { return COLOR; }
 
 
-    [[nodiscard]] virtual std::string GetVerilogAssign(const std::string &out, const std::string &a,
-                                                       const std::string &b) const {
+    [[nodiscard]] virtual std::string GetVerilogAssign(const std::string &out,
+                                                       const std::vector<std::string> &inputs) const {
         return "????";
     }
 
 
     // Pre-configured
-    BinaryOpNode(Module *module, const std::string &guid, const std::string &name, const int bit_width) :
-        ConfigurableBitWidthNode(guid, module, name, bit_width) {
+    BinaryOpNode(Module *module, const std::string &guid, const std::string &name, const int bit_width,
+                 const int num_inputs) :
+        ConfigurableDataAndNumInputsNode(guid, module, name, bit_width, num_inputs) {
         BinaryOpNode::InitPinsAfterConfig();
     }
 
-    BinaryOpNode(Module *module, const std::string &name) : ConfigurableBitWidthNode(module, name) {}
+    BinaryOpNode(Module *module, const std::string &name) : ConfigurableDataAndNumInputsNode(module, name) {}
+
+    static std::string GetBitInPinName(const int n) { return "Input " + std::to_string(n); }
 
 
     void InitPinsAfterConfig() override {
         int n = 0;
         // Inputs
-        pins.push_back((Pin){BINARY_OP_IN_PIN_A, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(bits)});
-        pins.push_back((Pin){BINARY_OP_IN_PIN_B, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(bits)});
+        for (int i = 0; i < inputs_size; i++) {
+            Pin new_input(GetBitInPinName(i), ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(data_bits));
+            pins.push_back(new_input);
+        }
 
-        // Outputs
-        pins.push_back((Pin){"Out", ax::NodeEditor::PinKind::Output, *this, n, PinDataType(bits)});
+        // Output
+        pins.push_back((Pin){"Out", ax::NodeEditor::PinKind::Output, *this, n, PinDataType(data_bits)});
     }
 
-    Pin GetAInputPin() { return FindPin(BINARY_OP_IN_PIN_A).value(); }
-    Pin GetBInputPin() { return FindPin(BINARY_OP_IN_PIN_B).value(); }
+    Pin GetInputPin(const int n) { return FindPin(GetBitInPinName(n)).value(); }
 };
