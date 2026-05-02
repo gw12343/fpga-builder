@@ -60,8 +60,8 @@ public:
                 {"guid", guid},
                 {"name", name},
                 {"id", id.Get()},
-                {"x", last_pos.x},
-                {"y", last_pos.y}};
+                {"x", last_pos.x == FLT_MAX ? start_pos.x : last_pos.x},
+                {"y", last_pos.y == FLT_MAX ? start_pos.y : last_pos.y}};
     }
 
     // Helpers
