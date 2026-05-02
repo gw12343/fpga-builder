@@ -145,6 +145,7 @@
             src/pch.h
             src/pch.h
             src/Default/ConfigurableDataAndNumInputsNode.h
+            src/Default/DecoderNode.h
     )
 
     target_include_directories(fpga_builder PUBLIC

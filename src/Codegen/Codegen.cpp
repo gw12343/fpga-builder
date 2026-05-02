@@ -15,6 +15,7 @@
 #include "Default/CustomModuleNode.h"
 #include "Default/DFFNode.h"
 #include "Default/DebounceNode.h"
+#include "Default/DecoderNode.h"
 #include "Default/EdgeNode.h"
 #include "Default/InputNode.h"
 #include "Default/LiteralNode.h"
@@ -201,7 +202,6 @@ void Codegen::visit(CustomModuleNode &node, const int output_slot) {
     // TODO retunnr??
 }
 
-
 void Codegen::visit(SplitterNode &node, const int output_slot) {
     CHECK_CACHE
     START_CHECK_CYCLES
@@ -330,6 +330,61 @@ void Codegen::visit(AdderNode &node, const int output_slot) {
 
     // Fallback - different output node not recognized??
     CircuitError("Invalid connection!", node);
+}
+
+void Codegen::visit(DecoderNode &node, const int output_slot) {
+    CHECK_CACHE
+    START_CHECK_CYCLES
+    std::vector<std::string> out_wire_names;
+
+    // Cache each output wire
+    for (int i = 0; i < node.GetNumOutputs(); i++) {
+        const std::string bit_output = GetSafeWireName("decoder_" + std::to_string(i) + "_out");
+        out_wire_names.push_back(bit_output);
+        m_visited_nodes[NODE_KEY(i + 1)] = bit_output;
+    }
+
+    // Input pin
+    const auto in = node.GetInputPin().GetConnectedPin();
+    // Verify connection to input pin
+    VERIFY_CONNECTION(in);
+    // Get input value
+    const auto input_val = EvalNode(in);
+
+    // Declare each individual bit as a wire
+    m_decls += "reg ";
+    for (int i = 0; i < node.GetNumOutputs(); i++) {
+        m_decls += out_wire_names[i] + ", ";
+    }
+    // Remove extra trailing comma and space
+    m_decls.pop_back();
+    m_decls.pop_back();
+    // End line
+    m_decls += ";\n";
+
+    // Initalize all outputs to 0
+    m_inner += "\t\t{";
+    // Assign each wire to single bit
+    for (int i = 0; i < node.GetNumOutputs(); i++) {
+        m_inner += out_wire_names[i] + ", ";
+    }
+    m_inner.pop_back();
+    m_inner.pop_back();
+    m_inner += "} = " + std::to_string(node.GetNumOutputs()) + "'b0;\n";
+
+    m_inner += "\t\tcase (" + input_val + ")\n";
+    for (int i = 0; i < node.GetNumOutputs(); i++) {
+        m_inner += "\t\t\t" + std::to_string(node.GetDataWidth()) + "'d" + std::to_string(i) + ": " +
+                   out_wire_names[i] + " = 1;\n";
+    }
+    m_inner += "\t\tendcase\n";
+
+
+    // Return correct output depending on output slot
+    // Skip over the input pin (pin 0)
+    const int bit_index = output_slot - 1;
+    END_CHECK_CYCLES
+    RETURN_REG(out_wire_names[bit_index]);
 }
 
 // ===== SINGLE OUTPUT NODES ===========================================================================================

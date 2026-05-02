@@ -1,6 +1,6 @@
 {
     "author": "gw",
-    "last_saved": 1777746995548,
+    "last_saved": 1777751445336,
     "module_files": [
         "main_module.json",
         "register_bank1.json",
@@ -8,7 +8,7 @@
         "alu_carry.json"
     ],
     "name": "New Project",
-    "selected_module": 2,
+    "selected_module": 0,
     "time_created": 1777434014282,
     "top_level_node_guid": "274503748e194d7397018655226b8573",
     "workspace_path": "../Project"

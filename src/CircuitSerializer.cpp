@@ -18,6 +18,7 @@
 #include "Default/CustomModuleNode.h"
 #include "Default/DFFNode.h"
 #include "Default/DebounceNode.h"
+#include "Default/DecoderNode.h"
 #include "Default/EdgeNode.h"
 #include "Default/InputNode.h"
 #include "Default/LiteralNode.h"
@@ -62,6 +63,8 @@ std::unique_ptr<Node> CircuitSerializer::NodeFromJson(const json &j, Module *m) 
         p = std::make_unique<LiteralNode>(m, guid, j.at("bits").get<int>(), j.at("value").get<int>());
     } else if (type == "SplitterNode") {
         p = std::make_unique<SplitterNode>(m, guid, j.at("bits").get<int>());
+    } else if (type == "DecoderNode") {
+        p = std::make_unique<DecoderNode>(m, guid, j.at("bits").get<int>());
     } else if (type == "CombinerNode") {
         p = std::make_unique<CombinerNode>(m, guid, j.at("bits").get<int>());
     } else if (type == "CounterNode") {

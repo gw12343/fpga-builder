@@ -17,6 +17,7 @@
 #include "Default/CustomModuleNode.h"
 #include "Default/DFFNode.h"
 #include "Default/DebounceNode.h"
+#include "Default/DecoderNode.h"
 #include "Default/EdgeNode.h"
 #include "Default/InputNode.h"
 #include "Default/LiteralNode.h"
@@ -48,6 +49,7 @@ Toolbox::Toolbox() {
     ADD_NODE_TO_CATEGORY("Wiring", "Splitter", SplitterNode);
     ADD_NODE_TO_CATEGORY("Wiring", "Combiner", CombinerNode);
     ADD_NODE_TO_CATEGORY("Wiring", "Multiplexer", MultiplexerNode);
+    ADD_NODE_TO_CATEGORY("Wiring", "Decoder", DecoderNode);
 
     ADD_NODE_TO_CATEGORY("IO", "Input", InputNode);
     ADD_NODE_TO_CATEGORY("IO", "Output", OutputNode);
