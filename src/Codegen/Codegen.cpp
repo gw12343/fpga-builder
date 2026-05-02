@@ -510,28 +510,38 @@ void Codegen::visit(CounterNode &node, const int output_slot) {
     const auto clk = node.GetClkPin().GetConnectedPin();
     const auto rst = node.GetResetPin().GetConnectedPin();
 
+    const auto load_enb = node.GetLoadPin().GetConnectedPin();
+    const auto load_val = node.GetLoadValuePin().GetConnectedPin();
+
     // Verify connections to pins
     VERIFY_CONNECTION(enb);
     VERIFY_CONNECTION(cup);
     VERIFY_CONNECTION(clk);
     VERIFY_CONNECTION(rst);
+    VERIFY_CONNECTION(load_enb);
+    VERIFY_CONNECTION(load_val);
 
     // Evaluate inputs
     const auto enb_val = EvalNode(enb);
     const auto cup_val = EvalNode(cup);
     const auto clk_val = EvalNode(clk);
     const auto rst_val = EvalNode(rst);
+    const auto load_enb_val = EvalNode(load_enb);
+    const auto load_val_val = EvalNode(load_val);
 
     m_decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + output_reg + ";\n";
 
     // counter block
     m_later += "\talways @(posedge " + clk_val + ") begin\n";
-    m_later += "\t\tif (" + rst_val + ") \n";
+    m_later += "\t\tif (" + rst_val + ") begin \n";
     m_later += "\t\t\t" + output_reg + " <= " + std::to_string(node.GetDataWidth()) + "'b0;\n";
-    m_later += "\t\telse if (" + enb_val + " & " + cup_val + " )\n";
+    m_later += "\t\tend else if (" + load_enb_val + " ) begin\n";
+    m_later += "\t\t\t" + output_reg + " <= " + load_val_val + ";\n";
+    m_later += "\t\tend else if (" + enb_val + " & " + cup_val + " ) begin\n";
     m_later += "\t\t\t" + output_reg + " <= " + output_reg + " + 1;\n";
-    m_later += "\t\telse if (" + enb_val + " & ~" + cup_val + " )\n";
+    m_later += "\t\tend else if (" + enb_val + " & ~" + cup_val + " ) begin\n";
     m_later += "\t\t\t" + output_reg + " <= " + output_reg + " - 1;\n";
+    m_later += "\t\tend\n";
     m_later += "\tend\n\n";
 
     RETURN_REG(output_reg)

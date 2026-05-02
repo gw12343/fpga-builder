@@ -11,6 +11,9 @@ static auto COUTNER_IN_PIN_CLOCK = "Clk";
 static auto COUTNER_IN_PIN_RESET = "Reset";
 static auto COUTNER_IN_PIN_COUNT_UP = "Count Up";
 
+static auto COUTNER_IN_PIN_LOAD = "Load Enable";
+static auto COUTNER_IN_PIN_DATA = "Load Value";
+
 class CounterNode final : public ConfigurableBitWidthNode {
 public:
     [[nodiscard]] std::string GetSerializationType() const override { return "CounterNode"; }
@@ -23,7 +26,7 @@ public:
 
     static constexpr ImVec4 COLOR = {0.729f, 0.455f, 0.067f, 1.0f};
     [[nodiscard]] ImVec4 GetUIColor() const override { return COLOR; }
-    [[nodiscard]] int GetNodeWidth() const override { return 150; }
+    [[nodiscard]] int GetNodeWidth() const override { return 175; }
 
     // Pre-configured node
     CounterNode(Module *module, const std::string &guid, const int bit_width) :
@@ -42,6 +45,9 @@ public:
         pins.push_back((Pin){COUTNER_IN_PIN_COUNT_UP, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(1)});
         pins.push_back((Pin){COUTNER_IN_PIN_RESET, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(1)});
 
+        pins.push_back((Pin){COUTNER_IN_PIN_LOAD, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(1)});
+        pins.push_back((Pin){COUTNER_IN_PIN_DATA, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(bits)});
+
         // Outputs
         pins.push_back((Pin){"Value", ax::NodeEditor::PinKind::Output, *this, n, PinDataType(bits)});
     }
@@ -50,4 +56,6 @@ public:
     Pin GetCountUpPin() { return FindPin(COUTNER_IN_PIN_COUNT_UP).value(); }
     Pin GetClkPin() { return FindPin(COUTNER_IN_PIN_CLOCK).value(); }
     Pin GetResetPin() { return FindPin(COUTNER_IN_PIN_RESET).value(); }
+    Pin GetLoadPin() { return FindPin(COUTNER_IN_PIN_LOAD).value(); }
+    Pin GetLoadValuePin() { return FindPin(COUTNER_IN_PIN_DATA).value(); }
 };

@@ -12,14 +12,9 @@
     ],
     "links": [
         {
-            "id": 2757816899,
+            "id": 18446744072172401219,
             "input_guid": "c70ea91458864b5d88b863e0af4757d8node0",
             "output_guid": "3bb4bfe076314492b31bfdee50ca0ec3node0"
-        },
-        {
-            "id": 680923870,
-            "input_guid": "fef074d7d24c4ee8b0743ae9d8765847node4",
-            "output_guid": "676464c7f7fd43bf905101da3e428155node0"
         },
         {
             "id": 475702672,
@@ -62,9 +57,24 @@
             "output_guid": "31b7f4d71d5c46f0ad51383a5613a508node1"
         },
         {
-            "id": 2284654950,
+            "id": 18446744071699239270,
             "input_guid": "298016ba2b8c4044a1fe4ae601d94073node0",
             "output_guid": "da4077cb57254849a88868523ba4fcefnode1"
+        },
+        {
+            "id": 18446744072399253096,
+            "input_guid": "fef074d7d24c4ee8b0743ae9d8765847node6",
+            "output_guid": "676464c7f7fd43bf905101da3e428155node0"
+        },
+        {
+            "id": 18446744071733868717,
+            "input_guid": "3bb4bfe076314492b31bfdee50ca0ec3node3",
+            "output_guid": "fef074d7d24c4ee8b0743ae9d8765847node4"
+        },
+        {
+            "id": 1053567453,
+            "input_guid": "62f8ec5b8d9b4fd4841a3293dee160denode0",
+            "output_guid": "fef074d7d24c4ee8b0743ae9d8765847node5"
         }
     ],
     "name": "main_module",
@@ -75,7 +85,7 @@
             "name": "Output",
             "slot": 0,
             "type": "OutputNode",
-            "x": 1198.0,
+            "x": 1086.0,
             "y": 701.0
         },
         {
@@ -84,35 +94,35 @@
             "name": "Input",
             "slot": 1,
             "type": "InputNode",
-            "x": -148.0,
-            "y": 109.0
+            "x": -509.0,
+            "y": 333.0
         },
         {
             "guid": "c066c399cbe649bb84aeb8ed639c2117",
-            "id": 3910113648,
+            "id": 18446744073324697968,
             "name": "Input",
             "slot": 0,
             "type": "InputNode",
-            "x": 19.0,
-            "y": 781.0
+            "x": -20.0,
+            "y": 861.0
         },
         {
             "bits": 4,
             "guid": "3bb4bfe076314492b31bfdee50ca0ec3",
-            "id": 4162728049,
+            "id": 18446744073577312369,
             "name": "Splitter",
             "type": "SplitterNode",
-            "x": 119.0,
-            "y": 181.0
+            "x": -162.0,
+            "y": 405.0
         },
         {
             "bits": 4,
             "guid": "fef074d7d24c4ee8b0743ae9d8765847",
-            "id": 4073043163,
+            "id": 18446744073487627483,
             "name": "Counter",
             "type": "CounterNode",
-            "x": 940.0,
-            "y": 773.0
+            "x": 819.0,
+            "y": 597.0
         },
         {
             "bits": 4,
@@ -120,12 +130,12 @@
             "id": 553506840,
             "name": "Splitter",
             "type": "SplitterNode",
-            "x": 302.0,
-            "y": 821.0
+            "x": 263.0,
+            "y": 901.0
         },
         {
             "guid": "31b7f4d71d5c46f0ad51383a5613a508",
-            "id": 3205428781,
+            "id": 18446744072620013101,
             "name": "Debounce",
             "type": "DebounceNode",
             "x": 393.0,
@@ -133,7 +143,7 @@
         },
         {
             "guid": "da4077cb57254849a88868523ba4fcef",
-            "id": 3089375483,
+            "id": 18446744072503959803,
             "name": "Edge",
             "type": "EdgeNode",
             "x": 555.0,
@@ -141,11 +151,21 @@
         },
         {
             "guid": "298016ba2b8c4044a1fe4ae601d94073",
-            "id": 2311027494,
+            "id": 18446744071725611814,
             "name": "",
             "type": "ClockNode",
-            "x": -4.0,
-            "y": 453.0
+            "x": -20.0,
+            "y": 661.0
+        },
+        {
+            "bits": 4,
+            "guid": "62f8ec5b8d9b4fd4841a3293dee160de",
+            "id": 18446744071931727758,
+            "name": "Literal",
+            "type": "LiteralNode",
+            "value": 10,
+            "x": 453.0,
+            "y": 1131.0
         }
     ],
     "outputs": [
