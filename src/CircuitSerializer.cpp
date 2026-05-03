@@ -9,6 +9,7 @@
 
 #include "Default/AdderNode.h"
 #include "Default/BinaryOperator/AndNode.h"
+#include "Default/BinaryOperator/NandNode.h"
 #include "Default/BinaryOperator/NorNode.h"
 #include "Default/BinaryOperator/OrNode.h"
 #include "Default/BinaryOperator/XOrNode.h"
@@ -53,6 +54,8 @@ std::unique_ptr<Node> CircuitSerializer::NodeFromJson(const json &j, Module *m) 
         p = std::make_unique<NorNode>(m, guid, j.at("bits").get<int>(), j.at("num_inputs").get<int>());
     } else if (type == "AndNode") {
         p = std::make_unique<AndNode>(m, guid, j.at("bits").get<int>(), j.at("num_inputs").get<int>());
+    } else if (type == "NandNode") {
+        p = std::make_unique<NandNode>(m, guid, j.at("bits").get<int>(), j.at("num_inputs").get<int>());
     } else if (type == "OutputNode") {
         p = std::make_unique<OutputNode>(m, guid, j.at("slot").get<int>());
     } else if (type == "InputNode") {

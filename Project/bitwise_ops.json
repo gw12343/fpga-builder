@@ -1,0 +1,222 @@
+{
+    "guid": "fe7c5f046e2b41b8b3bf733c989b56b0",
+    "inputs": [
+        {
+            "bits": 32,
+            "name": "A"
+        },
+        {
+            "bits": 32,
+            "name": "B"
+        }
+    ],
+    "links": [
+        {
+            "id": 2492349896,
+            "input_guid": "4352d17c29f3475c84979d750271680dnode0",
+            "output_guid": "216fc3d92d81423aa6b9335be93cd529node0"
+        },
+        {
+            "id": 3886766799,
+            "input_guid": "5c3beeafbf1e462c90c352e5bb519a3fnode0",
+            "output_guid": "216fc3d92d81423aa6b9335be93cd529node1"
+        },
+        {
+            "id": 2695910780,
+            "input_guid": "216fc3d92d81423aa6b9335be93cd529node2",
+            "output_guid": "a1cbe8e4fbde4039829d21a1dfcf8ddfnode0"
+        },
+        {
+            "id": 1350005748,
+            "input_guid": "4352d17c29f3475c84979d750271680dnode0",
+            "output_guid": "fa86c8c2d7904b968a0218ebe93f1c21node0"
+        },
+        {
+            "id": 780650522,
+            "input_guid": "5c3beeafbf1e462c90c352e5bb519a3fnode0",
+            "output_guid": "fa86c8c2d7904b968a0218ebe93f1c21node1"
+        },
+        {
+            "id": 1493446255,
+            "input_guid": "4352d17c29f3475c84979d750271680dnode0",
+            "output_guid": "fbdb857d79b84acaaf166e924f7f7c14node0"
+        },
+        {
+            "id": 2158027248,
+            "input_guid": "4352d17c29f3475c84979d750271680dnode0",
+            "output_guid": "7ef1bd2f8bf0484ba5820ff074417becnode0"
+        },
+        {
+            "id": 939720136,
+            "input_guid": "4352d17c29f3475c84979d750271680dnode0",
+            "output_guid": "92d359b1ca974c6babd409a977d8e4b6node0"
+        },
+        {
+            "id": 4222144159,
+            "input_guid": "5c3beeafbf1e462c90c352e5bb519a3fnode0",
+            "output_guid": "7ef1bd2f8bf0484ba5820ff074417becnode1"
+        },
+        {
+            "id": 3414420620,
+            "input_guid": "5c3beeafbf1e462c90c352e5bb519a3fnode0",
+            "output_guid": "92d359b1ca974c6babd409a977d8e4b6node1"
+        },
+        {
+            "id": 1921281897,
+            "input_guid": "fa86c8c2d7904b968a0218ebe93f1c21node2",
+            "output_guid": "1313cf44dc6c46ea96849fdd090bf715node0"
+        },
+        {
+            "id": 365180771,
+            "input_guid": "fbdb857d79b84acaaf166e924f7f7c14node1",
+            "output_guid": "d7a2df9ccd7a4adbadd788cb64dfa7canode0"
+        },
+        {
+            "id": 3564513787,
+            "input_guid": "7ef1bd2f8bf0484ba5820ff074417becnode2",
+            "output_guid": "d1576e3341c7428ebca44c357ef1ef64node0"
+        },
+        {
+            "id": 2108238512,
+            "input_guid": "92d359b1ca974c6babd409a977d8e4b6node2",
+            "output_guid": "331a889e3ff341f9a629a6f8645638f9node0"
+        }
+    ],
+    "name": "bitwise_ops",
+    "nodes": [
+        {
+            "guid": "4352d17c29f3475c84979d750271680d",
+            "id": 192162728,
+            "name": "Input",
+            "slot": 0,
+            "type": "InputNode",
+            "x": 0.0,
+            "y": 0.0
+        },
+        {
+            "guid": "5c3beeafbf1e462c90c352e5bb519a3f",
+            "id": 1688647777,
+            "name": "Input",
+            "slot": 1,
+            "type": "InputNode",
+            "x": 3.0,
+            "y": 157.0
+        },
+        {
+            "guid": "a1cbe8e4fbde4039829d21a1dfcf8ddf",
+            "id": 1558548768,
+            "name": "Output",
+            "slot": 0,
+            "type": "OutputNode",
+            "x": 654.0,
+            "y": -211.0
+        },
+        {
+            "guid": "1313cf44dc6c46ea96849fdd090bf715",
+            "id": 1976370786,
+            "name": "Output",
+            "slot": 1,
+            "type": "OutputNode",
+            "x": 654.0,
+            "y": -51.0
+        },
+        {
+            "guid": "d7a2df9ccd7a4adbadd788cb64dfa7ca",
+            "id": 2380285074,
+            "name": "Output",
+            "slot": 2,
+            "type": "OutputNode",
+            "x": 654.0,
+            "y": 109.0
+        },
+        {
+            "guid": "d1576e3341c7428ebca44c357ef1ef64",
+            "id": 2854751570,
+            "name": "Output",
+            "slot": 3,
+            "type": "OutputNode",
+            "x": 654.0,
+            "y": 269.0
+        },
+        {
+            "guid": "331a889e3ff341f9a629a6f8645638f9",
+            "id": 58915727,
+            "name": "Output",
+            "slot": 4,
+            "type": "OutputNode",
+            "x": 654.0,
+            "y": 429.0
+        },
+        {
+            "bits": 32,
+            "guid": "216fc3d92d81423aa6b9335be93cd529",
+            "id": 2036322651,
+            "name": "AND",
+            "num_inputs": 2,
+            "type": "AndNode",
+            "x": 440.0,
+            "y": -59.0
+        },
+        {
+            "bits": 32,
+            "guid": "fa86c8c2d7904b968a0218ebe93f1c21",
+            "id": 2631234184,
+            "name": "OR",
+            "num_inputs": 2,
+            "type": "OrNode",
+            "x": 440.0,
+            "y": 53.0
+        },
+        {
+            "bits": 32,
+            "guid": "fbdb857d79b84acaaf166e924f7f7c14",
+            "id": 2515031484,
+            "name": "NOT",
+            "type": "NotNode",
+            "x": 443.0,
+            "y": 165.0
+        },
+        {
+            "bits": 32,
+            "guid": "7ef1bd2f8bf0484ba5820ff074417bec",
+            "id": 526393569,
+            "name": "XOR",
+            "num_inputs": 2,
+            "type": "XOrNode",
+            "x": 443.0,
+            "y": 245.0
+        },
+        {
+            "bits": 32,
+            "guid": "92d359b1ca974c6babd409a977d8e4b6",
+            "id": 919527944,
+            "name": "NAND",
+            "num_inputs": 2,
+            "type": "NandNode",
+            "x": 440.0,
+            "y": 357.0
+        }
+    ],
+    "outputs": [
+        {
+            "bits": 32,
+            "name": "AND_OUT"
+        },
+        {
+            "bits": 32,
+            "name": "OR_OUT"
+        },
+        {
+            "bits": 32,
+            "name": "NOT_OUT"
+        },
+        {
+            "bits": 32,
+            "name": "XOR_OUT"
+        },
+        {
+            "bits": 32,
+            "name": "NAND_OUT"
+        }
+    ]
+}

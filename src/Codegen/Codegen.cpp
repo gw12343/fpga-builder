@@ -161,6 +161,9 @@ void Codegen::visit(CustomModuleNode &node, const int output_slot) {
     }
 
 
+    // const auto save = m_active_nodes;
+    // m_active_nodes = {};
+
     std::vector<std::string> input_pin_values;
     std::vector<std::string> input_pin_names;
 
@@ -177,6 +180,8 @@ void Codegen::visit(CustomModuleNode &node, const int output_slot) {
         input_pin_values.push_back(input_val);
         input_pin_names.push_back(node.pins[i].GetName());
     }
+
+    // m_active_nodes = save;
 
     // Create output wires
     for (const auto &[name, bits]: output_wires) {
@@ -199,7 +204,7 @@ void Codegen::visit(CustomModuleNode &node, const int output_slot) {
     RETURN_REG(output_wires[output_slot - num_inputs].name);
 
     END_CHECK_CYCLES
-    // TODO retunnr??
+    //  TODO retunnr??
 }
 
 void Codegen::visit(SplitterNode &node, const int output_slot) {
@@ -432,6 +437,9 @@ void Codegen::visit(MultiplexerNode &node, const int output_slot) {
     CHECK_CACHE
     START_CHECK_CYCLES
 
+    std::string result_reg = GetSafeWireName("mux_result");
+    m_visited_nodes[NODE_KEY(output_slot)] = result_reg;
+
     // Store evaluated pins
     std::vector<std::string> input_pin_values;
 
@@ -457,7 +465,6 @@ void Codegen::visit(MultiplexerNode &node, const int output_slot) {
     const auto select_val = EvalNode(s);
 
 
-    std::string result_reg = GetSafeWireName("mux_result");
     m_decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + result_reg + ";\n";
 
 

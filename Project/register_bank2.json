@@ -751,8 +751,8 @@
             "name": "Output",
             "slot": 2,
             "type": "OutputNode",
-            "x": -434.0,
-            "y": 861.0
+            "x": -1090.0,
+            "y": 957.0
         },
         {
             "guid": "c851a44cb2904902af4e6bebf1f62e73",
@@ -813,7 +813,7 @@
             "id": 1834860791,
             "name": "Combiner",
             "type": "CombinerNode",
-            "x": -621.0,
+            "x": -851.0,
             "y": 1237.0
         },
         {
@@ -832,8 +832,8 @@
             "name": "Literal",
             "type": "LiteralNode",
             "value": 0,
-            "x": -1019.0,
-            "y": 2395.0
+            "x": -1323.0,
+            "y": 1867.0
         },
         {
             "guid": "20de38a67cd94305983d26093b5bcdc0",
@@ -841,7 +841,7 @@
             "name": "Output",
             "slot": 5,
             "type": "OutputNode",
-            "x": -274.0,
+            "x": -504.0,
             "y": 1117.0
         },
         {
@@ -922,8 +922,8 @@
             "name": "Input",
             "slot": 7,
             "type": "InputNode",
-            "x": -166.0,
-            "y": 2621.0
+            "x": -118.0,
+            "y": 2381.0
         },
         {
             "bits": 32,
@@ -931,8 +931,8 @@
             "id": 1848835016,
             "name": "Splitter",
             "type": "SplitterNode",
-            "x": 62.0,
-            "y": 2645.0
+            "x": 110.0,
+            "y": 2405.0
         },
         {
             "bits": 16,
@@ -940,8 +940,8 @@
             "id": 461895241,
             "name": "Combiner",
             "type": "CombinerNode",
-            "x": 259.0,
-            "y": 2645.0
+            "x": 307.0,
+            "y": 2405.0
         },
         {
             "bits": 16,
@@ -949,8 +949,8 @@
             "id": 1947092373,
             "name": "Register",
             "type": "RegisterNode",
-            "x": 505.0,
-            "y": 2485.0
+            "x": 553.0,
+            "y": 2245.0
         },
         {
             "guid": "ce108ca083714e79a6abd3c13852cfa7",
@@ -958,16 +958,16 @@
             "name": "Input",
             "slot": 8,
             "type": "InputNode",
-            "x": 83.0,
-            "y": 2461.0
+            "x": 131.0,
+            "y": 2221.0
         },
         {
             "guid": "086666b0ed8d423cb538b1c2d6901e86",
             "id": 18446744073216336547,
             "name": "",
             "type": "ClockNode",
-            "x": 300.0,
-            "y": 2485.0
+            "x": 348.0,
+            "y": 2245.0
         },
         {
             "guid": "b61e99137d75477bb3284c6f94d828b1",
@@ -975,8 +975,8 @@
             "name": "Input",
             "slot": 4,
             "type": "InputNode",
-            "x": 163.0,
-            "y": 2253.0
+            "x": 211.0,
+            "y": 2013.0
         },
         {
             "guid": "224aa1037d4d40c68d44e214f8ce4903",
@@ -984,8 +984,8 @@
             "name": "Output",
             "slot": 6,
             "type": "OutputNode",
-            "x": 926.0,
-            "y": 2285.0
+            "x": 974.0,
+            "y": 2045.0
         },
         {
             "guid": "776e3cd03bc04e72b4e41587be6bd6ef",
@@ -993,8 +993,8 @@
             "name": "Output",
             "slot": 4,
             "type": "OutputNode",
-            "x": 1102.0,
-            "y": 2749.0
+            "x": 1150.0,
+            "y": 2509.0
         },
         {
             "bits": 16,
@@ -1002,8 +1002,8 @@
             "id": 18446744073250453068,
             "name": "Splitter",
             "type": "SplitterNode",
-            "x": 583.0,
-            "y": 2725.0
+            "x": 631.0,
+            "y": 2485.0
         },
         {
             "bits": 32,
@@ -1011,8 +1011,8 @@
             "id": 18446744071758976183,
             "name": "Combiner",
             "type": "CombinerNode",
-            "x": 812.0,
-            "y": 2725.0
+            "x": 860.0,
+            "y": 2485.0
         },
         {
             "bits": 1,
@@ -1021,8 +1021,8 @@
             "name": "Literal",
             "type": "LiteralNode",
             "value": 0,
-            "x": 549.0,
-            "y": 3739.0
+            "x": 597.0,
+            "y": 3179.0
         }
     ],
     "outputs": [

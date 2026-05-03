@@ -146,6 +146,7 @@
             src/pch.h
             src/Default/ConfigurableDataAndNumInputsNode.h
             src/Default/DecoderNode.h
+            src/Default/BinaryOperator/NandNode.h
     )
 
     target_include_directories(fpga_builder PUBLIC

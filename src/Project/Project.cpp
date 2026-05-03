@@ -49,10 +49,8 @@ Project::Project(const std::string &workspace) : m_time_created(0), m_last_saved
 
 void Project::RegisterModule(const std::shared_ptr<Module> &m) {
     m_modules.push_back(m);
-    for (const auto &module: m_modules) {
-        module->RefreshAllCustomModuleNodes(m);
-    }
 
+    // Default to the main module being selected
     if (m->GetGuid() == m_top_level_node_guid)
         m_selected_module = m_modules.size() - 1;
 }
@@ -155,6 +153,13 @@ void Project::LoadConfigFile() {
     for (auto module_files = j["module_files"].get<std::vector<std::string>>(); const auto &path: module_files) {
         auto m = CircuitSerializer::LoadModule(this, m_workspace_path + "/" + path);
         RegisterModule(m);
+    }
+
+    // Refresh all custom nodes
+    for (const auto &module: m_modules) {
+        for (const auto &module2: m_modules) {
+            module->RefreshAllCustomModuleNodes(module2);
+        }
     }
 
     ImGui::InsertNotification({ImGuiToastType::Success, 3000, "Loaded config for project '%s'", m_name.c_str()});

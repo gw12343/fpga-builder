@@ -8,6 +8,7 @@
 #include "Codegen/Codegen.h"
 #include "Default/AdderNode.h"
 #include "Default/BinaryOperator/AndNode.h"
+#include "Default/BinaryOperator/NandNode.h"
 #include "Default/BinaryOperator/NorNode.h"
 #include "Default/BinaryOperator/OrNode.h"
 #include "Default/BinaryOperator/XOrNode.h"
@@ -41,6 +42,7 @@ Toolbox::Toolbox() {
     ADD_NODE_TO_CATEGORY("Bitwise Operators", "Custom", CustomModuleNode);
     ADD_NODE_TO_CATEGORY("Bitwise Operators", "NOT", NotNode);
     ADD_NODE_TO_CATEGORY("Bitwise Operators", "AND", AndNode);
+    ADD_NODE_TO_CATEGORY("Bitwise Operators", "NAND", NandNode);
     ADD_NODE_TO_CATEGORY("Bitwise Operators", "OR", OrNode);
     ADD_NODE_TO_CATEGORY("Bitwise Operators", "NOR", NorNode);
     ADD_NODE_TO_CATEGORY("Bitwise Operators", "XOR", XOrNode);

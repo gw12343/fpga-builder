@@ -38,7 +38,7 @@ void Link::Render() const {
     const Pin &inPin = in.value();
 
     const auto link_color = BitWidthColor(out->GetDataType().GetBitWidth());
-    const auto link_thickness = inPin.GetDataType().GetBitWidth();
+    const auto link_thickness = pow(inPin.GetDataType().GetBitWidth(), 0.8);
 
 
     ax::NodeEditor::Link(id, outPin.GetId(), inPin.GetId(), link_color, static_cast<float>(link_thickness));

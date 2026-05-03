@@ -31,6 +31,8 @@ public:
 
 
     void InitPinsAfterConfig() override {
+        std::cout << "INIT PINS CUSTOM: " << module_guid << std::endl;
+        std::cout << "has val: " << module_ref.has_value() << std::endl;
         pins.clear();
         if (!module_ref.has_value())
             return;
