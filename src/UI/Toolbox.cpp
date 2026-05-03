@@ -26,6 +26,7 @@
 #include "Default/OutputNode.h"
 #include "Default/RegisterNode.h"
 #include "Default/SplitterNode.h"
+#include "Default/SubtractorNode.h"
 #include "Default/UnaryOperator/NotNode.h"
 #include "Lib/IconsFontAwesome6.h"
 
@@ -61,6 +62,7 @@ Toolbox::Toolbox() {
     ADD_NODE_TO_CATEGORY("Memory", "Counter", CounterNode);
     ADD_NODE_TO_CATEGORY("Memory", "DFF", DFFNode);
 
+    ADD_NODE_TO_CATEGORY("Misc", "Subtractor", SubtractorNode);
     ADD_NODE_TO_CATEGORY("Misc", "Adder", AdderNode);
     ADD_NODE_TO_CATEGORY("Misc", "Clock " ICON_FA_WAVE_SQUARE, ClockNode);
     ADD_NODE_TO_CATEGORY("Misc", "Debounce", DebounceNode);

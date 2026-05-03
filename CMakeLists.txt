@@ -147,6 +147,7 @@
             src/Default/ConfigurableDataAndNumInputsNode.h
             src/Default/DecoderNode.h
             src/Default/BinaryOperator/NandNode.h
+            src/Default/SubtractorNode.h
     )
 
     target_include_directories(fpga_builder PUBLIC

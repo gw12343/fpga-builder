@@ -23,6 +23,7 @@
 #include "Default/OutputNode.h"
 #include "Default/RegisterNode.h"
 #include "Default/SplitterNode.h"
+#include "Default/SubtractorNode.h"
 #include "Default/UnaryOperator/UnaryOpNode.h"
 #include "Module.h"
 
@@ -115,7 +116,7 @@ void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
 
 
     const std::string out = header + "\n// === wire/reg declarations ================================\n" + m_decls +
-                            "\n// === module m_instances =====================================\n" + m_instances +
+                            "\n// === module instances =====================================\n" + m_instances +
                             "\n// === combination logic ====================================\n" +
 
                             "\talways @(*) begin\n" + m_inner + "\tend\n\n" +
@@ -330,6 +331,44 @@ void Codegen::visit(AdderNode &node, const int output_slot) {
     }
     // Falling edge option
     if (output_slot == node.ADDER_COUT_ID) {
+        RETURN_REG(output_carry);
+    }
+
+    // Fallback - different output node not recognized??
+    CircuitError("Invalid connection!", node);
+}
+
+void Codegen::visit(SubtractorNode &node, int output_slot) {
+    CHECK_CACHE
+
+    const std::string output_value = GetSafeWireName("sub_out");
+    const std::string output_carry = GetSafeWireName("sub_carry_out");
+
+    m_visited_nodes[NODE_KEY(node.SUBTRACTOR_Q_ID)] = output_value;
+    m_visited_nodes[NODE_KEY(node.SUBTRACTOR_COUT_ID)] = output_carry;
+
+    // Input pins
+    const auto a = node.GetAInputPin().GetConnectedPin();
+    const auto b = node.GetBInputPin().GetConnectedPin();
+
+    VERIFY_CONNECTION(a);
+    VERIFY_CONNECTION(b);
+
+    const auto a_val = EvalNode(a);
+    const auto b_val = EvalNode(b);
+
+    m_decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + output_value + ";\n";
+    m_decls += "reg " + output_carry + ";\n";
+
+    // Subtraction with extension first
+    m_inner += "\t\t{" + output_carry + ", " + output_value + "} = {1'b0, " + a_val + "} - {1'b0, " + b_val + "};\n";
+
+    // Rising edge option
+    if (output_slot == node.SUBTRACTOR_Q_ID) {
+        RETURN_REG(output_value);
+    }
+    // Falling edge option
+    if (output_slot == node.SUBTRACTOR_COUT_ID) {
         RETURN_REG(output_carry);
     }
 

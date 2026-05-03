@@ -17,44 +17,59 @@
             "output_guid": "3bb4bfe076314492b31bfdee50ca0ec3node0"
         },
         {
-            "id": 18446744071952482831,
-            "input_guid": "5ede67ada675436e9147c96f574d0279node1",
-            "output_guid": "da31f5362cd848ab8adea9c6c2478d1cnode1"
+            "id": 18446744073699577466,
+            "input_guid": "c343e4dcc9834aa8812574e2269870dbnode0",
+            "output_guid": "26d250c041b14458ae2fed0372db3868node3"
         },
         {
-            "id": 1586829561,
-            "input_guid": "5ede67ada675436e9147c96f574d0279node2",
-            "output_guid": "da31f5362cd848ab8adea9c6c2478d1cnode2"
+            "id": 18446744072286136638,
+            "input_guid": "3bb4bfe076314492b31bfdee50ca0ec3node4",
+            "output_guid": "26d250c041b14458ae2fed0372db3868node2"
         },
         {
-            "id": 1623925600,
-            "input_guid": "5ede67ada675436e9147c96f574d0279node3",
-            "output_guid": "da31f5362cd848ab8adea9c6c2478d1cnode3"
+            "id": 371997752,
+            "input_guid": "3bb4bfe076314492b31bfdee50ca0ec3node4",
+            "output_guid": "f099d36d0c194435ba5f9b6fd34e9bfanode2"
         },
         {
-            "id": 18446744072840515701,
-            "input_guid": "5ede67ada675436e9147c96f574d0279node4",
-            "output_guid": "da31f5362cd848ab8adea9c6c2478d1cnode4"
+            "id": 18446744071821171425,
+            "input_guid": "c343e4dcc9834aa8812574e2269870dbnode0",
+            "output_guid": "f099d36d0c194435ba5f9b6fd34e9bfanode3"
         },
         {
-            "id": 168735063,
-            "input_guid": "da31f5362cd848ab8adea9c6c2478d1cnode0",
-            "output_guid": "676464c7f7fd43bf905101da3e428155node0"
+            "id": 224163634,
+            "input_guid": "878345a1ac4d47d0b755e06756136066node0",
+            "output_guid": "f099d36d0c194435ba5f9b6fd34e9bfanode1"
         },
         {
-            "id": 415313946,
+            "id": 1361615797,
+            "input_guid": "878345a1ac4d47d0b755e06756136066node0",
+            "output_guid": "26d250c041b14458ae2fed0372db3868node1"
+        },
+        {
+            "id": 673012017,
             "input_guid": "3bb4bfe076314492b31bfdee50ca0ec3node1",
-            "output_guid": "c7259d98392a43b489e463a23222e91cnode1"
+            "output_guid": "f099d36d0c194435ba5f9b6fd34e9bfanode0"
         },
         {
-            "id": 18446744072681015947,
+            "id": 279604533,
             "input_guid": "3bb4bfe076314492b31bfdee50ca0ec3node2",
-            "output_guid": "c7259d98392a43b489e463a23222e91cnode2"
+            "output_guid": "26d250c041b14458ae2fed0372db3868node0"
         },
         {
-            "id": 722644712,
-            "input_guid": "c7259d98392a43b489e463a23222e91cnode0",
-            "output_guid": "5ede67ada675436e9147c96f574d0279node0"
+            "id": 1066893088,
+            "input_guid": "f099d36d0c194435ba5f9b6fd34e9bfanode4",
+            "output_guid": "22a44107bea0454dada0d28a022e9f9cnode0"
+        },
+        {
+            "id": 2490394964,
+            "input_guid": "26d250c041b14458ae2fed0372db3868node4",
+            "output_guid": "22a44107bea0454dada0d28a022e9f9cnode1"
+        },
+        {
+            "id": 2711077430,
+            "input_guid": "22a44107bea0454dada0d28a022e9f9cnode2",
+            "output_guid": "676464c7f7fd43bf905101da3e428155node0"
         }
     ],
     "name": "main_module",
@@ -65,16 +80,16 @@
             "name": "Output",
             "slot": 0,
             "type": "OutputNode",
-            "x": 1086.0,
-            "y": 701.0
+            "x": 606.0,
+            "y": 509.0
         },
         {
             "guid": "c70ea91458864b5d88b863e0af4757d8",
             "id": 18446744073121455157,
             "name": "Input",
-            "slot": 0,
+            "slot": 1,
             "type": "InputNode",
-            "x": -509.0,
+            "x": -605.0,
             "y": 333.0
         },
         {
@@ -83,35 +98,52 @@
             "id": 18446744073577312369,
             "name": "Splitter",
             "type": "SplitterNode",
-            "x": -162.0,
+            "x": -345.0,
             "y": 405.0
         },
         {
-            "bits": 2,
-            "guid": "5ede67ada675436e9147c96f574d0279",
-            "id": 18446744072636179852,
-            "name": "Decoder",
-            "type": "DecoderNode",
-            "x": 462.0,
+            "guid": "c343e4dcc9834aa8812574e2269870db",
+            "id": 18446744071639806719,
+            "name": "Input",
+            "slot": 0,
+            "type": "InputNode",
+            "x": -525.0,
+            "y": 749.0
+        },
+        {
+            "bits": 4,
+            "guid": "26d250c041b14458ae2fed0372db3868",
+            "id": 18446744071924198054,
+            "name": "Register",
+            "type": "RegisterNode",
+            "x": 41.0,
             "y": 677.0
         },
         {
             "bits": 4,
-            "guid": "da31f5362cd848ab8adea9c6c2478d1c",
-            "id": 18446744073444267649,
-            "name": "Combiner",
-            "type": "CombinerNode",
-            "x": 716.0,
-            "y": 677.0
+            "guid": "f099d36d0c194435ba5f9b6fd34e9bfa",
+            "id": 18446744073463305684,
+            "name": "Register",
+            "type": "RegisterNode",
+            "x": 49.0,
+            "y": 469.0
         },
         {
-            "bits": 2,
-            "guid": "c7259d98392a43b489e463a23222e91c",
-            "id": 1179143753,
-            "name": "Combiner",
-            "type": "CombinerNode",
-            "x": 220.0,
-            "y": 709.0
+            "guid": "878345a1ac4d47d0b755e06756136066",
+            "id": 18446744071700738591,
+            "name": "",
+            "type": "ClockNode",
+            "x": -244.0,
+            "y": 645.0
+        },
+        {
+            "bits": 4,
+            "guid": "22a44107bea0454dada0d28a022e9f9c",
+            "id": 3787523644,
+            "name": "Subtractor",
+            "type": "SubtractorNode",
+            "x": 308.0,
+            "y": 581.0
         }
     ],
     "outputs": [
