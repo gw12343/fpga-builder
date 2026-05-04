@@ -23,6 +23,7 @@
 #include "Default/InputNode.h"
 #include "Default/LiteralNode.h"
 #include "Default/MultiplexerNode.h"
+#include "Default/MultiplierNode.h"
 #include "Default/OutputNode.h"
 #include "Default/RegisterNode.h"
 #include "Default/SplitterNode.h"
@@ -62,6 +63,7 @@ Toolbox::Toolbox() {
     ADD_NODE_TO_CATEGORY("Memory", "Counter", CounterNode);
     ADD_NODE_TO_CATEGORY("Memory", "DFF", DFFNode);
 
+    ADD_NODE_TO_CATEGORY("Misc", "Multiplier", MultiplierNode);
     ADD_NODE_TO_CATEGORY("Misc", "Subtractor", SubtractorNode);
     ADD_NODE_TO_CATEGORY("Misc", "Adder", AdderNode);
     ADD_NODE_TO_CATEGORY("Misc", "Clock " ICON_FA_WAVE_SQUARE, ClockNode);

@@ -24,6 +24,7 @@
 #include "Default/InputNode.h"
 #include "Default/LiteralNode.h"
 #include "Default/MultiplexerNode.h"
+#include "Default/MultiplierNode.h"
 #include "Default/OutputNode.h"
 #include "Default/RegisterNode.h"
 #include "Default/SplitterNode.h"
@@ -83,6 +84,8 @@ std::unique_ptr<Node> CircuitSerializer::NodeFromJson(const json &j, Module *m) 
         p = std::make_unique<EdgeNode>(m, guid);
     } else if (type == "AdderNode") {
         p = std::make_unique<AdderNode>(m, guid, j.at("bits").get<int>());
+    } else if (type == "MultiplierNode") {
+        p = std::make_unique<MultiplierNode>(m, guid, j.at("bits").get<int>());
     } else if (type == "SubtractorNode") {
         p = std::make_unique<SubtractorNode>(m, guid, j.at("bits").get<int>());
     } else if (type == "ClockNode") {

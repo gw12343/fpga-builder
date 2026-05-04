@@ -20,6 +20,7 @@
 #include "Default/InputNode.h"
 #include "Default/LiteralNode.h"
 #include "Default/MultiplexerNode.h"
+#include "Default/MultiplierNode.h"
 #include "Default/OutputNode.h"
 #include "Default/RegisterNode.h"
 #include "Default/SplitterNode.h"
@@ -132,6 +133,7 @@ void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
         std::cerr << "Could not open file \"" << out_path << "\"" << std::endl;
     }
 }
+
 
 // ===== MULTI OUTPUT NODES ============================================================================================
 void Codegen::visit(CustomModuleNode &node, const int output_slot) {
@@ -375,6 +377,7 @@ void Codegen::visit(SubtractorNode &node, int output_slot) {
     // Fallback - different output node not recognized??
     CircuitError("Invalid connection!", node);
 }
+
 
 void Codegen::visit(DecoderNode &node, const int output_slot) {
     CHECK_CACHE
@@ -686,6 +689,30 @@ void Codegen::visit(DFFNode &node, const int output_slot) {
     RETURN_REG(output_reg);
 }
 
+
+void Codegen::visit(MultiplierNode &node, const int output_slot) {
+    CHECK_CACHE
+
+    const std::string output_value = GetSafeWireName("mul_out");
+
+    // Input pins
+    const auto a = node.GetAInputPin().GetConnectedPin();
+    const auto b = node.GetBInputPin().GetConnectedPin();
+
+    VERIFY_CONNECTION(a);
+    VERIFY_CONNECTION(b);
+
+    const auto a_val = EvalNode(a);
+    const auto b_val = EvalNode(b);
+
+    m_decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + output_value + ";\n";
+
+    // Subtraction with extension first
+    m_inner += "\t\t" + output_value + " = " + a_val + " * " + b_val + ";\n";
+
+
+    CACHE_AND_RETURN(node, output_value, output_slot);
+}
 
 void Codegen::visit(BinaryOpNode &node, const int output_slot) {
     CHECK_CACHE

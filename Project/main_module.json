@@ -57,18 +57,18 @@
             "output_guid": "26d250c041b14458ae2fed0372db3868node0"
         },
         {
-            "id": 1066893088,
+            "id": 333143932,
             "input_guid": "f099d36d0c194435ba5f9b6fd34e9bfanode4",
-            "output_guid": "22a44107bea0454dada0d28a022e9f9cnode0"
+            "output_guid": "73492901ea784cc9b4de72ad6d9c490enode0"
         },
         {
-            "id": 2490394964,
+            "id": 1341319430,
             "input_guid": "26d250c041b14458ae2fed0372db3868node4",
-            "output_guid": "22a44107bea0454dada0d28a022e9f9cnode1"
+            "output_guid": "73492901ea784cc9b4de72ad6d9c490enode1"
         },
         {
-            "id": 2711077430,
-            "input_guid": "22a44107bea0454dada0d28a022e9f9cnode2",
+            "id": 2777181257,
+            "input_guid": "73492901ea784cc9b4de72ad6d9c490enode2",
             "output_guid": "676464c7f7fd43bf905101da3e428155node0"
         }
     ],
@@ -138,12 +138,39 @@
         },
         {
             "bits": 4,
-            "guid": "22a44107bea0454dada0d28a022e9f9c",
-            "id": 3787523644,
-            "name": "Subtractor",
-            "type": "SubtractorNode",
-            "x": 308.0,
-            "y": 581.0
+            "guid": "73492901ea784cc9b4de72ad6d9c490e",
+            "id": 2538869741,
+            "name": "Multiplier",
+            "type": "MultiplierNode",
+            "x": 288.0,
+            "y": 565.0
+        },
+        {
+            "guid": "1c2f46a215fd47c38a9125cdde9f2087",
+            "id": 2415606839,
+            "module_guid": "47669e6b2b634623ad2aeedacfefab7b",
+            "name": "Custom",
+            "type": "CustomNode",
+            "x": -386.0,
+            "y": 1141.0
+        },
+        {
+            "guid": "d8627c0683f64f06bdee67e7a6c8a7d7",
+            "id": 487370994,
+            "module_guid": "1c3aa7e79e4141028e08261d0ca0045e",
+            "name": "Custom",
+            "type": "CustomNode",
+            "x": -20.0,
+            "y": 1157.0
+        },
+        {
+            "guid": "3e5c89368fd24eb2a29283faf3c8c2e3",
+            "id": 311779377,
+            "module_guid": "cbbecabe798e475bbf0561d4b819fd22",
+            "name": "Custom",
+            "type": "CustomNode",
+            "x": 580.0,
+            "y": 1173.0
         }
     ],
     "outputs": [
