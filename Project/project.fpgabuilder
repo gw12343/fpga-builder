@@ -1,6 +1,6 @@
 {
     "author": "gw",
-    "last_saved": 1777861377972,
+    "last_saved": 1777940316813,
     "module_files": [
         "main_module.json",
         "register_bank1.json",
@@ -10,10 +10,12 @@
         "flag_register.json",
         "alu_mux.json",
         "bitwise_ops.json",
-        "instruction_decoder.json"
+        "instruction_decoder.json",
+        "instruction_splitter.json",
+        "alu.json"
     ],
     "name": "New Project",
-    "selected_module": 8,
+    "selected_module": 0,
     "time_created": 1777434014282,
     "top_level_node_guid": "274503748e194d7397018655226b8573",
     "workspace_path": "../Project"

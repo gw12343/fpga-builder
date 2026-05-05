@@ -17,6 +17,7 @@ public:
 
     void GenerateCode(const std::shared_ptr<Module> &module);
 
+    void visit(ROMNode &node, int output_slot) override;
     void visit(MultiplierNode &node, int output_slot) override;
     void visit(SubtractorNode &node, int output_slot) override;
     void visit(DecoderNode &node, int output_slot) override;
@@ -55,6 +56,7 @@ private:
     std::string m_instances;
     std::string m_inner;
     std::string m_later;
+    std::string m_initial;
     bool m_failed;
 
 

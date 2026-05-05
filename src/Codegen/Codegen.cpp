@@ -22,6 +22,7 @@
 #include "Default/MultiplexerNode.h"
 #include "Default/MultiplierNode.h"
 #include "Default/OutputNode.h"
+#include "Default/ROMNode.h"
 #include "Default/RegisterNode.h"
 #include "Default/SplitterNode.h"
 #include "Default/SubtractorNode.h"
@@ -117,8 +118,8 @@ void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
 
 
     const std::string out = header + "\n// === wire/reg declarations ================================\n" + m_decls +
-                            "\n// === module instances =====================================\n" + m_instances +
-                            "\n// === combination logic ====================================\n" +
+                            "\n" + m_initial + "\n// === module instances =====================================\n" +
+                            m_instances + "\n// === combination logic ====================================\n" +
 
                             "\talways @(*) begin\n" + m_inner + "\tend\n\n" +
                             "\n// === clocked logic ========================================\n" + m_later + footer;
@@ -133,7 +134,6 @@ void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
         std::cerr << "Could not open file \"" << out_path << "\"" << std::endl;
     }
 }
-
 
 // ===== MULTI OUTPUT NODES ============================================================================================
 void Codegen::visit(CustomModuleNode &node, const int output_slot) {
@@ -340,7 +340,7 @@ void Codegen::visit(AdderNode &node, const int output_slot) {
     CircuitError("Invalid connection!", node);
 }
 
-void Codegen::visit(SubtractorNode &node, int output_slot) {
+void Codegen::visit(SubtractorNode &node, const int output_slot) {
     CHECK_CACHE
 
     const std::string output_value = GetSafeWireName("sub_out");
@@ -690,6 +690,45 @@ void Codegen::visit(DFFNode &node, const int output_slot) {
 }
 
 
+void Codegen::visit(ROMNode &node, const int output_slot) {
+    CHECK_CACHE
+
+    const std::string output_reg = GetSafeWireName("rom_out");
+    m_visited_nodes[NODE_KEY(output_slot)] = output_reg;
+
+    // Input pins
+    const auto adr = node.GetAddressPin().GetConnectedPin();
+    const auto clk = node.GetClockPin().GetConnectedPin();
+
+    VERIFY_CONNECTION(adr);
+    VERIFY_CONNECTION(clk);
+
+    const auto adr_val = EvalNode(adr);
+    const auto clk_val = EvalNode(clk);
+
+    const std::string rom_reg = GetSafeWireName("rom");
+
+    // declare output register and shift register
+    m_decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + rom_reg + " [" +
+               std::to_string(static_cast<int>(pow(2, node.GetSelectWidth())) - 1) + ":0];\n";
+    m_decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + output_reg + ";\n";
+
+    // debounce output register set
+    m_initial += "\tinitial begin\n";
+    m_initial += "\t\t$readmemh(\"" + node.GetRomFile() + "\", " + rom_reg + ");\n";
+    m_initial += "\tend\n\n";
+
+
+    // Synchronous read to ensure bram
+    m_later += "\talways @(posedge " + clk_val + ") begin\n";
+    m_later += "\t\t" + output_reg + " <= " + rom_reg + "[" + adr_val + "];\n";
+    m_later += "\tend\n\n";
+
+
+    RETURN_REG(output_reg)
+}
+
+
 void Codegen::visit(MultiplierNode &node, const int output_slot) {
     CHECK_CACHE
 
@@ -713,6 +752,7 @@ void Codegen::visit(MultiplierNode &node, const int output_slot) {
 
     CACHE_AND_RETURN(node, output_value, output_slot);
 }
+
 
 void Codegen::visit(BinaryOpNode &node, const int output_slot) {
     CHECK_CACHE

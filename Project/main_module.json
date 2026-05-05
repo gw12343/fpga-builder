@@ -12,147 +12,356 @@
     ],
     "links": [
         {
-            "id": 18446744072172401219,
-            "input_guid": "c70ea91458864b5d88b863e0af4757d8node0",
-            "output_guid": "3bb4bfe076314492b31bfdee50ca0ec3node0"
+            "id": 279355074,
+            "input_guid": "687bcfcd0cb34c03b1a9cd0ec3f21fe0node17",
+            "output_guid": "3e5c89368fd24eb2a29283faf3c8c2e3node6"
         },
         {
-            "id": 18446744073699577466,
-            "input_guid": "c343e4dcc9834aa8812574e2269870dbnode0",
-            "output_guid": "26d250c041b14458ae2fed0372db3868node3"
+            "id": 18446744071842664329,
+            "input_guid": "687bcfcd0cb34c03b1a9cd0ec3f21fe0node15",
+            "output_guid": "3e5c89368fd24eb2a29283faf3c8c2e3node5"
         },
         {
-            "id": 18446744072286136638,
-            "input_guid": "3bb4bfe076314492b31bfdee50ca0ec3node4",
-            "output_guid": "26d250c041b14458ae2fed0372db3868node2"
+            "id": 18446744072176487406,
+            "input_guid": "687bcfcd0cb34c03b1a9cd0ec3f21fe0node19",
+            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node15"
         },
         {
-            "id": 371997752,
-            "input_guid": "3bb4bfe076314492b31bfdee50ca0ec3node4",
-            "output_guid": "f099d36d0c194435ba5f9b6fd34e9bfanode2"
+            "id": 18446744073043992473,
+            "input_guid": "687bcfcd0cb34c03b1a9cd0ec3f21fe0node18",
+            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node16"
         },
         {
-            "id": 18446744071821171425,
-            "input_guid": "c343e4dcc9834aa8812574e2269870dbnode0",
-            "output_guid": "f099d36d0c194435ba5f9b6fd34e9bfanode3"
+            "id": 18446744072915378554,
+            "input_guid": "77b9ae5c4b0b43ee8a7408e54bcc423bnode5",
+            "output_guid": "1c2f46a215fd47c38a9125cdde9f2087node2"
         },
         {
-            "id": 224163634,
-            "input_guid": "878345a1ac4d47d0b755e06756136066node0",
-            "output_guid": "f099d36d0c194435ba5f9b6fd34e9bfanode1"
+            "id": 18446744072437723100,
+            "input_guid": "233156d616ca456f8f163b596a195561node0",
+            "output_guid": "77b9ae5c4b0b43ee8a7408e54bcc423bnode0"
         },
         {
-            "id": 1361615797,
-            "input_guid": "878345a1ac4d47d0b755e06756136066node0",
-            "output_guid": "26d250c041b14458ae2fed0372db3868node1"
+            "id": 992555900,
+            "input_guid": "233156d616ca456f8f163b596a195561node0",
+            "output_guid": "77b9ae5c4b0b43ee8a7408e54bcc423bnode3"
         },
         {
-            "id": 673012017,
-            "input_guid": "3bb4bfe076314492b31bfdee50ca0ec3node1",
-            "output_guid": "f099d36d0c194435ba5f9b6fd34e9bfanode0"
+            "id": 18446744072757094302,
+            "input_guid": "cfc88b26d2ef48dea3e87c3c8e4f4858node0",
+            "output_guid": "77b9ae5c4b0b43ee8a7408e54bcc423bnode2"
         },
         {
-            "id": 279604533,
-            "input_guid": "3bb4bfe076314492b31bfdee50ca0ec3node2",
-            "output_guid": "26d250c041b14458ae2fed0372db3868node0"
+            "id": 188028921,
+            "input_guid": "9faefe084cfe481a92ee20a027ac4ea3node0",
+            "output_guid": "77b9ae5c4b0b43ee8a7408e54bcc423bnode1"
         },
         {
-            "id": 333143932,
-            "input_guid": "f099d36d0c194435ba5f9b6fd34e9bfanode4",
-            "output_guid": "73492901ea784cc9b4de72ad6d9c490enode0"
+            "id": 986618745,
+            "input_guid": "687bcfcd0cb34c03b1a9cd0ec3f21fe0node5",
+            "output_guid": "77b9ae5c4b0b43ee8a7408e54bcc423bnode4"
         },
         {
-            "id": 1341319430,
-            "input_guid": "26d250c041b14458ae2fed0372db3868node4",
-            "output_guid": "73492901ea784cc9b4de72ad6d9c490enode1"
+            "id": 18446744073571312168,
+            "input_guid": "ede9ee76c5284c799f306444ff1c8872node3",
+            "output_guid": "e62544c02e6a46f6b0a47e9538759c46node0"
         },
         {
-            "id": 2777181257,
-            "input_guid": "73492901ea784cc9b4de72ad6d9c490enode2",
-            "output_guid": "676464c7f7fd43bf905101da3e428155node0"
+            "id": 18446744073495086303,
+            "input_guid": "cdbcf21cf8474603b136dc300cc4ec3cnode3",
+            "output_guid": "faf9f94d78c347399871c17589408e82node0"
+        },
+        {
+            "id": 815201834,
+            "input_guid": "e62544c02e6a46f6b0a47e9538759c46node3",
+            "output_guid": "1c2f46a215fd47c38a9125cdde9f2087node3"
+        },
+        {
+            "id": 18446744072193125483,
+            "input_guid": "faf9f94d78c347399871c17589408e82node3",
+            "output_guid": "1c2f46a215fd47c38a9125cdde9f2087node4"
+        },
+        {
+            "id": 18446744072319801546,
+            "input_guid": "687bcfcd0cb34c03b1a9cd0ec3f21fe0node13",
+            "output_guid": "e62544c02e6a46f6b0a47e9538759c46node2"
+        },
+        {
+            "id": 1525594412,
+            "input_guid": "687bcfcd0cb34c03b1a9cd0ec3f21fe0node12",
+            "output_guid": "ede9ee76c5284c799f306444ff1c8872node2"
+        },
+        {
+            "id": 18446744072701568967,
+            "input_guid": "687bcfcd0cb34c03b1a9cd0ec3f21fe0node11",
+            "output_guid": "faf9f94d78c347399871c17589408e82node2"
+        },
+        {
+            "id": 18446744072607906666,
+            "input_guid": "687bcfcd0cb34c03b1a9cd0ec3f21fe0node10",
+            "output_guid": "cdbcf21cf8474603b136dc300cc4ec3cnode2"
+        },
+        {
+            "id": 18446744072597365486,
+            "input_guid": "687bcfcd0cb34c03b1a9cd0ec3f21fe0node3",
+            "output_guid": "ede9ee76c5284c799f306444ff1c8872node0"
+        },
+        {
+            "id": 18446744073597784911,
+            "input_guid": "687bcfcd0cb34c03b1a9cd0ec3f21fe0node4",
+            "output_guid": "cdbcf21cf8474603b136dc300cc4ec3cnode0"
+        },
+        {
+            "id": 112671032,
+            "input_guid": "687bcfcd0cb34c03b1a9cd0ec3f21fe0node14",
+            "output_guid": "1c2f46a215fd47c38a9125cdde9f2087node5"
+        },
+        {
+            "id": 650142451,
+            "input_guid": "687bcfcd0cb34c03b1a9cd0ec3f21fe0node9",
+            "output_guid": "1c2f46a215fd47c38a9125cdde9f2087node6"
+        },
+        {
+            "id": 438187196,
+            "input_guid": "687bcfcd0cb34c03b1a9cd0ec3f21fe0node7",
+            "output_guid": "1c2f46a215fd47c38a9125cdde9f2087node7"
+        },
+        {
+            "id": 18446744072127650054,
+            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node13",
+            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node0"
+        },
+        {
+            "id": 18446744072745684534,
+            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node14",
+            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node1"
+        },
+        {
+            "id": 1629434295,
+            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node15",
+            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node2"
+        },
+        {
+            "id": 842870129,
+            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node16",
+            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node3"
+        },
+        {
+            "id": 18446744072944196243,
+            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node17",
+            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node4"
+        },
+        {
+            "id": 18446744073339726006,
+            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node18",
+            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node5"
+        },
+        {
+            "id": 18446744072400332836,
+            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node19",
+            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node6"
+        },
+        {
+            "id": 229250667,
+            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node20",
+            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node7"
+        },
+        {
+            "id": 1222148279,
+            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node21",
+            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node8"
+        },
+        {
+            "id": 12865839,
+            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node22",
+            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node9"
+        },
+        {
+            "id": 18446744073207999823,
+            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node23",
+            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node10"
+        },
+        {
+            "id": 18446744073377967678,
+            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node24",
+            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node11"
+        },
+        {
+            "id": 1096482512,
+            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node25",
+            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node12"
+        },
+        {
+            "id": 18446744073476633283,
+            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node26",
+            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node13"
+        },
+        {
+            "id": 18446744072662029640,
+            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node27",
+            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node14"
+        },
+        {
+            "id": 18446744071595640741,
+            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node12",
+            "output_guid": "93f5d57087ca42829d66ab57ce0f20fenode0"
+        },
+        {
+            "id": 1170817318,
+            "input_guid": "93f5d57087ca42829d66ab57ce0f20fenode1",
+            "output_guid": "ede9ee76c5284c799f306444ff1c8872node1"
+        },
+        {
+            "id": 18446744072757057435,
+            "input_guid": "93f5d57087ca42829d66ab57ce0f20fenode1",
+            "output_guid": "cdbcf21cf8474603b136dc300cc4ec3cnode1"
+        },
+        {
+            "id": 18446744072522702440,
+            "input_guid": "93f5d57087ca42829d66ab57ce0f20fenode2",
+            "output_guid": "e62544c02e6a46f6b0a47e9538759c46node1"
+        },
+        {
+            "id": 985742345,
+            "input_guid": "93f5d57087ca42829d66ab57ce0f20fenode2",
+            "output_guid": "faf9f94d78c347399871c17589408e82node1"
+        },
+        {
+            "id": 1502215043,
+            "input_guid": "93f5d57087ca42829d66ab57ce0f20fenode1",
+            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node17"
+        },
+        {
+            "id": 18446744073420397737,
+            "input_guid": "93f5d57087ca42829d66ab57ce0f20fenode2",
+            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node18"
+        },
+        {
+            "id": 18446744072121004635,
+            "input_guid": "93f5d57087ca42829d66ab57ce0f20fenode3",
+            "output_guid": "687bcfcd0cb34c03b1a9cd0ec3f21fe0node0"
+        },
+        {
+            "id": 3453325822,
+            "input_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node19",
+            "output_guid": "279f6c6c83ea405fbba9ac0e0e337ad6node1"
+        },
+        {
+            "id": 3267791675,
+            "input_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node20",
+            "output_guid": "279f6c6c83ea405fbba9ac0e0e337ad6node2"
+        },
+        {
+            "id": 4049836350,
+            "input_guid": "687bcfcd0cb34c03b1a9cd0ec3f21fe0node6",
+            "output_guid": "279f6c6c83ea405fbba9ac0e0e337ad6node0"
+        },
+        {
+            "id": 429032178,
+            "input_guid": "279f6c6c83ea405fbba9ac0e0e337ad6node4",
+            "output_guid": "3e5c89368fd24eb2a29283faf3c8c2e3node0"
+        },
+        {
+            "id": 3869567878,
+            "input_guid": "279f6c6c83ea405fbba9ac0e0e337ad6node5",
+            "output_guid": "3e5c89368fd24eb2a29283faf3c8c2e3node1"
+        },
+        {
+            "id": 4003914408,
+            "input_guid": "279f6c6c83ea405fbba9ac0e0e337ad6node6",
+            "output_guid": "3e5c89368fd24eb2a29283faf3c8c2e3node2"
+        },
+        {
+            "id": 2183277492,
+            "input_guid": "279f6c6c83ea405fbba9ac0e0e337ad6node7",
+            "output_guid": "3e5c89368fd24eb2a29283faf3c8c2e3node3"
+        },
+        {
+            "id": 3401442838,
+            "input_guid": "279f6c6c83ea405fbba9ac0e0e337ad6node8",
+            "output_guid": "3e5c89368fd24eb2a29283faf3c8c2e3node4"
+        },
+        {
+            "id": 687446749,
+            "input_guid": "3e5c89368fd24eb2a29283faf3c8c2e3node8",
+            "output_guid": "687bcfcd0cb34c03b1a9cd0ec3f21fe0node1"
+        },
+        {
+            "id": 839004893,
+            "input_guid": "c9a7f52b18a74a20b60da012250f474bnode0",
+            "output_guid": "0df5ebd6a9bd411fa301fbea7d52e003node0"
+        },
+        {
+            "id": 3073530843,
+            "input_guid": "3e5c89368fd24eb2a29283faf3c8c2e3node8",
+            "output_guid": "c9a7f52b18a74a20b60da012250f474bnode1"
+        },
+        {
+            "id": 3233987970,
+            "input_guid": "3e5c89368fd24eb2a29283faf3c8c2e3node8",
+            "output_guid": "c9a7f52b18a74a20b60da012250f474bnode2"
+        },
+        {
+            "id": 1665981639,
+            "input_guid": "3e5c89368fd24eb2a29283faf3c8c2e3node8",
+            "output_guid": "c9a7f52b18a74a20b60da012250f474bnode3"
+        },
+        {
+            "id": 751030095,
+            "input_guid": "3e5c89368fd24eb2a29283faf3c8c2e3node8",
+            "output_guid": "c9a7f52b18a74a20b60da012250f474bnode4"
+        },
+        {
+            "id": 3078678814,
+            "input_guid": "778f54d6ff5246c881bc85d1f2777bd5node0",
+            "output_guid": "c9cac289c1184ab0b14fe3a49f249871node0"
+        },
+        {
+            "id": 1255512509,
+            "input_guid": "c9cac289c1184ab0b14fe3a49f249871node4",
+            "output_guid": "3fde415b864d4ceaa14f1d1e9de0f4c7node0"
+        },
+        {
+            "id": 1678797507,
+            "input_guid": "3fde415b864d4ceaa14f1d1e9de0f4c7node2",
+            "output_guid": "7f6c8fe1307940359ba2be5e776a566bnode0"
+        },
+        {
+            "id": 542480382,
+            "input_guid": "71c2bba22b65483cbe07d4c465b6a51fnode0",
+            "output_guid": "3fde415b864d4ceaa14f1d1e9de0f4c7node1"
+        },
+        {
+            "id": 1505090668,
+            "input_guid": "71c2bba22b65483cbe07d4c465b6a51fnode0",
+            "output_guid": "7f6c8fe1307940359ba2be5e776a566bnode1"
+        },
+        {
+            "id": 2046394310,
+            "input_guid": "7f6c8fe1307940359ba2be5e776a566bnode2",
+            "output_guid": "687bcfcd0cb34c03b1a9cd0ec3f21fe0node2"
+        },
+        {
+            "id": 3570729408,
+            "input_guid": "7f6c8fe1307940359ba2be5e776a566bnode2",
+            "output_guid": "3e5c89368fd24eb2a29283faf3c8c2e3node7"
+        },
+        {
+            "id": 2526016577,
+            "input_guid": "7f6c8fe1307940359ba2be5e776a566bnode2",
+            "output_guid": "1c2f46a215fd47c38a9125cdde9f2087node8"
         }
     ],
     "name": "main_module",
     "nodes": [
         {
-            "guid": "676464c7f7fd43bf905101da3e428155",
-            "id": 1110480112,
-            "name": "Output",
-            "slot": 0,
-            "type": "OutputNode",
-            "x": 606.0,
-            "y": 509.0
-        },
-        {
-            "guid": "c70ea91458864b5d88b863e0af4757d8",
-            "id": 18446744073121455157,
-            "name": "Input",
-            "slot": 1,
-            "type": "InputNode",
-            "x": -605.0,
-            "y": 333.0
-        },
-        {
-            "bits": 4,
-            "guid": "3bb4bfe076314492b31bfdee50ca0ec3",
-            "id": 18446744073577312369,
-            "name": "Splitter",
-            "type": "SplitterNode",
-            "x": -345.0,
-            "y": 405.0
-        },
-        {
-            "guid": "c343e4dcc9834aa8812574e2269870db",
-            "id": 18446744071639806719,
-            "name": "Input",
-            "slot": 0,
-            "type": "InputNode",
-            "x": -525.0,
-            "y": 749.0
-        },
-        {
-            "bits": 4,
-            "guid": "26d250c041b14458ae2fed0372db3868",
-            "id": 18446744071924198054,
-            "name": "Register",
-            "type": "RegisterNode",
-            "x": 41.0,
-            "y": 677.0
-        },
-        {
-            "bits": 4,
-            "guid": "f099d36d0c194435ba5f9b6fd34e9bfa",
-            "id": 18446744073463305684,
-            "name": "Register",
-            "type": "RegisterNode",
-            "x": 49.0,
-            "y": 469.0
-        },
-        {
-            "guid": "878345a1ac4d47d0b755e06756136066",
-            "id": 18446744071700738591,
-            "name": "",
-            "type": "ClockNode",
-            "x": -244.0,
-            "y": 645.0
-        },
-        {
-            "bits": 4,
-            "guid": "73492901ea784cc9b4de72ad6d9c490e",
-            "id": 2538869741,
-            "name": "Multiplier",
-            "type": "MultiplierNode",
-            "x": 288.0,
-            "y": 565.0
-        },
-        {
             "guid": "1c2f46a215fd47c38a9125cdde9f2087",
-            "id": 2415606839,
+            "id": 18446744071830191159,
             "module_guid": "47669e6b2b634623ad2aeedacfefab7b",
             "name": "Custom",
             "type": "CustomNode",
-            "x": -386.0,
-            "y": 1141.0
+            "x": -368.0,
+            "y": 1477.0
         },
         {
             "guid": "d8627c0683f64f06bdee67e7a6c8a7d7",
@@ -160,8 +369,8 @@
             "module_guid": "1c3aa7e79e4141028e08261d0ca0045e",
             "name": "Custom",
             "type": "CustomNode",
-            "x": -20.0,
-            "y": 1157.0
+            "x": -4.0,
+            "y": 1653.0
         },
         {
             "guid": "3e5c89368fd24eb2a29283faf3c8c2e3",
@@ -169,8 +378,175 @@
             "module_guid": "cbbecabe798e475bbf0561d4b819fd22",
             "name": "Custom",
             "type": "CustomNode",
-            "x": 580.0,
-            "y": 1173.0
+            "x": 1302.0,
+            "y": 2581.0
+        },
+        {
+            "guid": "687bcfcd0cb34c03b1a9cd0ec3f21fe0",
+            "id": 18446744072533766341,
+            "module_guid": "0070f2b6f96c411f9a3c4a6ddb059f81",
+            "name": "Custom",
+            "type": "CustomNode",
+            "x": -1926.0,
+            "y": 1717.0
+        },
+        {
+            "data_bits": 32,
+            "guid": "77b9ae5c4b0b43ee8a7408e54bcc423b",
+            "id": 2135727166,
+            "name": "Multiplexer",
+            "select_bits": 2,
+            "type": "MultiplexerNode",
+            "x": -1231.0,
+            "y": 1045.0
+        },
+        {
+            "bits": 32,
+            "guid": "233156d616ca456f8f163b596a195561",
+            "id": 18446744072782211377,
+            "name": "Literal",
+            "type": "LiteralNode",
+            "value": 0,
+            "x": -1595.0,
+            "y": 939.0
+        },
+        {
+            "bits": 32,
+            "guid": "9faefe084cfe481a92ee20a027ac4ea3",
+            "id": 18446744073687835321,
+            "name": "Literal",
+            "type": "LiteralNode",
+            "value": 1,
+            "x": -1595.0,
+            "y": 1067.0
+        },
+        {
+            "bits": 32,
+            "guid": "cfc88b26d2ef48dea3e87c3c8e4f4858",
+            "id": 1983051766,
+            "name": "Literal",
+            "type": "LiteralNode",
+            "value": 2147483647,
+            "x": -1595.0,
+            "y": 1195.0
+        },
+        {
+            "data_bits": 4,
+            "guid": "ede9ee76c5284c799f306444ff1c8872",
+            "id": 881326913,
+            "name": "Multiplexer",
+            "select_bits": 1,
+            "type": "MultiplexerNode",
+            "x": -1283.0,
+            "y": 1541.0
+        },
+        {
+            "data_bits": 4,
+            "guid": "e62544c02e6a46f6b0a47e9538759c46",
+            "id": 18446744072202400882,
+            "name": "Multiplexer",
+            "select_bits": 1,
+            "type": "MultiplexerNode",
+            "x": -953.0,
+            "y": 1509.0
+        },
+        {
+            "data_bits": 4,
+            "guid": "faf9f94d78c347399871c17589408e82",
+            "id": 18446744073351820755,
+            "name": "Multiplexer",
+            "select_bits": 1,
+            "type": "MultiplexerNode",
+            "x": -975.0,
+            "y": 1669.0
+        },
+        {
+            "data_bits": 4,
+            "guid": "cdbcf21cf8474603b136dc300cc4ec3c",
+            "id": 1389359667,
+            "name": "Multiplexer",
+            "select_bits": 1,
+            "type": "MultiplexerNode",
+            "x": -1311.0,
+            "y": 1701.0
+        },
+        {
+            "guid": "93f5d57087ca42829d66ab57ce0f20fe",
+            "id": 798015454,
+            "module_guid": "e3227259d6db4d339fe4884a8c30a9ec",
+            "name": "Custom",
+            "type": "CustomNode",
+            "x": -1870.0,
+            "y": 2645.0
+        },
+        {
+            "guid": "279f6c6c83ea405fbba9ac0e0e337ad6",
+            "id": 1519211079,
+            "module_guid": "73c73ace20f347eca18838cd543fd369",
+            "name": "Custom",
+            "type": "CustomNode",
+            "x": 434.0,
+            "y": 1477.0
+        },
+        {
+            "guid": "0df5ebd6a9bd411fa301fbea7d52e003",
+            "id": 3746605520,
+            "name": "Output",
+            "slot": 0,
+            "type": "OutputNode",
+            "x": 2062.0,
+            "y": 2589.0
+        },
+        {
+            "bits": 4,
+            "guid": "c9a7f52b18a74a20b60da012250f474b",
+            "id": 3322654374,
+            "name": "Combiner",
+            "type": "CombinerNode",
+            "x": 1772.0,
+            "y": 2661.0
+        },
+        {
+            "guid": "778f54d6ff5246c881bc85d1f2777bd5",
+            "id": 3979815632,
+            "name": "Input",
+            "slot": 1,
+            "type": "InputNode",
+            "x": -2317.0,
+            "y": 3293.0
+        },
+        {
+            "guid": "3fde415b864d4ceaa14f1d1e9de0f4c7",
+            "id": 2161382409,
+            "name": "Debounce",
+            "type": "DebounceNode",
+            "x": -1813.0,
+            "y": 3477.0
+        },
+        {
+            "guid": "7f6c8fe1307940359ba2be5e776a566b",
+            "id": 2357542395,
+            "name": "Edge",
+            "type": "EdgeNode",
+            "x": -1623.0,
+            "y": 3493.0
+        },
+        {
+            "bits": 4,
+            "guid": "c9cac289c1184ab0b14fe3a49f249871",
+            "id": 1173238501,
+            "name": "Splitter",
+            "type": "SplitterNode",
+            "x": -2066.0,
+            "y": 3381.0
+        },
+        {
+            "guid": "71c2bba22b65483cbe07d4c465b6a51f",
+            "id": 894350459,
+            "name": "",
+            "type": "ClockNode",
+            "x": -2164.0,
+            "y": 3573.0
         }
     ],
     "outputs": [

@@ -149,6 +149,7 @@
             src/Default/BinaryOperator/NandNode.h
             src/Default/SubtractorNode.h
             src/Default/MultiplierNode.h
+            src/Default/ROMNode.h
     )
 
     target_include_directories(fpga_builder PUBLIC
