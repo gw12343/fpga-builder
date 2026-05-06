@@ -28,6 +28,7 @@
 #include "Default/OutputNode.h"
 #include "Default/ROMNode.h"
 #include "Default/RegisterNode.h"
+#include "Default/ShifterNode.h"
 #include "Default/SplitterNode.h"
 #include "Default/SubtractorNode.h"
 #include "Default/UnaryOperator/NotNode.h"
@@ -52,6 +53,7 @@ Toolbox::Toolbox() {
     ADD_NODE_TO_CATEGORY("Bitwise Operators", "OR", OrNode);
     ADD_NODE_TO_CATEGORY("Bitwise Operators", "NOR", NorNode);
     ADD_NODE_TO_CATEGORY("Bitwise Operators", "XOR", XOrNode);
+    ADD_NODE_TO_CATEGORY("Bitwise Operators", "Shifter", ShifterNode);
 
     ADD_NODE_TO_CATEGORY("Wiring", "Literal", LiteralNode);
     ADD_NODE_TO_CATEGORY("Wiring", "Splitter", SplitterNode);

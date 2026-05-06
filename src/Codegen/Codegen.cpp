@@ -25,6 +25,7 @@
 #include "Default/OutputNode.h"
 #include "Default/ROMNode.h"
 #include "Default/RegisterNode.h"
+#include "Default/ShifterNode.h"
 #include "Default/SplitterNode.h"
 #include "Default/SubtractorNode.h"
 #include "Default/UnaryOperator/UnaryOpNode.h"
@@ -608,6 +609,30 @@ void Codegen::visit(DebounceNode &node, const int output_slot) {
     m_later += "\t\t\t" + output_reg + " <= 1'b0;\n";
     m_later += "\tend\n\n";
 
+
+    RETURN_REG(output_reg)
+}
+
+
+void Codegen::visit(ShifterNode &node, const int output_slot) {
+    CHECK_CACHE
+
+    std::string output_reg = GetSafeWireName("shifter_out");
+    m_visited_nodes[NODE_KEY(output_slot)] = output_reg;
+
+    // Input pins
+    const auto in = node.GetInputPin().GetConnectedPin();
+    const auto dist = node.GetDistancePin().GetConnectedPin();
+
+    VERIFY_CONNECTION(in);
+    VERIFY_CONNECTION(dist);
+
+    const auto in_val = EvalNode(in);
+    const auto dist_val = EvalNode(dist);
+
+    m_decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + output_reg + ";\n";
+
+    m_inner += "\t\t" + output_reg + " = " + node.GetShiftOperator(in_val, dist_val) + ";\n";
 
     RETURN_REG(output_reg)
 }

@@ -152,6 +152,7 @@
             src/Default/ROMNode.h
             src/Default/ComparatorNode.h
             src/Default/ComparatorNode.h
+            src/Default/ShifterNode.h
     )
 
     target_include_directories(fpga_builder PUBLIC

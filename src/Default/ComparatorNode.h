@@ -62,7 +62,6 @@ public:
     int COMPARATOR_E_ID = -1;
     int COMPARATOR_L_ID = -1;
 
-    Pin GetAInputPin() { return FindPin(ADDER_IN_PIN_A).value(); }
-    Pin GetBInputPin() { return FindPin(ADDER_IN_PIN_B).value(); }
-    Pin GetCarryInputPin() { return FindPin(ADDER_IN_PIN_CIN).value(); }
+    Pin GetAInputPin() { return FindPin(COMPARATOR_IN_PIN_A).value(); }
+    Pin GetBInputPin() { return FindPin(COMPARATOR_IN_PIN_B).value(); }
 };

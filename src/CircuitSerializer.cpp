@@ -29,6 +29,7 @@
 #include "Default/OutputNode.h"
 #include "Default/ROMNode.h"
 #include "Default/RegisterNode.h"
+#include "Default/ShifterNode.h"
 #include "Default/SplitterNode.h"
 #include "Default/SubtractorNode.h"
 #include "Default/UnaryOperator/NotNode.h"
@@ -79,6 +80,8 @@ std::unique_ptr<Node> CircuitSerializer::NodeFromJson(const json &j, Module *m) 
         p = std::make_unique<ComparatorNode>(m, guid, j.at("bits").get<int>());
     } else if (type == "CombinerNode") {
         p = std::make_unique<CombinerNode>(m, guid, j.at("bits").get<int>());
+    } else if (type == "ShifterNode") {
+        p = std::make_unique<ShifterNode>(m, guid, j.at("bits").get<int>(), j.at("type_index").get<int>());
     } else if (type == "CounterNode") {
         p = std::make_unique<CounterNode>(m, guid, j.at("bits").get<int>());
     } else if (type == "RegisterNode") {
