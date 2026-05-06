@@ -7,13 +7,9 @@
 
 #include <SDL3/SDL_init.h>
 #include <SDL3/SDL_opengl.h>
-#include <imgui.h>
 #include <imgui_impl_opengl3.h>
 #include <imgui_impl_sdl3.h>
 #include <iostream>
-
-#include "Lib/IconsFontAwesome6.h"
-#include "Lib/ImGuiNotify.h"
 
 
 void Renderer::InitWindow(const int w, const int h, const std::string &title) {
@@ -22,11 +18,11 @@ void Renderer::InitWindow(const int w, const int h, const std::string &title) {
         return;
     }
 
-    window = SDL_CreateWindow(title.c_str(), w, h,
-                              SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY);
+    m_window = SDL_CreateWindow(title.c_str(), w, h,
+                                SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY);
 
-    gl_context = SDL_GL_CreateContext(window);
-    SDL_GL_MakeCurrent(window, gl_context);
+    m_gl_context = SDL_GL_CreateContext(m_window);
+    SDL_GL_MakeCurrent(m_window, m_gl_context);
     SDL_GL_SetSwapInterval(1);
 
     IMGUI_CHECKVERSION();
@@ -38,30 +34,30 @@ void Renderer::InitWindow(const int w, const int h, const std::string &title) {
     ImGui::StyleColorsDark();
 
 
-    constexpr float scale = 2;
+    constexpr float UI_SCALE = 2;
     ImGuiStyle &style = ImGui::GetStyle();
 
-    style.ScaleAllSizes(scale);
+    style.ScaleAllSizes(UI_SCALE);
 
 
     // ImFontConfig roboto_config;
     // roboto_config.MergeMode = true;
     // roboto_config.PixelSnapH = true;
-    io.Fonts->AddFontFromFileTTF("../resources/Roboto-Regular.ttf", 12.0f * scale);
+    io.Fonts->AddFontFromFileTTF("../resources/Roboto-Regular.ttf", 12.0f * UI_SCALE);
 
     ImFontConfig fa_config;
     fa_config.MergeMode = true;
     fa_config.PixelSnapH = true;
     fa_config.GlyphMinAdvanceX = 12.0f;
 
-    static constexpr ImWchar icons_ranges[] = {ICON_MIN_FA, ICON_MAX_FA, 0};
-    io.Fonts->AddFontFromFileTTF("../resources/fa-solid-900.ttf", 12.0f * scale, &fa_config, icons_ranges);
+    static constexpr ImWchar ICON_RANGES[] = {ICON_MIN_FA, ICON_MAX_FA, 0};
+    io.Fonts->AddFontFromFileTTF("../resources/fa-solid-900.ttf", 12.0f * UI_SCALE, &fa_config, ICON_RANGES);
 
 
     io.FontGlobalScale = 1.0f;
 
 
-    ImGui_ImplSDL3_InitForOpenGL(window, gl_context);
+    ImGui_ImplSDL3_InitForOpenGL(m_window, m_gl_context);
     ImGui_ImplOpenGL3_Init("#version 130");
 
     style.ChildRounding = 0;
@@ -99,9 +95,11 @@ void Renderer::InitWindow(const int w, const int h, const std::string &title) {
     colors[ImGuiCol_CheckMark] = ImVec4(0.84f, 0.84f, 0.84f, 1.00f);
     colors[ImGuiCol_SliderGrab] = ImVec4(0.43f, 0.43f, 0.43f, 1.00f);
     colors[ImGuiCol_SliderGrabActive] = ImVec4(0.55f, 0.55f, 0.55f, 1.00f);
-    colors[ImGuiCol_Button] = ImVec4(0.55f, 0.55f, 0.55f, 0.40f);
-    colors[ImGuiCol_ButtonHovered] = ImVec4(0.15f, 0.15f, 0.15f, 0.62f);
-    colors[ImGuiCol_ButtonActive] = ImVec4(0.60f, 0.60f, 0.60f, 1.00f);
+
+    colors[ImGuiCol_Button] = ImVec4(0.3, 0.3, 0.3, 1.0);
+    colors[ImGuiCol_ButtonHovered] = ImVec4(0.35, 0.35, 0.35, 1.0);
+    colors[ImGuiCol_ButtonActive] = ImVec4(0.4, 0.4, 0.4, 1.0);
+
     colors[ImGuiCol_Header] = ImVec4(0.84f, 0.36f, 0.05f, 0.00f);
     colors[ImGuiCol_HeaderHovered] = ImVec4(0.25f, 0.25f, 0.25f, 0.80f);
     colors[ImGuiCol_HeaderActive] = ImVec4(0.42f, 0.42f, 0.42f, 1.00f);
@@ -149,8 +147,8 @@ void Renderer::CloseWindow() const {
     ImGui_ImplSDL3_Shutdown();
     ImGui::DestroyContext();
 
-    SDL_GL_DestroyContext(gl_context);
-    SDL_DestroyWindow(window);
+    SDL_GL_DestroyContext(m_gl_context);
+    SDL_DestroyWindow(m_window);
     SDL_Quit();
 }
 
@@ -161,7 +159,7 @@ void Renderer::StartFrame() {
         ImGui_ImplSDL3_ProcessEvent(&event);
 
         if (event.type == SDL_EVENT_QUIT)
-            running = false;
+            m_running = false;
     }
 
     ImGui_ImplOpenGL3_NewFrame();
@@ -207,5 +205,5 @@ void Renderer::EndFrame() const {
 
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     ImGui::UpdatePlatformWindows();
-    SDL_GL_SwapWindow(window);
+    SDL_GL_SwapWindow(m_window);
 }

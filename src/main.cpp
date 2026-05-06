@@ -3,10 +3,8 @@
 //
 
 #define SDL_MAIN_HANDLED
-
-#include "CircuitSerializer.h"
 #include "CopyPasteManager.h"
-#include "Module.h"
+#include "Project/Project.h"
 
 #include "UI/ConfigManager.h"
 #include "UI/ErrorManager.h"
@@ -24,23 +22,27 @@ int main(int, char **) {
 
     renderer->InitWindow(2000, 1600, "FPGA Builder");
 
-    auto main_module = CircuitSerializer::LoadModule("../Project/circuit.json");
 
-    const auto output_viewer = std::make_shared<OutputViewer>(main_module);
+    const auto output_viewer = std::make_shared<OutputViewer>();
     const auto topbar = std::make_shared<Topbar>();
     const auto toolbox = std::make_shared<Toolbox>();
+
+    const auto p = std::make_shared<Project>("../Project");
 
 
     // Main loop
     while (renderer->IsRunning()) {
         renderer->StartFrame();
 
-        toolbox->Render(main_module, config_manager);
-        topbar->Render(main_module, error_manager, output_viewer);
-        main_module->Render(error_manager, cp_manager);
-        config_manager->Render(main_module);
+
+        toolbox->Render(p->GetSelectedModule(), config_manager);
+        topbar->Render(p, error_manager, output_viewer);
+
+        p->Render(error_manager, cp_manager);
+
+        config_manager->Render(p->GetSelectedModule());
         output_viewer->Render();
-        error_manager->Render(main_module);
+        error_manager->Render(p->GetSelectedModule());
 
         renderer->EndFrame();
     }

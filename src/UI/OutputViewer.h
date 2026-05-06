@@ -3,17 +3,18 @@
 //
 
 #pragma once
+#include <regex>
 #include "Lib/TextEditor.h"
 
 
 class Module;
 class OutputViewer {
 public:
-    explicit OutputViewer(const std::shared_ptr<Module> &module);
+    explicit OutputViewer();
     void UpdateOutput(const std::shared_ptr<Module> &module);
     void Render();
 
 private:
-    TextEditor::ErrorMarkers markers;
-    TextEditor editor;
+    TextEditor::ErrorMarkers m_markers;
+    TextEditor m_editor;
 };

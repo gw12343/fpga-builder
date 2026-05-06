@@ -1,0 +1,51 @@
+Checks: '-*,readability-identifier-naming'
+
+CheckOptions:
+  - key: readability-identifier-naming.ClassCase
+    value: PascalCase
+  - key: readability-identifier-naming.StructCase
+    value: PascalCase
+
+  - key: readability-identifier-naming.FunctionCase
+    value: PascalCase
+  - key: readability-identifier-naming.MethodCase
+    value: PascalCase
+
+  - key: readability-identifier-naming.VariableCase
+    value: snake_case
+
+  - key: readability-identifier-naming.ParameterCase
+    value: snake_case
+  - key: readability-identifier-naming.ConstantParameterCase
+    value: snake_case
+  - key: readability-identifier-naming.ConstantParameterPrefix
+    value: ""
+
+  - key: readability-identifier-naming.PublicMemberCase
+    value: snake_case
+  - key: readability-identifier-naming.PublicMemberPrefix
+    value: ""
+
+  - key: readability-identifier-naming.ProtectedMemberCase
+    value: snake_case
+  - key: readability-identifier-naming.ProtectedMemberPrefix
+    value: ""
+
+  - key: readability-identifier-naming.PrivateMemberCase
+    value: snake_case
+  - key: readability-identifier-naming.PrivateMemberPrefix
+    value: m_
+
+  - key: readability-identifier-naming.StructMemberCase
+    value: snake_case
+  - key: readability-identifier-naming.StructMemberPrefix
+    value: ""
+
+  - key: readability-identifier-naming.ConstantCase
+    value: snake_case
+  - key: readability-identifier-naming.ConstexprVariableCase
+    value: UPPER_CASE
+  - key: readability-identifier-naming.GlobalConstantCase
+    value: UPPER_CASE
+  - key: readability-identifier-naming.StaticConstantCase
+    value: UPPER_CASE

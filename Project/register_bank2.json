@@ -1,0 +1,1058 @@
+{
+    "guid": "5308bdda9ee54c228b43ea54bcc7f698",
+    "inputs": [
+        {
+            "bits": 1,
+            "name": "load_sp"
+        },
+        {
+            "bits": 1,
+            "name": "load_bp"
+        },
+        {
+            "bits": 1,
+            "name": "load_ins"
+        },
+        {
+            "bits": 1,
+            "name": "load_jmp"
+        },
+        {
+            "bits": 1,
+            "name": "load_adr"
+        },
+        {
+            "bits": 1,
+            "name": "sp_decrement"
+        },
+        {
+            "bits": 1,
+            "name": "sp_count"
+        },
+        {
+            "bits": 32,
+            "name": "DBUS"
+        },
+        {
+            "bits": 1,
+            "name": "reset"
+        },
+        {
+            "bits": 1,
+            "name": "pc_count"
+        }
+    ],
+    "links": [
+        {
+            "id": 18446744072562816591,
+            "input_guid": "f1d4fef521204303b69143a15c311341node0",
+            "output_guid": "19f43c3e4d7242d58f36d8397784ae5cnode4"
+        },
+        {
+            "id": 132934051,
+            "input_guid": "df7df3f9edee4b81b415fcc0446de6c9node0",
+            "output_guid": "19f43c3e4d7242d58f36d8397784ae5cnode5"
+        },
+        {
+            "id": 1117737051,
+            "input_guid": "41e1457150314aacb0a51abb1b133181node0",
+            "output_guid": "19f43c3e4d7242d58f36d8397784ae5cnode3"
+        },
+        {
+            "id": 18446744073192926692,
+            "input_guid": "9cbe453fe93448cba3eb7c1d2100fcd2node0",
+            "output_guid": "d364e94a690648f5828447732f3e48f7node0"
+        },
+        {
+            "id": 18446744072312128675,
+            "input_guid": "d364e94a690648f5828447732f3e48f7node1",
+            "output_guid": "19f43c3e4d7242d58f36d8397784ae5cnode2"
+        },
+        {
+            "id": 724656100,
+            "input_guid": "7483c23467bd4e37a6bac4111a77d873node0",
+            "output_guid": "19f43c3e4d7242d58f36d8397784ae5cnode1"
+        },
+        {
+            "id": 1348561985,
+            "input_guid": "54e11116e4674a3db4164034d1dd3382node0",
+            "output_guid": "19f43c3e4d7242d58f36d8397784ae5cnode0"
+        },
+        {
+            "id": 315119310,
+            "input_guid": "19f43c3e4d7242d58f36d8397784ae5cnode6",
+            "output_guid": "bb69a6776a9f44ecb2e5ed33f8b6efd0node0"
+        },
+        {
+            "id": 18446744073571184090,
+            "input_guid": "7cd92b7f2c224e39b6bc7bee3bf02120node0",
+            "output_guid": "eac90fbb1f35450ca3ec69ba2c1171benode1"
+        },
+        {
+            "id": 193949696,
+            "input_guid": "5eb771aef0ab4140b541165d40a0eec0node0",
+            "output_guid": "eac90fbb1f35450ca3ec69ba2c1171benode2"
+        },
+        {
+            "id": 18446744072571521477,
+            "input_guid": "dd6d29bac23b4f52ba92f8a69f09fb30node0",
+            "output_guid": "eac90fbb1f35450ca3ec69ba2c1171benode3"
+        },
+        {
+            "id": 1947630960,
+            "input_guid": "e74e0f26f53b4fb6937d0a5b075a91ednode0",
+            "output_guid": "eac90fbb1f35450ca3ec69ba2c1171benode0"
+        },
+        {
+            "id": 18446744072787285131,
+            "input_guid": "166253050e874c6b94bac51f1266e0d9node4",
+            "output_guid": "468942bf7fd143f8ab41fd074f27f67bnode0"
+        },
+        {
+            "id": 1326512800,
+            "input_guid": "f0eefed6830d47b9b6258cf541916a09node0",
+            "output_guid": "166253050e874c6b94bac51f1266e0d9node1"
+        },
+        {
+            "id": 18446744073306318526,
+            "input_guid": "c851a44cb2904902af4e6bebf1f62e73node0",
+            "output_guid": "166253050e874c6b94bac51f1266e0d9node2"
+        },
+        {
+            "id": 899263453,
+            "input_guid": "4a5b2ac5976b4ad5a3c05ccaf993216dnode0",
+            "output_guid": "166253050e874c6b94bac51f1266e0d9node3"
+        },
+        {
+            "id": 25235555,
+            "input_guid": "3e7553f037ad48129c3c3c99288a6f34node0",
+            "output_guid": "166253050e874c6b94bac51f1266e0d9node0"
+        },
+        {
+            "id": 18446744073231677996,
+            "input_guid": "166253050e874c6b94bac51f1266e0d9node4",
+            "output_guid": "e858b41dbede47d6a447488e00cff77enode0"
+        },
+        {
+            "id": 18446744072121224677,
+            "input_guid": "e858b41dbede47d6a447488e00cff77enode1",
+            "output_guid": "c5ddffb2409a48dcb6dfb904f51d52ednode1"
+        },
+        {
+            "id": 18446744071888002363,
+            "input_guid": "e858b41dbede47d6a447488e00cff77enode2",
+            "output_guid": "c5ddffb2409a48dcb6dfb904f51d52ednode2"
+        },
+        {
+            "id": 18446744072527983548,
+            "input_guid": "e858b41dbede47d6a447488e00cff77enode3",
+            "output_guid": "c5ddffb2409a48dcb6dfb904f51d52ednode3"
+        },
+        {
+            "id": 18446744072886625915,
+            "input_guid": "e858b41dbede47d6a447488e00cff77enode4",
+            "output_guid": "c5ddffb2409a48dcb6dfb904f51d52ednode4"
+        },
+        {
+            "id": 18446744072193431258,
+            "input_guid": "e858b41dbede47d6a447488e00cff77enode5",
+            "output_guid": "c5ddffb2409a48dcb6dfb904f51d52ednode5"
+        },
+        {
+            "id": 498169032,
+            "input_guid": "e858b41dbede47d6a447488e00cff77enode6",
+            "output_guid": "c5ddffb2409a48dcb6dfb904f51d52ednode6"
+        },
+        {
+            "id": 18446744071632996014,
+            "input_guid": "e858b41dbede47d6a447488e00cff77enode7",
+            "output_guid": "c5ddffb2409a48dcb6dfb904f51d52ednode7"
+        },
+        {
+            "id": 767415225,
+            "input_guid": "e858b41dbede47d6a447488e00cff77enode8",
+            "output_guid": "c5ddffb2409a48dcb6dfb904f51d52ednode8"
+        },
+        {
+            "id": 251177148,
+            "input_guid": "e858b41dbede47d6a447488e00cff77enode9",
+            "output_guid": "c5ddffb2409a48dcb6dfb904f51d52ednode9"
+        },
+        {
+            "id": 531463462,
+            "input_guid": "e858b41dbede47d6a447488e00cff77enode10",
+            "output_guid": "c5ddffb2409a48dcb6dfb904f51d52ednode10"
+        },
+        {
+            "id": 527219525,
+            "input_guid": "e858b41dbede47d6a447488e00cff77enode11",
+            "output_guid": "c5ddffb2409a48dcb6dfb904f51d52ednode11"
+        },
+        {
+            "id": 1936827439,
+            "input_guid": "e858b41dbede47d6a447488e00cff77enode12",
+            "output_guid": "c5ddffb2409a48dcb6dfb904f51d52ednode12"
+        },
+        {
+            "id": 1789533807,
+            "input_guid": "e858b41dbede47d6a447488e00cff77enode13",
+            "output_guid": "c5ddffb2409a48dcb6dfb904f51d52ednode13"
+        },
+        {
+            "id": 1754177319,
+            "input_guid": "e858b41dbede47d6a447488e00cff77enode14",
+            "output_guid": "c5ddffb2409a48dcb6dfb904f51d52ednode14"
+        },
+        {
+            "id": 674830056,
+            "input_guid": "e858b41dbede47d6a447488e00cff77enode15",
+            "output_guid": "c5ddffb2409a48dcb6dfb904f51d52ednode15"
+        },
+        {
+            "id": 18446744071743983023,
+            "input_guid": "e858b41dbede47d6a447488e00cff77enode16",
+            "output_guid": "c5ddffb2409a48dcb6dfb904f51d52ednode16"
+        },
+        {
+            "id": 18446744073119785463,
+            "input_guid": "eac90fbb1f35450ca3ec69ba2c1171benode4",
+            "output_guid": "509866db033146c1a34399669c9491e0node0"
+        },
+        {
+            "id": 1802139535,
+            "input_guid": "cef8fae7d7884c999c3bcf07e1f8a2a5node0",
+            "output_guid": "c5ddffb2409a48dcb6dfb904f51d52ednode18"
+        },
+        {
+            "id": 18446744073167079479,
+            "input_guid": "cef8fae7d7884c999c3bcf07e1f8a2a5node0",
+            "output_guid": "c5ddffb2409a48dcb6dfb904f51d52ednode20"
+        },
+        {
+            "id": 1263774104,
+            "input_guid": "cef8fae7d7884c999c3bcf07e1f8a2a5node0",
+            "output_guid": "c5ddffb2409a48dcb6dfb904f51d52ednode21"
+        },
+        {
+            "id": 1134186731,
+            "input_guid": "cef8fae7d7884c999c3bcf07e1f8a2a5node0",
+            "output_guid": "c5ddffb2409a48dcb6dfb904f51d52ednode23"
+        },
+        {
+            "id": 18446744073296551562,
+            "input_guid": "cef8fae7d7884c999c3bcf07e1f8a2a5node0",
+            "output_guid": "c5ddffb2409a48dcb6dfb904f51d52ednode24"
+        },
+        {
+            "id": 18446744072948455495,
+            "input_guid": "cef8fae7d7884c999c3bcf07e1f8a2a5node0",
+            "output_guid": "c5ddffb2409a48dcb6dfb904f51d52ednode26"
+        },
+        {
+            "id": 1000640289,
+            "input_guid": "cef8fae7d7884c999c3bcf07e1f8a2a5node0",
+            "output_guid": "c5ddffb2409a48dcb6dfb904f51d52ednode27"
+        },
+        {
+            "id": 18446744072461278526,
+            "input_guid": "cef8fae7d7884c999c3bcf07e1f8a2a5node0",
+            "output_guid": "c5ddffb2409a48dcb6dfb904f51d52ednode28"
+        },
+        {
+            "id": 18446744072037333064,
+            "input_guid": "cef8fae7d7884c999c3bcf07e1f8a2a5node0",
+            "output_guid": "c5ddffb2409a48dcb6dfb904f51d52ednode29"
+        },
+        {
+            "id": 18446744071615900171,
+            "input_guid": "cef8fae7d7884c999c3bcf07e1f8a2a5node0",
+            "output_guid": "c5ddffb2409a48dcb6dfb904f51d52ednode30"
+        },
+        {
+            "id": 18446744073703304083,
+            "input_guid": "cef8fae7d7884c999c3bcf07e1f8a2a5node0",
+            "output_guid": "c5ddffb2409a48dcb6dfb904f51d52ednode31"
+        },
+        {
+            "id": 697329083,
+            "input_guid": "cef8fae7d7884c999c3bcf07e1f8a2a5node0",
+            "output_guid": "c5ddffb2409a48dcb6dfb904f51d52ednode32"
+        },
+        {
+            "id": 533018754,
+            "input_guid": "cef8fae7d7884c999c3bcf07e1f8a2a5node0",
+            "output_guid": "c5ddffb2409a48dcb6dfb904f51d52ednode25"
+        },
+        {
+            "id": 1003490929,
+            "input_guid": "cef8fae7d7884c999c3bcf07e1f8a2a5node0",
+            "output_guid": "c5ddffb2409a48dcb6dfb904f51d52ednode22"
+        },
+        {
+            "id": 2129105259,
+            "input_guid": "cef8fae7d7884c999c3bcf07e1f8a2a5node0",
+            "output_guid": "c5ddffb2409a48dcb6dfb904f51d52ednode17"
+        },
+        {
+            "id": 18446744072453721407,
+            "input_guid": "cef8fae7d7884c999c3bcf07e1f8a2a5node0",
+            "output_guid": "c5ddffb2409a48dcb6dfb904f51d52ednode19"
+        },
+        {
+            "id": 710809695,
+            "input_guid": "c5ddffb2409a48dcb6dfb904f51d52ednode0",
+            "output_guid": "20de38a67cd94305983d26093b5bcdc0node0"
+        },
+        {
+            "id": 18446744072108327960,
+            "input_guid": "57535718ac934bc9a8c74813ea944504node0",
+            "output_guid": "42dde2b14941496990e681738e51b47enode4"
+        },
+        {
+            "id": 18446744072812164996,
+            "input_guid": "797327e3b6e2423c88f952abba85ac4dnode0",
+            "output_guid": "42dde2b14941496990e681738e51b47enode5"
+        },
+        {
+            "id": 1375139005,
+            "input_guid": "f3941a97fe414d30bfb444835f6dd5aenode0",
+            "output_guid": "42dde2b14941496990e681738e51b47enode3"
+        },
+        {
+            "id": 18446744072475745635,
+            "input_guid": "0957afad3e7e4366a080292aec11a8b2node0",
+            "output_guid": "42dde2b14941496990e681738e51b47enode1"
+        },
+        {
+            "id": 1754175167,
+            "input_guid": "687c904d94654c7092da60a2eb670086node0",
+            "output_guid": "42dde2b14941496990e681738e51b47enode0"
+        },
+        {
+            "id": 18446744073298658317,
+            "input_guid": "42dde2b14941496990e681738e51b47enode6",
+            "output_guid": "47ac784367a64b6d8a5115616a9da3cbnode0"
+        },
+        {
+            "id": 23955739,
+            "input_guid": "c96575c2779a4c4994f2ee38d587eeecnode0",
+            "output_guid": "42dde2b14941496990e681738e51b47enode2"
+        },
+        {
+            "id": 1273731395,
+            "input_guid": "8b8e80cc52444f50837b97c65df70dd1node0",
+            "output_guid": "e78ab5a151804a33a37a26d52d005b57node0"
+        },
+        {
+            "id": 867060727,
+            "input_guid": "e78ab5a151804a33a37a26d52d005b57node1",
+            "output_guid": "db6c0fc012e74f5abfadf7641bcd6ccanode1"
+        },
+        {
+            "id": 153988498,
+            "input_guid": "e78ab5a151804a33a37a26d52d005b57node2",
+            "output_guid": "db6c0fc012e74f5abfadf7641bcd6ccanode2"
+        },
+        {
+            "id": 1586105927,
+            "input_guid": "e78ab5a151804a33a37a26d52d005b57node3",
+            "output_guid": "db6c0fc012e74f5abfadf7641bcd6ccanode3"
+        },
+        {
+            "id": 83193182,
+            "input_guid": "e78ab5a151804a33a37a26d52d005b57node4",
+            "output_guid": "db6c0fc012e74f5abfadf7641bcd6ccanode4"
+        },
+        {
+            "id": 810558053,
+            "input_guid": "e78ab5a151804a33a37a26d52d005b57node5",
+            "output_guid": "db6c0fc012e74f5abfadf7641bcd6ccanode5"
+        },
+        {
+            "id": 18446744071659372054,
+            "input_guid": "e78ab5a151804a33a37a26d52d005b57node6",
+            "output_guid": "db6c0fc012e74f5abfadf7641bcd6ccanode6"
+        },
+        {
+            "id": 1497498851,
+            "input_guid": "e78ab5a151804a33a37a26d52d005b57node7",
+            "output_guid": "db6c0fc012e74f5abfadf7641bcd6ccanode7"
+        },
+        {
+            "id": 1529754328,
+            "input_guid": "e78ab5a151804a33a37a26d52d005b57node8",
+            "output_guid": "db6c0fc012e74f5abfadf7641bcd6ccanode8"
+        },
+        {
+            "id": 18446744073144954442,
+            "input_guid": "e78ab5a151804a33a37a26d52d005b57node9",
+            "output_guid": "db6c0fc012e74f5abfadf7641bcd6ccanode9"
+        },
+        {
+            "id": 18446744073157029128,
+            "input_guid": "e78ab5a151804a33a37a26d52d005b57node10",
+            "output_guid": "db6c0fc012e74f5abfadf7641bcd6ccanode10"
+        },
+        {
+            "id": 771039245,
+            "input_guid": "e78ab5a151804a33a37a26d52d005b57node11",
+            "output_guid": "db6c0fc012e74f5abfadf7641bcd6ccanode11"
+        },
+        {
+            "id": 18446744072460795607,
+            "input_guid": "e78ab5a151804a33a37a26d52d005b57node12",
+            "output_guid": "db6c0fc012e74f5abfadf7641bcd6ccanode12"
+        },
+        {
+            "id": 18446744073095612194,
+            "input_guid": "e78ab5a151804a33a37a26d52d005b57node13",
+            "output_guid": "db6c0fc012e74f5abfadf7641bcd6ccanode13"
+        },
+        {
+            "id": 1410775306,
+            "input_guid": "e78ab5a151804a33a37a26d52d005b57node14",
+            "output_guid": "db6c0fc012e74f5abfadf7641bcd6ccanode14"
+        },
+        {
+            "id": 18446744072053120560,
+            "input_guid": "e78ab5a151804a33a37a26d52d005b57node15",
+            "output_guid": "db6c0fc012e74f5abfadf7641bcd6ccanode15"
+        },
+        {
+            "id": 18446744072382467458,
+            "input_guid": "e78ab5a151804a33a37a26d52d005b57node16",
+            "output_guid": "db6c0fc012e74f5abfadf7641bcd6ccanode16"
+        },
+        {
+            "id": 18446744072984453326,
+            "input_guid": "db6c0fc012e74f5abfadf7641bcd6ccanode0",
+            "output_guid": "b43dafdbf47543fe90da06d301ded17enode3"
+        },
+        {
+            "id": 1650609224,
+            "input_guid": "ce108ca083714e79a6abd3c13852cfa7node0",
+            "output_guid": "b43dafdbf47543fe90da06d301ded17enode2"
+        },
+        {
+            "id": 18446744072364476564,
+            "input_guid": "086666b0ed8d423cb538b1c2d6901e86node0",
+            "output_guid": "b43dafdbf47543fe90da06d301ded17enode1"
+        },
+        {
+            "id": 18446744071865015443,
+            "input_guid": "b61e99137d75477bb3284c6f94d828b1node0",
+            "output_guid": "b43dafdbf47543fe90da06d301ded17enode0"
+        },
+        {
+            "id": 759405751,
+            "input_guid": "b43dafdbf47543fe90da06d301ded17enode4",
+            "output_guid": "224aa1037d4d40c68d44e214f8ce4903node0"
+        },
+        {
+            "id": 18446744072495901227,
+            "input_guid": "db6c0fc012e74f5abfadf7641bcd6ccanode0",
+            "output_guid": "46b607f7194f4573a8d28d54df3f4151node0"
+        },
+        {
+            "id": 1995249051,
+            "input_guid": "46b607f7194f4573a8d28d54df3f4151node1",
+            "output_guid": "4c9486be4dc4449aa6f651bce5f08020node1"
+        },
+        {
+            "id": 760471674,
+            "input_guid": "46b607f7194f4573a8d28d54df3f4151node2",
+            "output_guid": "4c9486be4dc4449aa6f651bce5f08020node2"
+        },
+        {
+            "id": 18446744073161504519,
+            "input_guid": "46b607f7194f4573a8d28d54df3f4151node3",
+            "output_guid": "4c9486be4dc4449aa6f651bce5f08020node3"
+        },
+        {
+            "id": 1711044486,
+            "input_guid": "46b607f7194f4573a8d28d54df3f4151node4",
+            "output_guid": "4c9486be4dc4449aa6f651bce5f08020node4"
+        },
+        {
+            "id": 18446744072365491369,
+            "input_guid": "46b607f7194f4573a8d28d54df3f4151node5",
+            "output_guid": "4c9486be4dc4449aa6f651bce5f08020node5"
+        },
+        {
+            "id": 588033367,
+            "input_guid": "46b607f7194f4573a8d28d54df3f4151node6",
+            "output_guid": "4c9486be4dc4449aa6f651bce5f08020node6"
+        },
+        {
+            "id": 1824659983,
+            "input_guid": "46b607f7194f4573a8d28d54df3f4151node7",
+            "output_guid": "4c9486be4dc4449aa6f651bce5f08020node7"
+        },
+        {
+            "id": 1069962129,
+            "input_guid": "46b607f7194f4573a8d28d54df3f4151node8",
+            "output_guid": "4c9486be4dc4449aa6f651bce5f08020node8"
+        },
+        {
+            "id": 18446744071908167468,
+            "input_guid": "46b607f7194f4573a8d28d54df3f4151node9",
+            "output_guid": "4c9486be4dc4449aa6f651bce5f08020node9"
+        },
+        {
+            "id": 656673692,
+            "input_guid": "46b607f7194f4573a8d28d54df3f4151node10",
+            "output_guid": "4c9486be4dc4449aa6f651bce5f08020node10"
+        },
+        {
+            "id": 920318224,
+            "input_guid": "46b607f7194f4573a8d28d54df3f4151node11",
+            "output_guid": "4c9486be4dc4449aa6f651bce5f08020node11"
+        },
+        {
+            "id": 1677331111,
+            "input_guid": "46b607f7194f4573a8d28d54df3f4151node12",
+            "output_guid": "4c9486be4dc4449aa6f651bce5f08020node12"
+        },
+        {
+            "id": 18446744073216433878,
+            "input_guid": "46b607f7194f4573a8d28d54df3f4151node13",
+            "output_guid": "4c9486be4dc4449aa6f651bce5f08020node13"
+        },
+        {
+            "id": 18446744072165551112,
+            "input_guid": "46b607f7194f4573a8d28d54df3f4151node14",
+            "output_guid": "4c9486be4dc4449aa6f651bce5f08020node14"
+        },
+        {
+            "id": 910456155,
+            "input_guid": "46b607f7194f4573a8d28d54df3f4151node15",
+            "output_guid": "4c9486be4dc4449aa6f651bce5f08020node15"
+        },
+        {
+            "id": 18446744073537741204,
+            "input_guid": "46b607f7194f4573a8d28d54df3f4151node16",
+            "output_guid": "4c9486be4dc4449aa6f651bce5f08020node16"
+        },
+        {
+            "id": 18446744073529148019,
+            "input_guid": "982b4c9c1c3a4d629147b0b53088b472node0",
+            "output_guid": "4c9486be4dc4449aa6f651bce5f08020node17"
+        },
+        {
+            "id": 18446744072966924877,
+            "input_guid": "982b4c9c1c3a4d629147b0b53088b472node0",
+            "output_guid": "4c9486be4dc4449aa6f651bce5f08020node18"
+        },
+        {
+            "id": 18446744073577315096,
+            "input_guid": "982b4c9c1c3a4d629147b0b53088b472node0",
+            "output_guid": "4c9486be4dc4449aa6f651bce5f08020node20"
+        },
+        {
+            "id": 937916345,
+            "input_guid": "982b4c9c1c3a4d629147b0b53088b472node0",
+            "output_guid": "4c9486be4dc4449aa6f651bce5f08020node21"
+        },
+        {
+            "id": 18446744072500487275,
+            "input_guid": "982b4c9c1c3a4d629147b0b53088b472node0",
+            "output_guid": "4c9486be4dc4449aa6f651bce5f08020node19"
+        },
+        {
+            "id": 18446744071647766797,
+            "input_guid": "982b4c9c1c3a4d629147b0b53088b472node0",
+            "output_guid": "4c9486be4dc4449aa6f651bce5f08020node22"
+        },
+        {
+            "id": 18446744073228014784,
+            "input_guid": "982b4c9c1c3a4d629147b0b53088b472node0",
+            "output_guid": "4c9486be4dc4449aa6f651bce5f08020node23"
+        },
+        {
+            "id": 18446744071841839004,
+            "input_guid": "982b4c9c1c3a4d629147b0b53088b472node0",
+            "output_guid": "4c9486be4dc4449aa6f651bce5f08020node24"
+        },
+        {
+            "id": 18446744072362272570,
+            "input_guid": "982b4c9c1c3a4d629147b0b53088b472node0",
+            "output_guid": "4c9486be4dc4449aa6f651bce5f08020node25"
+        },
+        {
+            "id": 885220538,
+            "input_guid": "982b4c9c1c3a4d629147b0b53088b472node0",
+            "output_guid": "4c9486be4dc4449aa6f651bce5f08020node26"
+        },
+        {
+            "id": 18446744072753544164,
+            "input_guid": "982b4c9c1c3a4d629147b0b53088b472node0",
+            "output_guid": "4c9486be4dc4449aa6f651bce5f08020node27"
+        },
+        {
+            "id": 18446744071701005067,
+            "input_guid": "982b4c9c1c3a4d629147b0b53088b472node0",
+            "output_guid": "4c9486be4dc4449aa6f651bce5f08020node28"
+        },
+        {
+            "id": 1016968901,
+            "input_guid": "982b4c9c1c3a4d629147b0b53088b472node0",
+            "output_guid": "4c9486be4dc4449aa6f651bce5f08020node29"
+        },
+        {
+            "id": 2067918202,
+            "input_guid": "982b4c9c1c3a4d629147b0b53088b472node0",
+            "output_guid": "4c9486be4dc4449aa6f651bce5f08020node30"
+        },
+        {
+            "id": 880466709,
+            "input_guid": "982b4c9c1c3a4d629147b0b53088b472node0",
+            "output_guid": "4c9486be4dc4449aa6f651bce5f08020node31"
+        },
+        {
+            "id": 1603405384,
+            "input_guid": "982b4c9c1c3a4d629147b0b53088b472node0",
+            "output_guid": "4c9486be4dc4449aa6f651bce5f08020node32"
+        },
+        {
+            "id": 18446744073306164211,
+            "input_guid": "4c9486be4dc4449aa6f651bce5f08020node0",
+            "output_guid": "776e3cd03bc04e72b4e41587be6bd6efnode0"
+        }
+    ],
+    "name": "register_bank2",
+    "nodes": [
+        {
+            "bits": 32,
+            "guid": "19f43c3e4d7242d58f36d8397784ae5c",
+            "id": 600215660,
+            "name": "Counter",
+            "type": "CounterNode",
+            "x": -503.0,
+            "y": 229.0
+        },
+        {
+            "guid": "f1d4fef521204303b69143a15c311341",
+            "id": 1031345685,
+            "name": "Input",
+            "slot": 0,
+            "type": "InputNode",
+            "x": -973.0,
+            "y": 397.0
+        },
+        {
+            "guid": "df7df3f9edee4b81b415fcc0446de6c9",
+            "id": 18446744072913378913,
+            "name": "Input",
+            "slot": 7,
+            "type": "InputNode",
+            "x": -973.0,
+            "y": 557.0
+        },
+        {
+            "guid": "41e1457150314aacb0a51abb1b133181",
+            "id": 18446744072470404083,
+            "name": "Input",
+            "slot": 8,
+            "type": "InputNode",
+            "x": -973.0,
+            "y": 237.0
+        },
+        {
+            "guid": "9cbe453fe93448cba3eb7c1d2100fcd2",
+            "id": 728316250,
+            "name": "Input",
+            "slot": 5,
+            "type": "InputNode",
+            "x": -1165.0,
+            "y": 29.0
+        },
+        {
+            "bits": 1,
+            "guid": "d364e94a690648f5828447732f3e48f7",
+            "id": 18446744072476651307,
+            "name": "NOT",
+            "type": "NotNode",
+            "x": -879.0,
+            "y": 101.0
+        },
+        {
+            "guid": "7483c23467bd4e37a6bac4111a77d873",
+            "id": 1638900224,
+            "name": "",
+            "type": "ClockNode",
+            "x": -692.0,
+            "y": 69.0
+        },
+        {
+            "guid": "54e11116e4674a3db4164034d1dd3382",
+            "id": 18446744073450573860,
+            "name": "Input",
+            "slot": 6,
+            "type": "InputNode",
+            "x": -845.0,
+            "y": -131.0
+        },
+        {
+            "guid": "bb69a6776a9f44ecb2e5ed33f8b6efd0",
+            "id": 18446744072571341071,
+            "name": "Output",
+            "slot": 0,
+            "type": "OutputNode",
+            "x": -174.0,
+            "y": 157.0
+        },
+        {
+            "guid": "7cd92b7f2c224e39b6bc7bee3bf02120",
+            "id": 18446744073589282709,
+            "name": "",
+            "type": "ClockNode",
+            "x": 524.0,
+            "y": 133.0
+        },
+        {
+            "guid": "5eb771aef0ab4140b541165d40a0eec0",
+            "id": 18446744072362766808,
+            "name": "Input",
+            "slot": 8,
+            "type": "InputNode",
+            "x": 515.0,
+            "y": 237.0
+        },
+        {
+            "guid": "e74e0f26f53b4fb6937d0a5b075a91ed",
+            "id": 18446744071781519733,
+            "name": "Input",
+            "slot": 1,
+            "type": "InputNode",
+            "x": 499.0,
+            "y": -35.0
+        },
+        {
+            "guid": "dd6d29bac23b4f52ba92f8a69f09fb30",
+            "id": 18446744073520956418,
+            "name": "Input",
+            "slot": 7,
+            "type": "InputNode",
+            "x": 515.0,
+            "y": 397.0
+        },
+        {
+            "bits": 32,
+            "guid": "eac90fbb1f35450ca3ec69ba2c1171be",
+            "id": 18446744073690686104,
+            "name": "Register",
+            "type": "RegisterNode",
+            "x": 905.0,
+            "y": 101.0
+        },
+        {
+            "guid": "468942bf7fd143f8ab41fd074f27f67b",
+            "id": 18446744072037541044,
+            "name": "Output",
+            "slot": 2,
+            "type": "OutputNode",
+            "x": -1090.0,
+            "y": 957.0
+        },
+        {
+            "guid": "c851a44cb2904902af4e6bebf1f62e73",
+            "id": 18446744073425655557,
+            "name": "Input",
+            "slot": 8,
+            "type": "InputNode",
+            "x": -1805.0,
+            "y": 1293.0
+        },
+        {
+            "guid": "f0eefed6830d47b9b6258cf541916a09",
+            "id": 944802317,
+            "name": "",
+            "type": "ClockNode",
+            "x": -1796.0,
+            "y": 1189.0
+        },
+        {
+            "guid": "4a5b2ac5976b4ad5a3c05ccaf993216d",
+            "id": 260566601,
+            "name": "Input",
+            "slot": 7,
+            "type": "InputNode",
+            "x": -1805.0,
+            "y": 1453.0
+        },
+        {
+            "bits": 32,
+            "guid": "166253050e874c6b94bac51f1266e0d9",
+            "id": 471800944,
+            "name": "Register",
+            "type": "RegisterNode",
+            "x": -1415.0,
+            "y": 1157.0
+        },
+        {
+            "guid": "3e7553f037ad48129c3c3c99288a6f34",
+            "id": 1488710467,
+            "name": "Input",
+            "slot": 2,
+            "type": "InputNode",
+            "x": -1821.0,
+            "y": 1021.0
+        },
+        {
+            "bits": 32,
+            "guid": "e858b41dbede47d6a447488e00cff77e",
+            "id": 1488680590,
+            "name": "Splitter",
+            "type": "SplitterNode",
+            "x": -1076.0,
+            "y": 1237.0
+        },
+        {
+            "bits": 32,
+            "guid": "c5ddffb2409a48dcb6dfb904f51d52ed",
+            "id": 1834860791,
+            "name": "Combiner",
+            "type": "CombinerNode",
+            "x": -851.0,
+            "y": 1237.0
+        },
+        {
+            "guid": "509866db033146c1a34399669c9491e0",
+            "id": 18446744073276194113,
+            "name": "Output",
+            "slot": 1,
+            "type": "OutputNode",
+            "x": 1150.0,
+            "y": 29.0
+        },
+        {
+            "bits": 1,
+            "guid": "cef8fae7d7884c999c3bcf07e1f8a2a5",
+            "id": 2048906060,
+            "name": "Literal",
+            "type": "LiteralNode",
+            "value": 0,
+            "x": -1323.0,
+            "y": 1867.0
+        },
+        {
+            "guid": "20de38a67cd94305983d26093b5bcdc0",
+            "id": 1152439620,
+            "name": "Output",
+            "slot": 5,
+            "type": "OutputNode",
+            "x": -504.0,
+            "y": 1117.0
+        },
+        {
+            "guid": "47ac784367a64b6d8a5115616a9da3cb",
+            "id": 906168065,
+            "name": "Output",
+            "slot": 3,
+            "type": "OutputNode",
+            "x": 1276.0,
+            "y": 1149.0
+        },
+        {
+            "bits": 32,
+            "guid": "42dde2b14941496990e681738e51b47e",
+            "id": 741450203,
+            "name": "Counter",
+            "type": "CounterNode",
+            "x": 947.0,
+            "y": 1221.0
+        },
+        {
+            "guid": "687c904d94654c7092da60a2eb670086",
+            "id": 2010382525,
+            "name": "Input",
+            "slot": 9,
+            "type": "InputNode",
+            "x": 545.0,
+            "y": 845.0
+        },
+        {
+            "guid": "0957afad3e7e4366a080292aec11a8b2",
+            "id": 1907491707,
+            "name": "",
+            "type": "ClockNode",
+            "x": 698.0,
+            "y": 1045.0
+        },
+        {
+            "guid": "f3941a97fe414d30bfb444835f6dd5ae",
+            "id": 1756355867,
+            "name": "Input",
+            "slot": 8,
+            "type": "InputNode",
+            "x": 449.0,
+            "y": 1181.0
+        },
+        {
+            "guid": "57535718ac934bc9a8c74813ea944504",
+            "id": 1242342613,
+            "name": "Input",
+            "slot": 3,
+            "type": "InputNode",
+            "x": 449.0,
+            "y": 1341.0
+        },
+        {
+            "guid": "797327e3b6e2423c88f952abba85ac4d",
+            "id": 1295092980,
+            "name": "Input",
+            "slot": 7,
+            "type": "InputNode",
+            "x": 449.0,
+            "y": 1501.0
+        },
+        {
+            "bits": 1,
+            "guid": "c96575c2779a4c4994f2ee38d587eeec",
+            "id": 902715787,
+            "name": "Literal",
+            "type": "LiteralNode",
+            "value": 1,
+            "x": 443.0,
+            "y": 1019.0
+        },
+        {
+            "guid": "8b8e80cc52444f50837b97c65df70dd1",
+            "id": 18446744073614243450,
+            "name": "Input",
+            "slot": 7,
+            "type": "InputNode",
+            "x": -118.0,
+            "y": 2381.0
+        },
+        {
+            "bits": 32,
+            "guid": "e78ab5a151804a33a37a26d52d005b57",
+            "id": 1848835016,
+            "name": "Splitter",
+            "type": "SplitterNode",
+            "x": 110.0,
+            "y": 2405.0
+        },
+        {
+            "bits": 16,
+            "guid": "db6c0fc012e74f5abfadf7641bcd6cca",
+            "id": 461895241,
+            "name": "Combiner",
+            "type": "CombinerNode",
+            "x": 307.0,
+            "y": 2405.0
+        },
+        {
+            "bits": 16,
+            "guid": "b43dafdbf47543fe90da06d301ded17e",
+            "id": 1947092373,
+            "name": "Register",
+            "type": "RegisterNode",
+            "x": 553.0,
+            "y": 2245.0
+        },
+        {
+            "guid": "ce108ca083714e79a6abd3c13852cfa7",
+            "id": 818206550,
+            "name": "Input",
+            "slot": 8,
+            "type": "InputNode",
+            "x": 131.0,
+            "y": 2221.0
+        },
+        {
+            "guid": "086666b0ed8d423cb538b1c2d6901e86",
+            "id": 18446744073216336547,
+            "name": "",
+            "type": "ClockNode",
+            "x": 348.0,
+            "y": 2245.0
+        },
+        {
+            "guid": "b61e99137d75477bb3284c6f94d828b1",
+            "id": 18446744073372862244,
+            "name": "Input",
+            "slot": 4,
+            "type": "InputNode",
+            "x": 211.0,
+            "y": 2013.0
+        },
+        {
+            "guid": "224aa1037d4d40c68d44e214f8ce4903",
+            "id": 517604433,
+            "name": "Output",
+            "slot": 6,
+            "type": "OutputNode",
+            "x": 974.0,
+            "y": 2045.0
+        },
+        {
+            "guid": "776e3cd03bc04e72b4e41587be6bd6ef",
+            "id": 18446744071987523980,
+            "name": "Output",
+            "slot": 4,
+            "type": "OutputNode",
+            "x": 1150.0,
+            "y": 2509.0
+        },
+        {
+            "bits": 16,
+            "guid": "46b607f7194f4573a8d28d54df3f4151",
+            "id": 18446744073250453068,
+            "name": "Splitter",
+            "type": "SplitterNode",
+            "x": 631.0,
+            "y": 2485.0
+        },
+        {
+            "bits": 32,
+            "guid": "4c9486be4dc4449aa6f651bce5f08020",
+            "id": 18446744071758976183,
+            "name": "Combiner",
+            "type": "CombinerNode",
+            "x": 860.0,
+            "y": 2485.0
+        },
+        {
+            "bits": 1,
+            "guid": "982b4c9c1c3a4d629147b0b53088b472",
+            "id": 18446744072237613881,
+            "name": "Literal",
+            "type": "LiteralNode",
+            "value": 0,
+            "x": 597.0,
+            "y": 3179.0
+        }
+    ],
+    "outputs": [
+        {
+            "bits": 32,
+            "name": "val_sp"
+        },
+        {
+            "bits": 32,
+            "name": "val_bp"
+        },
+        {
+            "bits": 32,
+            "name": "val_ins"
+        },
+        {
+            "bits": 32,
+            "name": "val_pc"
+        },
+        {
+            "bits": 32,
+            "name": "val_adr"
+        },
+        {
+            "bits": 32,
+            "name": "instruction_literal"
+        },
+        {
+            "bits": 16,
+            "name": "address_16"
+        }
+    ]
+}

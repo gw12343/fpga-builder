@@ -90,8 +90,6 @@
             src/Default/InputNode.cpp
             src/Default/InputNode.h
             src/Codegen/Visitor.h
-            src/Codegen/TraversePrint.cpp
-            src/Codegen/TraversePrint.h
             src/Codegen/Codegen.cpp
             src/Codegen/Codegen.h
             src/Default/BinaryOperator/OrNode.h
@@ -139,6 +137,21 @@
             src/CopyPasteManager.cpp
             src/CopyPasteManager.h
             src/UI/ModuleUI.cpp
+            src/Project/Project.h
+            src/Project/Project.cpp
+            src/Default/CustomModuleNode.h
+            src/UI/ProjectUI.cpp
+            src/UI/NodeUI.cpp
+            src/pch.h
+            src/pch.h
+            src/Default/ConfigurableDataAndNumInputsNode.h
+            src/Default/DecoderNode.h
+            src/Default/BinaryOperator/NandNode.h
+            src/Default/SubtractorNode.h
+            src/Default/MultiplierNode.h
+            src/Default/ROMNode.h
+            src/Default/ComparatorNode.h
+            src/Default/ComparatorNode.h
     )
 
     target_include_directories(fpga_builder PUBLIC
@@ -153,6 +166,8 @@
             imgui_node_editor
             nlohmann_json::nlohmann_json
     )
+
+    target_precompile_headers(fpga_builder PRIVATE ${CMAKE_SOURCE_DIR}/src/pch.h)
 
     if (WIN32)
         target_link_libraries(fpga_builder PRIVATE

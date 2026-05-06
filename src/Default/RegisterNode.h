@@ -21,8 +21,8 @@ public:
         return std::make_unique<RegisterNode>(module, GUID::generate_guid(), bits);
     }
 
-    static constexpr ImVec4 color = {0.729f, 0.455f, 0.067f, 1.0f};
-    [[nodiscard]] ImVec4 GetUIColor() const override { return color; }
+    static constexpr ImVec4 COLOR = {0.729f, 0.455f, 0.067f, 1.0f};
+    [[nodiscard]] ImVec4 GetUIColor() const override { return COLOR; }
     [[nodiscard]] int GetNodeWidth() const override { return 150; }
 
 

@@ -4,13 +4,17 @@
 
 #include "CopyPasteManager.h"
 
+#include "Default/ConfigurableDataAndSelectBitWidthNode.h"
+#include "Link.h"
+#include "Pins/Pin.h"
+
 
 void CopyPasteManager::CopySelection(Module *module) {
-    auto &[copied_nodes, selected_nodes, copied_node_positions] = data[module];
+    auto &[copied_nodes, selected_nodes, copied_node_positions] = m_data[module];
 
 
-    copied_nodes.resize(ed::GetSelectedObjectCount());
-    selected_nodes.resize(ed::GetSelectedObjectCount());
+    copied_nodes.resize(ax::NodeEditor::GetSelectedObjectCount());
+    selected_nodes.resize(ax::NodeEditor::GetSelectedObjectCount());
 
     const int node_count = GetSelectedNodes(copied_nodes.data(), static_cast<int>(copied_nodes.size()));
     const int link_count = GetSelectedLinks(selected_nodes.data(), static_cast<int>(selected_nodes.size()));
@@ -25,7 +29,7 @@ void CopyPasteManager::CopySelection(Module *module) {
 
 
 void CopyPasteManager::PasteSelection(Module *module, const std::shared_ptr<ErrorManager> &error_manager) {
-    auto &[copied_nodes, selected_nodes, copied_node_positions] = data[module];
+    auto &[copied_nodes, selected_nodes, copied_node_positions] = m_data[module];
 
     std::map<std::string, std::string> guid_map;
     std::vector<std::string> old_nodes;
@@ -51,7 +55,7 @@ void CopyPasteManager::PasteSelection(Module *module, const std::shared_ptr<Erro
         copy->Render(error_manager);
         ax::NodeEditor::SelectNode(copy->id.Get(), true);
 
-        module->nodes.push_back(copy);
+        module->AddNode(copy);
     }
 
     // get the links that are between only the nodes selected
@@ -64,7 +68,7 @@ void CopyPasteManager::PasteSelection(Module *module, const std::shared_ptr<Erro
     };
 
     std::vector<link_copy_data> links_to_copy;
-    for (const auto &link: module->links) {
+    for (const auto &link: module->GetLinks()) {
         const auto &in_pin_op = module->GetPin(link.input_guid);
         const auto &out_pin_op = module->GetPin(link.output_guid);
         if (!in_pin_op || !out_pin_op)
@@ -106,7 +110,7 @@ void CopyPasteManager::PasteSelection(Module *module, const std::shared_ptr<Erro
         std::string new_out_id = new_node_out_op.value()->guid + out_suffix;
 
 
-        module->links.emplace_back(module, new_out_id, new_in_id);
+        module->AddLink({module, new_out_id, new_in_id});
     }
 }
 

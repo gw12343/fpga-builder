@@ -3,9 +3,6 @@
 //
 
 #pragma once
-#include <imgui.h>
-#include <map>
-#include <vector>
 
 #include "Module.h"
 
@@ -33,5 +30,5 @@ private:
     void PasteSelection(Module *module, const std::shared_ptr<ErrorManager> &error_manager);
 
 
-    std::map<Module *, CopiedNodeData> data;
+    std::map<Module *, CopiedNodeData> m_data;
 };

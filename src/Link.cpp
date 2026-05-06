@@ -4,14 +4,12 @@
 
 #include "Link.h"
 
-#include <intrin.h>
 #include <iostream>
-#include <utility>
+
 
 #include "GUID.h"
 #include "Module.h"
 #include "Pins/Pin.h"
-
 
 ImVec4 BitWidthColor(const int bits) {
     const float t = log2f(static_cast<float>(bits)) / 7.0f;
@@ -40,8 +38,8 @@ void Link::Render() const {
     const Pin &inPin = in.value();
 
     const auto link_color = BitWidthColor(out->GetDataType().GetBitWidth());
-    const auto link_thickness = inPin.GetDataType().GetBitWidth();
+    const auto link_thickness = pow(inPin.GetDataType().GetBitWidth(), 0.8);
 
 
-    ed::Link(id, outPin.GetId(), inPin.GetId(), link_color, static_cast<float>(link_thickness));
+    ax::NodeEditor::Link(id, outPin.GetId(), inPin.GetId(), link_color, static_cast<float>(link_thickness));
 }

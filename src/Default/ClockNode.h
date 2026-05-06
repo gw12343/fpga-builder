@@ -19,8 +19,8 @@ public:
     }
 
     [[nodiscard]] int GetNodeWidth() const override { return 25; }
-    static constexpr ImVec4 color = {0.1, 0.1, 0.1, .5};
-    [[nodiscard]] ImVec4 GetUIColor() const override { return color; }
+    static constexpr ImVec4 COLOR = {0.1, 0.1, 0.1, .5};
+    [[nodiscard]] ImVec4 GetUIColor() const override { return COLOR; }
 
 
     explicit ClockNode(Module *module) : ClockNode(module, GUID::generate_guid()) {}

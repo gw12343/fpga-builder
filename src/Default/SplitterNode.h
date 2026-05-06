@@ -19,8 +19,8 @@ public:
         return std::make_unique<SplitterNode>(module, GUID::generate_guid(), bits);
     }
 
-    static constexpr ImVec4 color = {0.325f, 0.290f, 0.718f, 1.0f};
-    [[nodiscard]] ImVec4 GetUIColor() const override { return color; }
+    static constexpr ImVec4 COLOR = {0.325f, 0.290f, 0.718f, 1.0f};
+    [[nodiscard]] ImVec4 GetUIColor() const override { return COLOR; }
     [[nodiscard]] int GetNodeWidth() const override { return 150; }
 
 

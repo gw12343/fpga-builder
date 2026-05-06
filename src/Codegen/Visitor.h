@@ -5,6 +5,12 @@
 #pragma once
 
 
+class ComparatorNode;
+class ROMNode;
+class MultiplierNode;
+class SubtractorNode;
+class DecoderNode;
+class CustomModuleNode;
 class AdderNode;
 class RegisterNode;
 class CombinerNode;
@@ -25,6 +31,12 @@ class Visitor {
 public:
     virtual ~Visitor() = default;
 
+    virtual void visit(ComparatorNode &node, int output_slot) {}
+    virtual void visit(ROMNode &node, int output_slot) {}
+    virtual void visit(MultiplierNode &node, int output_slot) {}
+    virtual void visit(SubtractorNode &node, int output_slot) {}
+    virtual void visit(DecoderNode &node, int output_slot) {}
+    virtual void visit(CustomModuleNode &node, int output_slot) {}
     virtual void visit(AdderNode &node, int output_slot) {}
     virtual void visit(RegisterNode &node, int output_slot) {}
     virtual void visit(CombinerNode &node, int output_slot) {}

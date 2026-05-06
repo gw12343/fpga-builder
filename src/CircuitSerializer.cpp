@@ -9,24 +9,31 @@
 
 #include "Default/AdderNode.h"
 #include "Default/BinaryOperator/AndNode.h"
+#include "Default/BinaryOperator/NandNode.h"
 #include "Default/BinaryOperator/NorNode.h"
 #include "Default/BinaryOperator/OrNode.h"
 #include "Default/BinaryOperator/XOrNode.h"
 #include "Default/ClockNode.h"
 #include "Default/CombinerNode.h"
+#include "Default/ComparatorNode.h"
 #include "Default/CounterNode.h"
+#include "Default/CustomModuleNode.h"
 #include "Default/DFFNode.h"
 #include "Default/DebounceNode.h"
+#include "Default/DecoderNode.h"
 #include "Default/EdgeNode.h"
 #include "Default/InputNode.h"
 #include "Default/LiteralNode.h"
 #include "Default/MultiplexerNode.h"
+#include "Default/MultiplierNode.h"
 #include "Default/OutputNode.h"
+#include "Default/ROMNode.h"
 #include "Default/RegisterNode.h"
 #include "Default/SplitterNode.h"
+#include "Default/SubtractorNode.h"
 #include "Default/UnaryOperator/NotNode.h"
 #include "Module.h"
-#include "UI/Lib/ImGuiNotify.h"
+#include "Project/Project.h"
 
 
 using json = nlohmann::json;
@@ -42,23 +49,34 @@ std::unique_ptr<Node> CircuitSerializer::NodeFromJson(const json &j, Module *m) 
     auto guid = j.at("guid").get<std::string>();
 
     if (type == "OrNode") {
-        p = std::make_unique<OrNode>(m, guid, j.at("bits").get<int>());
+        p = std::make_unique<OrNode>(m, guid, j.at("bits").get<int>(), j.at("num_inputs").get<int>());
+    } else if (type == "CustomNode") {
+        p = std::make_unique<CustomModuleNode>(m, guid, j.at("module_guid").get<std::string>());
     } else if (type == "XOrNode") {
-        p = std::make_unique<XOrNode>(m, guid, j.at("bits").get<int>());
+        p = std::make_unique<XOrNode>(m, guid, j.at("bits").get<int>(), j.at("num_inputs").get<int>());
     } else if (type == "NorNode") {
-        p = std::make_unique<NorNode>(m, guid, j.at("bits").get<int>());
+        p = std::make_unique<NorNode>(m, guid, j.at("bits").get<int>(), j.at("num_inputs").get<int>());
     } else if (type == "AndNode") {
-        p = std::make_unique<AndNode>(m, guid, j.at("bits").get<int>());
+        p = std::make_unique<AndNode>(m, guid, j.at("bits").get<int>(), j.at("num_inputs").get<int>());
+    } else if (type == "NandNode") {
+        p = std::make_unique<NandNode>(m, guid, j.at("bits").get<int>(), j.at("num_inputs").get<int>());
     } else if (type == "OutputNode") {
         p = std::make_unique<OutputNode>(m, guid, j.at("slot").get<int>());
     } else if (type == "InputNode") {
         p = std::make_unique<InputNode>(m, guid, j.at("slot").get<int>());
     } else if (type == "MultiplexerNode") {
         p = std::make_unique<MultiplexerNode>(m, guid, j.at("data_bits").get<int>(), j.at("select_bits").get<int>());
+    } else if (type == "ROMNode") {
+        p = std::make_unique<ROMNode>(m, guid, j.at("data_bits").get<int>(), j.at("select_bits").get<int>(),
+                                      j.at("rom_file").get<std::string>());
     } else if (type == "LiteralNode") {
         p = std::make_unique<LiteralNode>(m, guid, j.at("bits").get<int>(), j.at("value").get<int>());
     } else if (type == "SplitterNode") {
         p = std::make_unique<SplitterNode>(m, guid, j.at("bits").get<int>());
+    } else if (type == "DecoderNode") {
+        p = std::make_unique<DecoderNode>(m, guid, j.at("bits").get<int>());
+    } else if (type == "ComparatorNode") {
+        p = std::make_unique<ComparatorNode>(m, guid, j.at("bits").get<int>());
     } else if (type == "CombinerNode") {
         p = std::make_unique<CombinerNode>(m, guid, j.at("bits").get<int>());
     } else if (type == "CounterNode") {
@@ -73,6 +91,10 @@ std::unique_ptr<Node> CircuitSerializer::NodeFromJson(const json &j, Module *m) 
         p = std::make_unique<EdgeNode>(m, guid);
     } else if (type == "AdderNode") {
         p = std::make_unique<AdderNode>(m, guid, j.at("bits").get<int>());
+    } else if (type == "MultiplierNode") {
+        p = std::make_unique<MultiplierNode>(m, guid, j.at("bits").get<int>());
+    } else if (type == "SubtractorNode") {
+        p = std::make_unique<SubtractorNode>(m, guid, j.at("bits").get<int>());
     } else if (type == "ClockNode") {
         p = std::make_unique<ClockNode>(m, guid);
     } else if (type == "NotNode") {
@@ -111,7 +133,9 @@ Link CircuitSerializer::LinkFromJson(const json &j, Module *m) {
 
 CircuitSerializer::CircuitSerializer() = default;
 
-std::shared_ptr<Module> CircuitSerializer::LoadModule(const std::string &file_path) {
+std::shared_ptr<Module> CircuitSerializer::LoadModule(Project *project, const std::string &file_path) {
+    std::cout << "loading module " << file_path << std::endl;
+
     // Open and read file
     std::ifstream file(file_path);
     std::stringstream buffer;
@@ -120,57 +144,70 @@ std::shared_ptr<Module> CircuitSerializer::LoadModule(const std::string &file_pa
     json j = json::parse(buffer.str());
 
     // Create Module
-    auto module = std::make_shared<Module>(j["name"].get<std::string>());
+    auto module = std::make_shared<Module>(project, j["name"].get<std::string>(), j["guid"].get<std::string>());
 
     for (json j_inputs = j["inputs"]; const auto &j_in: j_inputs) {
-        module->inputs.push_back({j_in["name"].get<std::string>(), j_in["bits"].get<int>()});
+        module->AddInput({j_in["name"].get<std::string>(), j_in["bits"].get<int>()});
     }
 
     for (json j_outputs = j["outputs"]; const auto &j_out: j_outputs) {
-        module->outputs.push_back({j_out["name"].get<std::string>(), j_out["bits"].get<int>()});
+        module->AddOutput({j_out["name"].get<std::string>(), j_out["bits"].get<int>()});
     }
 
     for (json j_nodes = j["nodes"]; const auto &j_node: j_nodes) {
         auto node = NodeFromJson(j_node, module.get());
-        module->nodes.push_back(std::move(node));
+        module->AddNode(std::move(node));
     }
 
     for (json j_links = j["links"]; const auto &j_link: j_links) {
         auto link = LinkFromJson(j_link, module.get());
-        module->links.push_back(link);
+        module->AddLink(link);
     }
 
 
-    ImGui::InsertNotification({ImGuiToastType::Success, 3000, "Loaded module '%s'", module->name.c_str()});
+    ImGui::InsertNotification({ImGuiToastType::Success, 3000, "Loaded module '%s'", module->GetName().c_str()});
 
     return module;
 }
 
-void CircuitSerializer::SaveModule(const std::shared_ptr<Module> &module, const std::string &file_path) {
+void CircuitSerializer::RenameModuleFile(const Project *project, const Module *module, const std::string &new_name) {
+    const auto old_path = project->GetWorkspacePath() + "/" + module->GetName() + ".json";
+    const auto new_path = project->GetWorkspacePath() + "/" + new_name + ".json";
+
+    // Move old file
+    try {
+        std::filesystem::rename(old_path, new_path);
+        ImGui::InsertNotification({ImGuiToastType::Success, 500, "Renamed module to '%s'", new_path.c_str()});
+    } catch ([[maybe_unused]] const std::filesystem::filesystem_error &e) {
+        ImGui::InsertNotification({ImGuiToastType::Error, 500, "Failed to rename module"});
+    }
+}
+
+void CircuitSerializer::SaveModule(Project *project, const std::shared_ptr<Module> &module) {
     json j_file;
     json j_nodes = json::array();
     json j_links = json::array();
     json j_inputs = json::array();
     json j_outputs = json::array();
 
-    for (const auto &node: module->nodes) {
+    for (const auto &node: module->GetNodes()) {
         json j = node->ToJson();
         j_nodes.push_back(j);
     }
 
-    for (const auto &link: module->links) {
+    for (const auto &link: module->GetLinks()) {
         json j = link.to_json();
         j_links.push_back(j);
     }
 
-    for (const auto &[name, bits]: module->inputs) {
+    for (const auto &[name, bits]: module->GetInputs()) {
         json j;
         j["name"] = name;
         j["bits"] = bits;
         j_inputs.push_back(j);
     }
 
-    for (const auto &[name, bits]: module->outputs) {
+    for (const auto &[name, bits]: module->GetOutputs()) {
         json j;
         j["name"] = name;
         j["bits"] = bits;
@@ -183,17 +220,19 @@ void CircuitSerializer::SaveModule(const std::shared_ptr<Module> &module, const 
     j_file["inputs"] = j_inputs;
     j_file["outputs"] = j_outputs;
     j_file["name"] = module->GetName();
+    j_file["guid"] = module->GetGuid();
+
+    const std::string file_path = project->GetWorkspacePath() + "/" + module->GetName() + ".json";
 
     if (std::ofstream file(file_path); file.is_open()) {
         std::cout << "Writing output file..." << std::endl;
         file << j_file.dump(4);
         file.close();
-        ImGui::InsertNotification(
-                {ImGuiToastType::Success, 3000, "Saved module '%s' to %s", module->name.c_str(), file_path.c_str()});
-
+        ImGui::InsertNotification({ImGuiToastType::Success, 3000, "Saved module '%s' to %s", module->GetName().c_str(),
+                                   file_path.c_str()});
     } else {
         std::cerr << "Could not open file \"" << file_path << "\"" << std::endl;
         ImGui::InsertNotification({ImGuiToastType::Error, 3000, "Failed to save module '%s' to %s",
-                                   module->name.c_str(), file_path.c_str()});
+                                   module->GetName().c_str(), file_path.c_str()});
     }
 }

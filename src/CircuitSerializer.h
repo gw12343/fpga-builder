@@ -3,10 +3,11 @@
 //
 
 #pragma once
-#include <nlohmann/json.hpp>
+
 
 #include "Default/Node.h"
 #include "Link.h"
+#include "Project/Project.h"
 
 
 using json = nlohmann::json;
@@ -15,8 +16,9 @@ class CircuitSerializer {
 public:
     CircuitSerializer();
 
-    static std::shared_ptr<Module> LoadModule(const std::string &file_path);
-    static void SaveModule(const std::shared_ptr<Module> &module, const std::string &file_path);
+    static std::shared_ptr<Module> LoadModule(Project *project, const std::string &file_path);
+    static void SaveModule(Project *project, const std::shared_ptr<Module> &module);
+    static void RenameModuleFile(const Project *project, const Module *module, const std::string &new_name);
 
 private:
     static std::unique_ptr<Node> NodeFromJson(const json &j, Module *m);

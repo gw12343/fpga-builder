@@ -6,7 +6,7 @@
 #include <fstream>
 #include "Module.h"
 
-OutputViewer::OutputViewer(const std::shared_ptr<Module> &module) {
+OutputViewer::OutputViewer() {
     auto lang = TextEditor::LanguageDefinition::CPlusPlus();
 
     const std::unordered_set<std::string> verilog_keywords = {"always",
@@ -134,8 +134,8 @@ OutputViewer::OutputViewer(const std::shared_ptr<Module> &module) {
 
 
     lang.mKeywords = verilog_keywords;
-    editor.SetLanguageDefinition(lang);
-    editor.SetReadOnly(true);
+    m_editor.SetLanguageDefinition(lang);
+    m_editor.SetReadOnly(true);
 
 
     auto palette = TextEditor::GetDarkPalette();
@@ -156,21 +156,22 @@ OutputViewer::OutputViewer(const std::shared_ptr<Module> &module) {
     palette[static_cast<int>(TextEditor::PaletteIndex::ErrorMarker)] = ImColor(255, 60, 60);
     palette[static_cast<int>(TextEditor::PaletteIndex::Breakpoint)] = ImColor(180, 40, 40);
 
-    editor.SetPalette(palette);
+    m_editor.SetPalette(palette);
 
-    UpdateOutput(module);
+    m_editor.SetText("TODO");
+    // UpdateOutput(module);
 }
 void OutputViewer::UpdateOutput(const std::shared_ptr<Module> &module) {
-    const std::ifstream file("../Project/Export/" + module->name + ".v");
+    const std::ifstream file("../Project/Export/" + module->GetName() + ".v");
     std::stringstream buffer;
     buffer << file.rdbuf();
 
-    editor.SetText(buffer.str());
+    m_editor.SetText(buffer.str());
 }
 
 
 void OutputViewer::Render() {
     ImGui::Begin("Output");
-    editor.Render("TextEditor");
+    m_editor.Render("TextEditor");
     ImGui::End();
 }

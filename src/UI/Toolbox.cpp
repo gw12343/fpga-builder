@@ -8,21 +8,28 @@
 #include "Codegen/Codegen.h"
 #include "Default/AdderNode.h"
 #include "Default/BinaryOperator/AndNode.h"
+#include "Default/BinaryOperator/NandNode.h"
 #include "Default/BinaryOperator/NorNode.h"
 #include "Default/BinaryOperator/OrNode.h"
 #include "Default/BinaryOperator/XOrNode.h"
 #include "Default/ClockNode.h"
 #include "Default/CombinerNode.h"
+#include "Default/ComparatorNode.h"
 #include "Default/CounterNode.h"
+#include "Default/CustomModuleNode.h"
 #include "Default/DFFNode.h"
 #include "Default/DebounceNode.h"
+#include "Default/DecoderNode.h"
 #include "Default/EdgeNode.h"
 #include "Default/InputNode.h"
 #include "Default/LiteralNode.h"
 #include "Default/MultiplexerNode.h"
+#include "Default/MultiplierNode.h"
 #include "Default/OutputNode.h"
+#include "Default/ROMNode.h"
 #include "Default/RegisterNode.h"
 #include "Default/SplitterNode.h"
+#include "Default/SubtractorNode.h"
 #include "Default/UnaryOperator/NotNode.h"
 #include "Lib/IconsFontAwesome6.h"
 
@@ -31,13 +38,17 @@
 
 #define ADD_NODE_TO_CATEGORY(category, name, type)                                                                     \
                                                                                                                        \
-    categories[category].push_back({name, type::color, [](const std::shared_ptr<Module> &module) {                     \
-                                        return std::make_shared<type>(module.get());                                   \
-                                    }});
+    m_categories[category].push_back({name, type::COLOR, [](const std::shared_ptr<Module> &module) {                   \
+                                          auto n = std::make_shared<type>(module.get());                               \
+                                          n->start_pos = ImVec2(50, 50);                                               \
+                                          return n;                                                                    \
+                                      }});
 
 Toolbox::Toolbox() {
+    ADD_NODE_TO_CATEGORY("Bitwise Operators", "Custom", CustomModuleNode);
     ADD_NODE_TO_CATEGORY("Bitwise Operators", "NOT", NotNode);
     ADD_NODE_TO_CATEGORY("Bitwise Operators", "AND", AndNode);
+    ADD_NODE_TO_CATEGORY("Bitwise Operators", "NAND", NandNode);
     ADD_NODE_TO_CATEGORY("Bitwise Operators", "OR", OrNode);
     ADD_NODE_TO_CATEGORY("Bitwise Operators", "NOR", NorNode);
     ADD_NODE_TO_CATEGORY("Bitwise Operators", "XOR", XOrNode);
@@ -46,15 +57,20 @@ Toolbox::Toolbox() {
     ADD_NODE_TO_CATEGORY("Wiring", "Splitter", SplitterNode);
     ADD_NODE_TO_CATEGORY("Wiring", "Combiner", CombinerNode);
     ADD_NODE_TO_CATEGORY("Wiring", "Multiplexer", MultiplexerNode);
+    ADD_NODE_TO_CATEGORY("Wiring", "Decoder", DecoderNode);
 
     ADD_NODE_TO_CATEGORY("IO", "Input", InputNode);
     ADD_NODE_TO_CATEGORY("IO", "Output", OutputNode);
+    ADD_NODE_TO_CATEGORY("IO", "ROM", ROMNode);
 
 
     ADD_NODE_TO_CATEGORY("Memory", "Register", RegisterNode);
     ADD_NODE_TO_CATEGORY("Memory", "Counter", CounterNode);
     ADD_NODE_TO_CATEGORY("Memory", "DFF", DFFNode);
 
+    ADD_NODE_TO_CATEGORY("Misc", "Comparator", ComparatorNode);
+    ADD_NODE_TO_CATEGORY("Misc", "Multiplier", MultiplierNode);
+    ADD_NODE_TO_CATEGORY("Misc", "Subtractor", SubtractorNode);
     ADD_NODE_TO_CATEGORY("Misc", "Adder", AdderNode);
     ADD_NODE_TO_CATEGORY("Misc", "Clock " ICON_FA_WAVE_SQUARE, ClockNode);
     ADD_NODE_TO_CATEGORY("Misc", "Debounce", DebounceNode);
@@ -62,23 +78,25 @@ Toolbox::Toolbox() {
 }
 
 
-void Toolbox::Render(const std::shared_ptr<Module> &module, const std::shared_ptr<ConfigManager> &config_manager) {
+void Toolbox::Render(const std::optional<std::shared_ptr<Module>> &module,
+                     const std::shared_ptr<ConfigManager> &config_manager) {
     ImGui::Begin("Toolbox");
 
 
     std::shared_ptr<Node> new_node;
 
-    for (const auto &[category, node_types]: categories) {
+
+    for (const auto &[category, node_types]: m_categories) {
         if (node_types.empty())
             continue;
 
         ImGui::SeparatorText(category.c_str());
-        constexpr float node_width = NODE_MIN_BTN_SIZE;
+        constexpr float NODE_WIDTH = NODE_MIN_BTN_SIZE;
         const float btn_padding = ImGui::GetStyle().ItemSpacing.x;
         const float avail_width = ImGui::GetContentRegionAvail().x;
-        const int columns = std::max(1, static_cast<int>((avail_width + btn_padding) / (node_width + btn_padding)));
+        const int columns = std::max(1, static_cast<int>((avail_width + btn_padding) / (NODE_WIDTH + btn_padding)));
 
-        const float adjusted_width_extra = (avail_width - columns * (node_width + btn_padding) + btn_padding) / columns;
+        const float adjusted_width_extra = (avail_width - columns * (NODE_WIDTH + btn_padding) + btn_padding) / columns;
 
         int n = 0;
         int j = 0;
@@ -94,7 +112,8 @@ void Toolbox::Render(const std::shared_ptr<Module> &module, const std::shared_pt
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(color.x, color.y + .1, color.z + .1, color.w));
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(color.x + .2, color.y + .2, color.z + .2, color.w));
             if (ImGui::Button(name.c_str(), ImVec2(NODE_MIN_BTN_SIZE + adjusted_width_extra, NODE_MIN_BTN_SIZE))) {
-                new_node = creator(module);
+                if (module.has_value())
+                    new_node = creator(module.value());
             }
             ImGui::PopStyleColor(3);
         }
@@ -125,8 +144,8 @@ void Toolbox::Render(const std::shared_ptr<Module> &module, const std::shared_pt
     // NODE_BTN(ICON_FA_WAVE_SQUARE, ClockNode);
 
     if (new_node) {
-
-        config_manager->ConfigureAndAdd(module, new_node);
+        if (module.has_value())
+            config_manager->ConfigureAndAdd(module.value(), new_node);
     }
 
 

@@ -7,12 +7,12 @@
 
 class PinDataType {
 public:
-    explicit PinDataType(const int bit_width) : width(bit_width) {}
+    explicit PinDataType(const int bit_width) : m_width(bit_width) {}
 
     [[nodiscard]] bool CanConnect(const PinDataType &other) const;
 
-    [[nodiscard]] int GetBitWidth() const { return width; }
+    [[nodiscard]] int GetBitWidth() const { return m_width; }
 
 private:
-    int width;
+    int m_width;
 };
