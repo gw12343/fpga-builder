@@ -17,6 +17,7 @@ public:
 
     void GenerateCode(const std::shared_ptr<Module> &module);
 
+    void visit(ComparatorNode &node, int output_slot) override;
     void visit(ROMNode &node, int output_slot) override;
     void visit(MultiplierNode &node, int output_slot) override;
     void visit(SubtractorNode &node, int output_slot) override;

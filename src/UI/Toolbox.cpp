@@ -14,6 +14,7 @@
 #include "Default/BinaryOperator/XOrNode.h"
 #include "Default/ClockNode.h"
 #include "Default/CombinerNode.h"
+#include "Default/ComparatorNode.h"
 #include "Default/CounterNode.h"
 #include "Default/CustomModuleNode.h"
 #include "Default/DFFNode.h"
@@ -38,7 +39,9 @@
 #define ADD_NODE_TO_CATEGORY(category, name, type)                                                                     \
                                                                                                                        \
     m_categories[category].push_back({name, type::COLOR, [](const std::shared_ptr<Module> &module) {                   \
-                                          return std::make_shared<type>(module.get());                                 \
+                                          auto n = std::make_shared<type>(module.get());                               \
+                                          n->start_pos = ImVec2(50, 50);                                               \
+                                          return n;                                                                    \
                                       }});
 
 Toolbox::Toolbox() {
@@ -65,6 +68,7 @@ Toolbox::Toolbox() {
     ADD_NODE_TO_CATEGORY("Memory", "Counter", CounterNode);
     ADD_NODE_TO_CATEGORY("Memory", "DFF", DFFNode);
 
+    ADD_NODE_TO_CATEGORY("Misc", "Comparator", ComparatorNode);
     ADD_NODE_TO_CATEGORY("Misc", "Multiplier", MultiplierNode);
     ADD_NODE_TO_CATEGORY("Misc", "Subtractor", SubtractorNode);
     ADD_NODE_TO_CATEGORY("Misc", "Adder", AdderNode);

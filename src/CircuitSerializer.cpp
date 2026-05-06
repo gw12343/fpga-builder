@@ -15,6 +15,7 @@
 #include "Default/BinaryOperator/XOrNode.h"
 #include "Default/ClockNode.h"
 #include "Default/CombinerNode.h"
+#include "Default/ComparatorNode.h"
 #include "Default/CounterNode.h"
 #include "Default/CustomModuleNode.h"
 #include "Default/DFFNode.h"
@@ -74,6 +75,8 @@ std::unique_ptr<Node> CircuitSerializer::NodeFromJson(const json &j, Module *m) 
         p = std::make_unique<SplitterNode>(m, guid, j.at("bits").get<int>());
     } else if (type == "DecoderNode") {
         p = std::make_unique<DecoderNode>(m, guid, j.at("bits").get<int>());
+    } else if (type == "ComparatorNode") {
+        p = std::make_unique<ComparatorNode>(m, guid, j.at("bits").get<int>());
     } else if (type == "CombinerNode") {
         p = std::make_unique<CombinerNode>(m, guid, j.at("bits").get<int>());
     } else if (type == "CounterNode") {

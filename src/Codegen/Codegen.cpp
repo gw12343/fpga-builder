@@ -11,6 +11,7 @@
 #include "Default/BinaryOperator/OrNode.h"
 #include "Default/ClockNode.h"
 #include "Default/CombinerNode.h"
+#include "Default/ComparatorNode.h"
 #include "Default/CounterNode.h"
 #include "Default/CustomModuleNode.h"
 #include "Default/DFFNode.h"
@@ -136,6 +137,54 @@ void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
 }
 
 // ===== MULTI OUTPUT NODES ============================================================================================
+void Codegen::visit(ComparatorNode &node, const int output_slot) {
+    CHECK_CACHE
+
+    const std::string output_greater = GetSafeWireName("comparator_greater");
+    const std::string output_equal = GetSafeWireName("comparator_equal");
+    const std::string output_less = GetSafeWireName("comparator_less");
+
+    m_visited_nodes[NODE_KEY(node.COMPARATOR_G_ID)] = output_greater;
+    m_visited_nodes[NODE_KEY(node.COMPARATOR_E_ID)] = output_equal;
+    m_visited_nodes[NODE_KEY(node.COMPARATOR_L_ID)] = output_less;
+
+    // Input pins
+    const auto a = node.GetAInputPin().GetConnectedPin();
+    const auto b = node.GetBInputPin().GetConnectedPin();
+
+    VERIFY_CONNECTION(a);
+    VERIFY_CONNECTION(b);
+
+    const auto a_val = EvalNode(a);
+    const auto b_val = EvalNode(b);
+
+    m_decls += "reg " + output_greater + ";\n";
+    m_decls += "reg " + output_equal + ";\n";
+    m_decls += "reg " + output_less + ";\n";
+
+    m_inner += "\t\t" + output_greater + " = " + a_val + " > " + b_val + ";\n";
+    m_inner += "\t\t" + output_equal + " = " + a_val + " == " + b_val + ";\n";
+    m_inner += "\t\t" + output_less + " = " + a_val + " < " + b_val + ";\n";
+
+    // A > B
+    if (output_slot == node.COMPARATOR_G_ID) {
+        RETURN_REG(output_greater);
+    }
+
+    // A == B
+    if (output_slot == node.COMPARATOR_E_ID) {
+        RETURN_REG(output_equal);
+    }
+
+    // A < B
+    if (output_slot == node.COMPARATOR_L_ID) {
+        RETURN_REG(output_less);
+    }
+
+    // Fallback - different output node not recognized??
+    CircuitError("Invalid connection!", node);
+}
+
 void Codegen::visit(CustomModuleNode &node, const int output_slot) {
     CHECK_CACHE
     START_CHECK_CYCLES

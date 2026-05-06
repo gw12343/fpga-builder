@@ -150,6 +150,8 @@
             src/Default/SubtractorNode.h
             src/Default/MultiplierNode.h
             src/Default/ROMNode.h
+            src/Default/ComparatorNode.h
+            src/Default/ComparatorNode.h
     )
 
     target_include_directories(fpga_builder PUBLIC
