@@ -26,6 +26,7 @@
 #include "Default/MultiplexerNode.h"
 #include "Default/MultiplierNode.h"
 #include "Default/OutputNode.h"
+#include "Default/RAMNode.h"
 #include "Default/ROMNode.h"
 #include "Default/RegisterNode.h"
 #include "Default/ShifterNode.h"
@@ -64,6 +65,7 @@ Toolbox::Toolbox() {
     ADD_NODE_TO_CATEGORY("IO", "Input", InputNode);
     ADD_NODE_TO_CATEGORY("IO", "Output", OutputNode);
     ADD_NODE_TO_CATEGORY("IO", "ROM", ROMNode);
+    ADD_NODE_TO_CATEGORY("IO", "RAM", RAMNode);
 
 
     ADD_NODE_TO_CATEGORY("Memory", "Register", RegisterNode);

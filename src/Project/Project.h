@@ -19,6 +19,7 @@ public:
 
     [[nodiscard]] std::optional<std::shared_ptr<Module>> GetSelectedModule();
     [[nodiscard]] std::optional<std::shared_ptr<Module>> GetModule(const std::string &guid) const;
+    [[nodiscard]] std::vector<std::shared_ptr<Module>> GetModules() const { return m_modules; }
 
     [[nodiscard]] const std::string &GetWorkspacePath() const { return m_workspace_path; }
     [[nodiscard]] const std::string &GetTopLevelNodeGuid() const { return m_top_level_node_guid; }

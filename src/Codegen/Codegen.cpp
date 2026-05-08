@@ -23,6 +23,7 @@
 #include "Default/MultiplexerNode.h"
 #include "Default/MultiplierNode.h"
 #include "Default/OutputNode.h"
+#include "Default/RAMNode.h"
 #include "Default/ROMNode.h"
 #include "Default/RegisterNode.h"
 #include "Default/ShifterNode.h"
@@ -782,7 +783,7 @@ void Codegen::visit(ROMNode &node, const int output_slot) {
 
     const std::string rom_reg = GetSafeWireName("rom");
 
-    // declare output register and shift register
+    // declare output register
     m_decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + rom_reg + " [" +
                std::to_string(static_cast<int>(pow(2, node.GetSelectWidth())) - 1) + ":0];\n";
     m_decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + output_reg + ";\n";
@@ -796,6 +797,50 @@ void Codegen::visit(ROMNode &node, const int output_slot) {
     // Synchronous read to ensure bram
     m_later += "\talways @(posedge " + clk_val + ") begin\n";
     m_later += "\t\t" + output_reg + " <= " + rom_reg + "[" + adr_val + "];\n";
+    m_later += "\tend\n\n";
+
+
+    RETURN_REG(output_reg)
+}
+
+
+void Codegen::visit(RAMNode &node, const int output_slot) {
+    CHECK_CACHE
+
+    const std::string output_reg = GetSafeWireName("ram_out");
+    m_visited_nodes[NODE_KEY(output_slot)] = output_reg;
+
+    // Input pins
+    const auto adr = node.GetAddressPin().GetConnectedPin();
+    const auto in = node.GetInPin().GetConnectedPin();
+    const auto load = node.GetLoadPin().GetConnectedPin();
+    const auto clk = node.GetClockPin().GetConnectedPin();
+
+    VERIFY_CONNECTION(adr);
+    VERIFY_CONNECTION(in);
+    VERIFY_CONNECTION(load);
+    VERIFY_CONNECTION(clk);
+
+    const auto adr_val = EvalNode(adr);
+    const auto in_val = EvalNode(in);
+    const auto load_val = EvalNode(load);
+    const auto clk_val = EvalNode(clk);
+
+    const std::string ram_reg = GetSafeWireName("ram");
+
+
+    // declare output register and shift register
+    m_decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + ram_reg + " [" +
+               std::to_string(static_cast<int>(pow(2, node.GetSelectWidth())) - 1) + ":0];\n";
+
+    m_decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + output_reg + ";\n";
+
+
+    // Synchronous read to ensure bram
+    m_later += "\talways @(posedge " + clk_val + ") begin\n";
+    m_later += "\t\t" + output_reg + " <= " + ram_reg + "[" + adr_val + "];\n\n";
+    m_later += "\t\tif (" + load_val + ")\n";
+    m_later += "\t\t\t" + ram_reg + "[" + adr_val + "] <= " + in_val + ";\n";
     m_later += "\tend\n\n";
 
 

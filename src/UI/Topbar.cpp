@@ -14,6 +14,17 @@ void Topbar::Render(const std::shared_ptr<Project> &project, const std::shared_p
                     const std::shared_ptr<OutputViewer> &output_viewer) {
     ImGui::Begin("Options");
 
+    if (ImGui::Button("Export Project")) {
+        for (const auto module: project->GetModules()) {
+            Codegen c(error_manager);
+            c.GenerateCode(module);
+
+            output_viewer->UpdateOutput(module);
+        }
+    }
+
+    ImGui::SameLine();
+
     if (const auto module = project->GetSelectedModule(); module.has_value()) {
 
 

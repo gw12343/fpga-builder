@@ -27,6 +27,7 @@
 #include "Default/MultiplexerNode.h"
 #include "Default/MultiplierNode.h"
 #include "Default/OutputNode.h"
+#include "Default/RAMNode.h"
 #include "Default/ROMNode.h"
 #include "Default/RegisterNode.h"
 #include "Default/ShifterNode.h"
@@ -70,6 +71,8 @@ std::unique_ptr<Node> CircuitSerializer::NodeFromJson(const json &j, Module *m) 
     } else if (type == "ROMNode") {
         p = std::make_unique<ROMNode>(m, guid, j.at("data_bits").get<int>(), j.at("select_bits").get<int>(),
                                       j.at("rom_file").get<std::string>());
+    } else if (type == "RAMNode") {
+        p = std::make_unique<RAMNode>(m, guid, j.at("data_bits").get<int>(), j.at("select_bits").get<int>());
     } else if (type == "LiteralNode") {
         p = std::make_unique<LiteralNode>(m, guid, j.at("bits").get<int>(), j.at("value").get<int>());
     } else if (type == "SplitterNode") {
