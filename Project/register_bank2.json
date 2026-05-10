@@ -339,96 +339,6 @@
             "output_guid": "42dde2b14941496990e681738e51b47enode2"
         },
         {
-            "id": 1273731395,
-            "input_guid": "8b8e80cc52444f50837b97c65df70dd1node0",
-            "output_guid": "e78ab5a151804a33a37a26d52d005b57node0"
-        },
-        {
-            "id": 867060727,
-            "input_guid": "e78ab5a151804a33a37a26d52d005b57node1",
-            "output_guid": "db6c0fc012e74f5abfadf7641bcd6ccanode1"
-        },
-        {
-            "id": 153988498,
-            "input_guid": "e78ab5a151804a33a37a26d52d005b57node2",
-            "output_guid": "db6c0fc012e74f5abfadf7641bcd6ccanode2"
-        },
-        {
-            "id": 1586105927,
-            "input_guid": "e78ab5a151804a33a37a26d52d005b57node3",
-            "output_guid": "db6c0fc012e74f5abfadf7641bcd6ccanode3"
-        },
-        {
-            "id": 83193182,
-            "input_guid": "e78ab5a151804a33a37a26d52d005b57node4",
-            "output_guid": "db6c0fc012e74f5abfadf7641bcd6ccanode4"
-        },
-        {
-            "id": 810558053,
-            "input_guid": "e78ab5a151804a33a37a26d52d005b57node5",
-            "output_guid": "db6c0fc012e74f5abfadf7641bcd6ccanode5"
-        },
-        {
-            "id": 18446744071659372054,
-            "input_guid": "e78ab5a151804a33a37a26d52d005b57node6",
-            "output_guid": "db6c0fc012e74f5abfadf7641bcd6ccanode6"
-        },
-        {
-            "id": 1497498851,
-            "input_guid": "e78ab5a151804a33a37a26d52d005b57node7",
-            "output_guid": "db6c0fc012e74f5abfadf7641bcd6ccanode7"
-        },
-        {
-            "id": 1529754328,
-            "input_guid": "e78ab5a151804a33a37a26d52d005b57node8",
-            "output_guid": "db6c0fc012e74f5abfadf7641bcd6ccanode8"
-        },
-        {
-            "id": 18446744073144954442,
-            "input_guid": "e78ab5a151804a33a37a26d52d005b57node9",
-            "output_guid": "db6c0fc012e74f5abfadf7641bcd6ccanode9"
-        },
-        {
-            "id": 18446744073157029128,
-            "input_guid": "e78ab5a151804a33a37a26d52d005b57node10",
-            "output_guid": "db6c0fc012e74f5abfadf7641bcd6ccanode10"
-        },
-        {
-            "id": 771039245,
-            "input_guid": "e78ab5a151804a33a37a26d52d005b57node11",
-            "output_guid": "db6c0fc012e74f5abfadf7641bcd6ccanode11"
-        },
-        {
-            "id": 18446744072460795607,
-            "input_guid": "e78ab5a151804a33a37a26d52d005b57node12",
-            "output_guid": "db6c0fc012e74f5abfadf7641bcd6ccanode12"
-        },
-        {
-            "id": 18446744073095612194,
-            "input_guid": "e78ab5a151804a33a37a26d52d005b57node13",
-            "output_guid": "db6c0fc012e74f5abfadf7641bcd6ccanode13"
-        },
-        {
-            "id": 1410775306,
-            "input_guid": "e78ab5a151804a33a37a26d52d005b57node14",
-            "output_guid": "db6c0fc012e74f5abfadf7641bcd6ccanode14"
-        },
-        {
-            "id": 18446744072053120560,
-            "input_guid": "e78ab5a151804a33a37a26d52d005b57node15",
-            "output_guid": "db6c0fc012e74f5abfadf7641bcd6ccanode15"
-        },
-        {
-            "id": 18446744072382467458,
-            "input_guid": "e78ab5a151804a33a37a26d52d005b57node16",
-            "output_guid": "db6c0fc012e74f5abfadf7641bcd6ccanode16"
-        },
-        {
-            "id": 18446744072984453326,
-            "input_guid": "db6c0fc012e74f5abfadf7641bcd6ccanode0",
-            "output_guid": "b43dafdbf47543fe90da06d301ded17enode3"
-        },
-        {
             "id": 1650609224,
             "input_guid": "ce108ca083714e79a6abd3c13852cfa7node0",
             "output_guid": "b43dafdbf47543fe90da06d301ded17enode2"
@@ -447,11 +357,6 @@
             "id": 759405751,
             "input_guid": "b43dafdbf47543fe90da06d301ded17enode4",
             "output_guid": "224aa1037d4d40c68d44e214f8ce4903node0"
-        },
-        {
-            "id": 18446744072495901227,
-            "input_guid": "db6c0fc012e74f5abfadf7641bcd6ccanode0",
-            "output_guid": "46b607f7194f4573a8d28d54df3f4151node0"
         },
         {
             "id": 1995249051,
@@ -617,6 +522,21 @@
             "id": 18446744073306164211,
             "input_guid": "4c9486be4dc4449aa6f651bce5f08020node0",
             "output_guid": "776e3cd03bc04e72b4e41587be6bd6efnode0"
+        },
+        {
+            "id": 18446744073425776787,
+            "input_guid": "c464e97c69c54dc2958f6fa97831a7aanode1",
+            "output_guid": "b43dafdbf47543fe90da06d301ded17enode3"
+        },
+        {
+            "id": 608085164,
+            "input_guid": "c464e97c69c54dc2958f6fa97831a7aanode1",
+            "output_guid": "46b607f7194f4573a8d28d54df3f4151node0"
+        },
+        {
+            "id": 18446744072046475888,
+            "input_guid": "8b8e80cc52444f50837b97c65df70dd1node0",
+            "output_guid": "c464e97c69c54dc2958f6fa97831a7aanode0"
         }
     ],
     "name": "register_bank2",
@@ -926,24 +846,6 @@
             "y": 2381.0
         },
         {
-            "bits": 32,
-            "guid": "e78ab5a151804a33a37a26d52d005b57",
-            "id": 1848835016,
-            "name": "Splitter",
-            "type": "SplitterNode",
-            "x": 110.0,
-            "y": 2405.0
-        },
-        {
-            "bits": 16,
-            "guid": "db6c0fc012e74f5abfadf7641bcd6cca",
-            "id": 461895241,
-            "name": "Combiner",
-            "type": "CombinerNode",
-            "x": 307.0,
-            "y": 2405.0
-        },
-        {
             "bits": 16,
             "guid": "b43dafdbf47543fe90da06d301ded17e",
             "id": 1947092373,
@@ -1023,6 +925,17 @@
             "value": 0,
             "x": 597.0,
             "y": 3179.0
+        },
+        {
+            "guid": "c464e97c69c54dc2958f6fa97831a7aa",
+            "id": 2138123799,
+            "input_width": 32,
+            "name": "Bit Selector",
+            "range_end_bit": 15,
+            "range_start_bit": 0,
+            "type": "BitSelectorNode",
+            "x": 169.0,
+            "y": 2437.0
         }
     ],
     "outputs": [

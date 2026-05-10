@@ -17,6 +17,7 @@ public:
 
     void GenerateCode(const std::shared_ptr<Module> &module);
 
+    void visit(BitSelectorNode &node, int output_slot) override;
     void visit(RAMNode &node, int output_slot) override;
     void visit(ShifterNode &node, int output_slot) override;
     void visit(ComparatorNode &node, int output_slot) override;

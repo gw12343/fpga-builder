@@ -57,12 +57,12 @@
             "output_guid": "e141b3c4b14f424db36bdc85497491ccnode0"
         },
         {
-            "id": 4261240069,
+            "id": 18446744073675824389,
             "input_guid": "b6b223c0a3be4c388f84961a2dfa5beanode2",
             "output_guid": "02554352e87749be847fd791d02c0a61node3"
         },
         {
-            "id": 2944869069,
+            "id": 18446744072359453389,
             "input_guid": "8d7c7ed726a14440947351f440731a32node2",
             "output_guid": "02554352e87749be847fd791d02c0a61node0"
         },
@@ -72,49 +72,29 @@
             "output_guid": "02554352e87749be847fd791d02c0a61node1"
         },
         {
-            "id": 3359729464,
+            "id": 18446744072774313784,
             "input_guid": "02554352e87749be847fd791d02c0a61node4",
             "output_guid": "c70b1064d2a245bc86a51ba97ceca167node0"
         },
         {
-            "id": 2967959676,
+            "id": 18446744072382543996,
             "input_guid": "02554352e87749be847fd791d02c0a61node5",
             "output_guid": "dd343a18b2854a2fa216399f058f65b3node2"
         },
         {
-            "id": 3804399224,
+            "id": 18446744073218983544,
             "input_guid": "f6caa8c9d3f34a3183c50f18af5d1809node0",
             "output_guid": "dd343a18b2854a2fa216399f058f65b3node3"
         },
         {
-            "id": 1949597011,
-            "input_guid": "8d7c7ed726a14440947351f440731a32node3",
-            "output_guid": "4244823754b8474fbe7366628a044953node0"
-        },
-        {
-            "id": 3575417216,
-            "input_guid": "4244823754b8474fbe7366628a044953node1",
-            "output_guid": "1f3b8c03d6564142ab7e9c6ac5268c53node1"
-        },
-        {
-            "id": 1630410467,
-            "input_guid": "4244823754b8474fbe7366628a044953node2",
-            "output_guid": "1f3b8c03d6564142ab7e9c6ac5268c53node2"
-        },
-        {
-            "id": 3976914837,
-            "input_guid": "4244823754b8474fbe7366628a044953node3",
-            "output_guid": "1f3b8c03d6564142ab7e9c6ac5268c53node3"
-        },
-        {
-            "id": 2455133593,
-            "input_guid": "4244823754b8474fbe7366628a044953node4",
-            "output_guid": "1f3b8c03d6564142ab7e9c6ac5268c53node4"
-        },
-        {
-            "id": 4133418052,
-            "input_guid": "1f3b8c03d6564142ab7e9c6ac5268c53node0",
+            "id": 18446744072470569692,
+            "input_guid": "38e2f0ac1a87422687c9e609c91ab2fanode1",
             "output_guid": "02554352e87749be847fd791d02c0a61node2"
+        },
+        {
+            "id": 703184908,
+            "input_guid": "8d7c7ed726a14440947351f440731a32node3",
+            "output_guid": "38e2f0ac1a87422687c9e609c91ab2fanode0"
         }
     ],
     "name": "main_module",
@@ -125,8 +105,8 @@
             "module_guid": "b2ce350de2e242c187394dbece2409a1",
             "name": "Custom",
             "type": "CustomNode",
-            "x": 0.0,
-            "y": 0.0
+            "x": -31.0,
+            "y": -27.0
         },
         {
             "data_bits": 32,
@@ -135,8 +115,8 @@
             "name": "RAM",
             "select_bits": 16,
             "type": "RAMNode",
-            "x": 194.0,
-            "y": 325.0
+            "x": 17.0,
+            "y": 277.0
         },
         {
             "guid": "78187ebd2f894f1f9c3c6847de1e3d7c",
@@ -144,24 +124,24 @@
             "name": "Input",
             "slot": 1,
             "type": "InputNode",
-            "x": -900.0,
-            "y": -131.0
+            "x": -972.0,
+            "y": -291.0
         },
         {
             "guid": "e141b3c4b14f424db36bdc85497491cc",
             "id": 1843354012,
             "name": "Debounce",
             "type": "DebounceNode",
-            "x": -447.0,
-            "y": 53.0
+            "x": -519.0,
+            "y": -107.0
         },
         {
             "guid": "b6b223c0a3be4c388f84961a2dfa5bea",
             "id": 18446744073020496831,
             "name": "Edge",
             "type": "EdgeNode",
-            "x": -287.0,
-            "y": 85.0
+            "x": -359.0,
+            "y": -75.0
         },
         {
             "bits": 4,
@@ -169,16 +149,16 @@
             "id": 18446744071921125091,
             "name": "Splitter",
             "type": "SplitterNode",
-            "x": -697.0,
-            "y": -59.0
+            "x": -769.0,
+            "y": -219.0
         },
         {
             "guid": "f6caa8c9d3f34a3183c50f18af5d1809",
             "id": 701818767,
             "name": "",
             "type": "ClockNode",
-            "x": -596.0,
-            "y": 229.0
+            "x": -684.0,
+            "y": -27.0
         },
         {
             "guid": "02554352e87749be847fd791d02c0a61",
@@ -186,35 +166,28 @@
             "module_guid": "84020fe9fc584e238b369a8039b024ca",
             "name": "Custom",
             "type": "CustomNode",
-            "x": 79.0,
-            "y": -347.0
+            "x": 687.0,
+            "y": -363.0
         },
         {
             "guid": "c70b1064d2a245bc86a51ba97ceca167",
-            "id": 2167911653,
+            "id": 18446744071582495973,
             "name": "Output",
             "slot": 0,
             "type": "OutputNode",
-            "x": 574.0,
-            "y": -467.0
+            "x": 1006.0,
+            "y": -435.0
         },
         {
-            "bits": 32,
-            "guid": "4244823754b8474fbe7366628a044953",
-            "id": 1120202740,
-            "name": "Splitter",
-            "type": "SplitterNode",
-            "x": -322.0,
-            "y": -1211.0
-        },
-        {
-            "bits": 4,
-            "guid": "1f3b8c03d6564142ab7e9c6ac5268c53",
-            "id": 1101548736,
-            "name": "Combiner",
-            "type": "CombinerNode",
-            "x": -109.0,
-            "y": -1211.0
+            "guid": "38e2f0ac1a87422687c9e609c91ab2fa",
+            "id": 18446744072693712900,
+            "input_width": 32,
+            "name": "Bit Selector",
+            "range_end_bit": 3,
+            "range_start_bit": 0,
+            "type": "BitSelectorNode",
+            "x": 345.0,
+            "y": -315.0
         }
     ],
     "outputs": [

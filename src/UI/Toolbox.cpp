@@ -12,6 +12,7 @@
 #include "Default/BinaryOperator/NorNode.h"
 #include "Default/BinaryOperator/OrNode.h"
 #include "Default/BinaryOperator/XOrNode.h"
+#include "Default/BitSelectorNode.h"
 #include "Default/ClockNode.h"
 #include "Default/CombinerNode.h"
 #include "Default/ComparatorNode.h"
@@ -56,11 +57,12 @@ Toolbox::Toolbox() {
     ADD_NODE_TO_CATEGORY("Bitwise Operators", "XOR", XOrNode);
     ADD_NODE_TO_CATEGORY("Bitwise Operators", "Shifter", ShifterNode);
 
-    ADD_NODE_TO_CATEGORY("Wiring", "Literal", LiteralNode);
+    ADD_NODE_TO_CATEGORY("Wiring", "Literal #", LiteralNode);
     ADD_NODE_TO_CATEGORY("Wiring", "Splitter", SplitterNode);
     ADD_NODE_TO_CATEGORY("Wiring", "Combiner", CombinerNode);
     ADD_NODE_TO_CATEGORY("Wiring", "Multiplexer", MultiplexerNode);
     ADD_NODE_TO_CATEGORY("Wiring", "Decoder", DecoderNode);
+    ADD_NODE_TO_CATEGORY("Wiring", "Bit Selector", BitSelectorNode);
 
     ADD_NODE_TO_CATEGORY("IO", "Input", InputNode);
     ADD_NODE_TO_CATEGORY("IO", "Output", OutputNode);

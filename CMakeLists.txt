@@ -154,6 +154,8 @@
             src/Default/ComparatorNode.h
             src/Default/ShifterNode.h
             src/Default/RAMNode.h
+            src/Default/ConfigurableBitRangeNode.h
+            src/Default/BitSelectorNode.h
     )
 
     target_include_directories(fpga_builder PUBLIC

@@ -9,6 +9,7 @@
 
 #include "Default/AdderNode.h"
 #include "Default/BinaryOperator/OrNode.h"
+#include "Default/BitSelectorNode.h"
 #include "Default/ClockNode.h"
 #include "Default/CombinerNode.h"
 #include "Default/ComparatorNode.h"
@@ -137,6 +138,7 @@ void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
         std::cerr << "Could not open file \"" << out_path << "\"" << std::endl;
     }
 }
+
 
 // ===== MULTI OUTPUT NODES ============================================================================================
 void Codegen::visit(ComparatorNode &node, const int output_slot) {
@@ -429,7 +431,6 @@ void Codegen::visit(SubtractorNode &node, const int output_slot) {
     CircuitError("Invalid connection!", node);
 }
 
-
 void Codegen::visit(DecoderNode &node, const int output_slot) {
     CHECK_CACHE
     START_CHECK_CYCLES
@@ -525,6 +526,29 @@ void Codegen::visit(CombinerNode &node, const int output_slot) {
     CACHE_AND_RETURN(node, output_reg, output_slot)
 }
 
+
+void Codegen::visit(BitSelectorNode &node, const int output_slot) {
+    CHECK_CACHE
+    START_CHECK_CYCLES
+
+    const auto in = node.GetInputPin().GetConnectedPin();
+
+    VERIFY_CONNECTION(in);
+
+    const auto in_val = EvalNode(in);
+
+
+    // Declare output wire
+    const std::string output_wire = GetSafeWireName("bit_sel_out");
+    m_decls += "wire [" + std::to_string(node.GetDataRangeWidth() - 1) + ":0] " + output_wire + ";\n";
+
+    // Assignment statement in always
+    m_inner += "\t\t" + output_wire + " = " + in_val + "[" + std::to_string(node.GetEndBit()) + " : " +
+               std::to_string(node.GetStartBit()) + "];\n";
+    END_CHECK_CYCLES
+
+    CACHE_AND_RETURN(node, output_wire, output_slot)
+}
 
 void Codegen::visit(MultiplexerNode &node, const int output_slot) {
     CHECK_CACHE
