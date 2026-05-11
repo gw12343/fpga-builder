@@ -1,0 +1,216 @@
+{
+    "guid": "274503748e194d7397018655226b8573",
+    "inputs": [
+        {
+            "bits": 16,
+            "name": "SW"
+        },
+        {
+            "bits": 1,
+            "name": "BTNR"
+        },
+        {
+            "bits": 1,
+            "name": "BTNC"
+        },
+        {
+            "bits": 1,
+            "name": "BTNU"
+        },
+        {
+            "bits": 1,
+            "name": "BTND"
+        },
+        {
+            "bits": 1,
+            "name": "BTNL"
+        },
+        {
+            "bits": 1,
+            "name": "CPU_RESETN"
+        }
+    ],
+    "links": [
+        {
+            "id": 18446744071743871492,
+            "input_guid": "c760cb503eb64f509c7d0261000d3894node0",
+            "output_guid": "9b8836bc945d4f0c8841119851f601f4node3"
+        },
+        {
+            "id": 18446744072745798884,
+            "input_guid": "4034abf4709242218df13d2d3916e555node0",
+            "output_guid": "9b8836bc945d4f0c8841119851f601f4node1"
+        },
+        {
+            "id": 18446744072269211328,
+            "input_guid": "b0bccfe8a5c14ca091fafcfe86b8a2a5node2",
+            "output_guid": "48e9a80831044a4fa8bdc152771cbd78node0"
+        },
+        {
+            "id": 602178520,
+            "input_guid": "48e9a80831044a4fa8bdc152771cbd78node2",
+            "output_guid": "9b8836bc945d4f0c8841119851f601f4node0"
+        },
+        {
+            "id": 1036792202,
+            "input_guid": "4034abf4709242218df13d2d3916e555node0",
+            "output_guid": "b0bccfe8a5c14ca091fafcfe86b8a2a5node1"
+        },
+        {
+            "id": 1956851027,
+            "input_guid": "4034abf4709242218df13d2d3916e555node0",
+            "output_guid": "48e9a80831044a4fa8bdc152771cbd78node1"
+        },
+        {
+            "id": 2133980967,
+            "input_guid": "9b8836bc945d4f0c8841119851f601f4node4",
+            "output_guid": "c2e83d10c4d84b6e8770802876341381node0"
+        },
+        {
+            "id": 18446744072908958070,
+            "input_guid": "e972de79b00248db9382cffcc9a06114node0",
+            "output_guid": "c2e83d10c4d84b6e8770802876341381node1"
+        },
+        {
+            "id": 18446744071677755457,
+            "input_guid": "c2e83d10c4d84b6e8770802876341381node3",
+            "output_guid": "eecf5aac63f8438a903222767716e964node0"
+        },
+        {
+            "id": 251325562,
+            "input_guid": "03b6bc696ceb487dbd43c9b7b627e347node0",
+            "output_guid": "b0bccfe8a5c14ca091fafcfe86b8a2a5node0"
+        },
+        {
+            "id": 1588049144,
+            "input_guid": "399cbb7820084417af95f7c4dad52f75node0",
+            "output_guid": "c2e83d10c4d84b6e8770802876341381node2"
+        },
+        {
+            "id": 18446744072417256065,
+            "input_guid": "0b5196f31b88418692a792f5f3059a24node0",
+            "output_guid": "f5817ee85a0b444d8e7b0447f6262f2dnode0"
+        },
+        {
+            "id": 922021406,
+            "input_guid": "f5817ee85a0b444d8e7b0447f6262f2dnode1",
+            "output_guid": "9b8836bc945d4f0c8841119851f601f4node2"
+        }
+    ],
+    "name": "main_module",
+    "nodes": [
+        {
+            "guid": "eecf5aac63f8438a903222767716e964",
+            "id": 1264003187,
+            "name": "Output",
+            "slot": 0,
+            "type": "OutputNode",
+            "x": 670.0,
+            "y": -3.0
+        },
+        {
+            "guid": "c760cb503eb64f509c7d0261000d3894",
+            "id": 1070678412,
+            "name": "Input",
+            "slot": 0,
+            "type": "InputNode",
+            "x": -605.0,
+            "y": 237.0
+        },
+        {
+            "bits": 16,
+            "guid": "9b8836bc945d4f0c8841119851f601f4",
+            "id": 18446744073651315996,
+            "name": "Register",
+            "type": "RegisterNode",
+            "x": -119.0,
+            "y": -43.0
+        },
+        {
+            "guid": "03b6bc696ceb487dbd43c9b7b627e347",
+            "id": 1083609631,
+            "name": "Input",
+            "slot": 2,
+            "type": "InputNode",
+            "x": -797.0,
+            "y": -355.0
+        },
+        {
+            "guid": "4034abf4709242218df13d2d3916e555",
+            "id": 2027581763,
+            "name": "",
+            "type": "ClockNode",
+            "x": -708.0,
+            "y": -107.0
+        },
+        {
+            "guid": "b0bccfe8a5c14ca091fafcfe86b8a2a5",
+            "id": 154594874,
+            "name": "Debounce",
+            "type": "DebounceNode",
+            "x": -453.0,
+            "y": -203.0
+        },
+        {
+            "guid": "48e9a80831044a4fa8bdc152771cbd78",
+            "id": 1396810212,
+            "name": "Edge",
+            "type": "EdgeNode",
+            "x": -290.0,
+            "y": -139.0
+        },
+        {
+            "bits": 16,
+            "guid": "e972de79b00248db9382cffcc9a06114",
+            "id": 1048597754,
+            "name": "Literal",
+            "type": "LiteralNode",
+            "value": 21845,
+            "x": 37.0,
+            "y": 171.0
+        },
+        {
+            "data_bits": 16,
+            "guid": "c2e83d10c4d84b6e8770802876341381",
+            "id": 36283322,
+            "name": "Multiplexer",
+            "select_bits": 1,
+            "type": "MultiplexerNode",
+            "x": 314.0,
+            "y": 133.0
+        },
+        {
+            "guid": "0b5196f31b88418692a792f5f3059a24",
+            "id": 1107409518,
+            "name": "Input",
+            "slot": 6,
+            "type": "InputNode",
+            "x": -973.0,
+            "y": 45.0
+        },
+        {
+            "guid": "399cbb7820084417af95f7c4dad52f75",
+            "id": 1286180321,
+            "name": "Input",
+            "slot": 3,
+            "type": "InputNode",
+            "x": -253.0,
+            "y": 605.0
+        },
+        {
+            "bits": 1,
+            "guid": "f5817ee85a0b444d8e7b0447f6262f2d",
+            "id": 18446744073137962027,
+            "name": "NOT",
+            "type": "NotNode",
+            "x": -511.0,
+            "y": 69.0
+        }
+    ],
+    "outputs": [
+        {
+            "bits": 16,
+            "name": "LED"
+        }
+    ]
+}

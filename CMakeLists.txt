@@ -156,6 +156,7 @@
             src/Default/RAMNode.h
             src/Default/ConfigurableBitRangeNode.h
             src/Default/BitSelectorNode.h
+            src/Default/ClockedMultiplexerNode.h
     )
 
     target_include_directories(fpga_builder PUBLIC

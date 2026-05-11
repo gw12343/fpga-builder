@@ -33,7 +33,7 @@
 #include "Default/UnaryOperator/UnaryOpNode.h"
 #include "Module.h"
 
-#define OUTPUT_DIR "../Project/Export/"
+#define OUTPUT_DIR "/Export/"
 
 
 #define NODE_KEY(n) (node.guid + "-slot-" + std::to_string(n))
@@ -128,10 +128,10 @@ void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
                             "\talways @(*) begin\n" + m_inner + "\tend\n\n" +
                             "\n// === clocked logic ========================================\n" + m_later + footer;
 
-    const std::string out_path = OUTPUT_DIR + module->GetName() + ".v";
+    const std::string out_path = module->GetProject()->GetWorkspacePath() + OUTPUT_DIR + module->GetName() + ".v";
 
     if (std::ofstream file(out_path); file.is_open()) {
-        std::cout << "Writing output file..." << std::endl;
+        std::cout << "Writing output file... to " << out_path << std::endl;
         file << out;
         file.close();
     } else {
@@ -540,7 +540,7 @@ void Codegen::visit(BitSelectorNode &node, const int output_slot) {
 
     // Declare output wire
     const std::string output_wire = GetSafeWireName("bit_sel_out");
-    m_decls += "wire [" + std::to_string(node.GetDataRangeWidth() - 1) + ":0] " + output_wire + ";\n";
+    m_decls += "reg [" + std::to_string(node.GetDataRangeWidth() - 1) + ":0] " + output_wire + ";\n";
 
     // Assignment statement in always
     m_inner += "\t\t" + output_wire + " = " + in_val + "[" + std::to_string(node.GetEndBit()) + " : " +

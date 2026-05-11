@@ -22,7 +22,7 @@ public:
                                                  range_end_bit);
     }
 
-    static constexpr ImVec4 COLOR = {0.560f, 0.1f, 0.07f, 1.0f};
+    static constexpr ImVec4 COLOR = {0.325f, 0.290f, 0.718f, 1.0f};
     [[nodiscard]] ImVec4 GetUIColor() const override { return COLOR; }
 
 

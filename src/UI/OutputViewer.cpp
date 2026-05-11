@@ -5,6 +5,7 @@
 #include "OutputViewer.h"
 #include <fstream>
 #include "Module.h"
+#include "Project/Project.h"
 
 OutputViewer::OutputViewer() {
     auto lang = TextEditor::LanguageDefinition::CPlusPlus();
@@ -162,7 +163,9 @@ OutputViewer::OutputViewer() {
     // UpdateOutput(module);
 }
 void OutputViewer::UpdateOutput(const std::shared_ptr<Module> &module) {
-    const std::ifstream file("../Project/Export/" + module->GetName() + ".v");
+    const std::string path = module->GetProject()->GetWorkspacePath() + "/Export/" + module->GetName() + ".v";
+
+    const std::ifstream file(path);
     std::stringstream buffer;
     buffer << file.rdbuf();
 
