@@ -308,11 +308,11 @@ void Codegen::visit(SplitterNode &node, const int output_slot) {
 void Codegen::visit(EdgeNode &node, const int output_slot) {
     CHECK_CACHE
 
-    const std::string output_reg_rise = GetSafeWireName("edge_rise");
-    const std::string output_reg_fall = GetSafeWireName("edge_fall");
+    const std::string output_rise = GetSafeWireName("edge_rise");
+    const std::string output_fall = GetSafeWireName("edge_fall");
 
-    m_visited_nodes[NODE_KEY(node.EDGE_OUT_Q_ID)] = output_reg_rise;
-    m_visited_nodes[NODE_KEY(node.EDGE_OUT_NQ_ID)] = output_reg_fall;
+    m_visited_nodes[NODE_KEY(node.EDGE_OUT_Q_ID)] = output_rise;
+    m_visited_nodes[NODE_KEY(node.EDGE_OUT_NQ_ID)] = output_fall;
 
     // Input pins
     const auto d = node.GetDPin().GetConnectedPin();
@@ -324,32 +324,37 @@ void Codegen::visit(EdgeNode &node, const int output_slot) {
     const auto d_val = EvalNode(d);
     const auto clk_val = EvalNode(clk);
 
-    // declare output register and previous register
-    const std::string previous_reg = GetSafeWireName("edge_prev");
+    // Registers
+    const std::string sync0 = GetSafeWireName("edge_sync0");
+    const std::string sync1 = GetSafeWireName("edge_sync1");
+    const std::string prev = GetSafeWireName("edge_prev");
 
-    m_decls += "reg " + output_reg_rise + ";\n";
-    m_decls += "reg " + output_reg_fall + ";\n";
-    m_decls += "reg " + previous_reg + ";\n";
+    m_decls += "reg " + sync0 + ", " + sync1 + ";\n";
+    m_decls += "reg " + prev + ";\n";
+    m_decls += "reg " + output_rise + ";\n";
+    m_decls += "reg " + output_fall + ";\n";
 
-
-    // edge block
+    // Synchronizer
     m_later += "\talways @(posedge " + clk_val + ") begin\n";
-    m_later += "\t\t" + output_reg_rise + " <= " + d_val + " & ~" + previous_reg + ";\n";
-    m_later += "\t\t" + output_reg_fall + " <= ~" + d_val + " & " + previous_reg + ";\n";
-    m_later += "\t\t" + previous_reg + " <= " + d_val + ";\n";
+    m_later += "\t\t" + sync0 + " <= " + d_val + ";\n";
+    m_later += "\t\t" + sync1 + " <= " + sync0 + ";\n";
     m_later += "\tend\n\n";
 
+    // Edge detection
+    m_later += "\talways @(posedge " + clk_val + ") begin\n";
+    m_later += "\t\t" + output_rise + " <= " + sync1 + " & ~" + prev + ";\n";
+    m_later += "\t\t" + output_fall + " <= ~" + sync1 + " & " + prev + ";\n";
+    m_later += "\t\t" + prev + " <= " + sync1 + ";\n";
+    m_later += "\tend\n\n";
 
-    // Rising edge option
+    // Output selection
     if (output_slot == node.EDGE_OUT_Q_ID) {
-        RETURN_REG(output_reg_rise);
+        RETURN_REG(output_rise);
     }
-    // Falling edge option
     if (output_slot == node.EDGE_OUT_NQ_ID) {
-        RETURN_REG(output_reg_fall);
+        RETURN_REG(output_fall);
     }
 
-    // Fallback - different output node not recognized??
     CircuitError("Invalid connection!", node);
 }
 
@@ -529,7 +534,7 @@ void Codegen::visit(CombinerNode &node, const int output_slot) {
 
 void Codegen::visit(BitSelectorNode &node, const int output_slot) {
     CHECK_CACHE
-    START_CHECK_CYCLES
+    // START_CHECK_CYCLES
 
     const auto in = node.GetInputPin().GetConnectedPin();
 
@@ -545,10 +550,11 @@ void Codegen::visit(BitSelectorNode &node, const int output_slot) {
     // Assignment statement in always
     m_inner += "\t\t" + output_wire + " = " + in_val + "[" + std::to_string(node.GetEndBit()) + " : " +
                std::to_string(node.GetStartBit()) + "];\n";
-    END_CHECK_CYCLES
+    // END_CHECK_CYCLES
 
     CACHE_AND_RETURN(node, output_wire, output_slot)
 }
+
 
 void Codegen::visit(MultiplexerNode &node, const int output_slot) {
     CHECK_CACHE
@@ -601,7 +607,7 @@ void Codegen::visit(MultiplexerNode &node, const int output_slot) {
 void Codegen::visit(DebounceNode &node, const int output_slot) {
     CHECK_CACHE
 
-    std::string output_reg = GetSafeWireName("debounce_out");
+    const std::string output_reg = GetSafeWireName("debounce_out");
     m_visited_nodes[NODE_KEY(output_slot)] = output_reg;
 
     // Input pins
@@ -614,26 +620,31 @@ void Codegen::visit(DebounceNode &node, const int output_slot) {
     const auto d_val = EvalNode(d);
     const auto clk_val = EvalNode(clk);
 
+    // Registers
+    const std::string sync0 = GetSafeWireName("debounce_sync0");
+    const std::string sync1 = GetSafeWireName("debounce_sync1");
+    const std::string counter = GetSafeWireName("debounce_counter");
 
-    // declare output register and shift register
-    const std::string output_sr = GetSafeWireName("debounce_sr");
-    m_decls += "reg [15:0]" + output_sr + ";\n";
+    m_decls += "reg " + sync0 + ", " + sync1 + ";\n";
+    m_decls += "reg [19:0] " + counter + ";\n";
     m_decls += "reg " + output_reg + ";\n";
 
-
-    // debounce shift block
+    // Synchronizer
     m_later += "\talways @(posedge " + clk_val + ") begin\n";
-    m_later += "\t\t" + output_sr + " <= { " + output_sr + "[14:0], " + d_val + " };\n";
+    m_later += "\t\t" + sync0 + " <= " + d_val + ";\n";
+    m_later += "\t\t" + sync1 + " <= " + sync0 + ";\n";
     m_later += "\tend\n\n";
 
-    // debounce output register set
+    // Debounce
     m_later += "\talways @(posedge " + clk_val + ") begin\n";
-    m_later += "\t\tif (" + output_sr + " == 16'hFFFF)\n";
-    m_later += "\t\t\t" + output_reg + " <= 1'b1;\n";
-    m_later += "\t\telse if (" + output_sr + " == 16'h0000)\n";
-    m_later += "\t\t\t" + output_reg + " <= 1'b0;\n";
+    m_later += "\t\tif (" + sync1 + " == " + output_reg + ") begin\n";
+    m_later += "\t\t\t" + counter + " <= 0;\n";
+    m_later += "\t\tend else begin\n";
+    m_later += "\t\t\t" + counter + " <= " + counter + " + 1;\n";
+    m_later += "\t\t\tif (" + counter + " == 20'hFFFFF)\n";
+    m_later += "\t\t\t\t" + output_reg + " <= " + sync1 + ";\n";
+    m_later += "\t\tend\n";
     m_later += "\tend\n\n";
-
 
     RETURN_REG(output_reg)
 }
@@ -899,7 +910,7 @@ void Codegen::visit(MultiplierNode &node, const int output_slot) {
 
 void Codegen::visit(BinaryOpNode &node, const int output_slot) {
     CHECK_CACHE
-    START_CHECK_CYCLES
+    // START_CHECK_CYCLES
 
     std::vector<std::string> input_pin_values;
 
@@ -922,7 +933,7 @@ void Codegen::visit(BinaryOpNode &node, const int output_slot) {
     m_decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + out_reg + ";\n";
     m_inner += "\t\t" + node.GetVerilogAssign(out_reg, input_pin_values);
 
-    END_CHECK_CYCLES
+    // END_CHECK_CYCLES
     CACHE_AND_RETURN(node, out_reg, output_slot)
 }
 

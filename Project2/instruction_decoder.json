@@ -12,6 +12,10 @@
         {
             "bits": 1,
             "name": "reset"
+        },
+        {
+            "bits": 1,
+            "name": "count"
         }
     ],
     "links": [
@@ -186,16 +190,6 @@
             "output_guid": "6edb49f86a664e038f1c6b26be0c93e9node0"
         },
         {
-            "id": 18446744072343205778,
-            "input_guid": "123e3c2b828a49c3bedcb4a29bcc1eeenode0",
-            "output_guid": "1df8c5ad300440458e018b7a6a57d7e7node0"
-        },
-        {
-            "id": 18446744072922072900,
-            "input_guid": "fb5414b98e434ae68d69e49e064588c9node0",
-            "output_guid": "46f3af1bc9f34e53a33ccdb3df967882node3"
-        },
-        {
             "id": 869919157,
             "input_guid": "565643cf7791452a9d3fb37ca3fdfae3node0",
             "output_guid": "46f3af1bc9f34e53a33ccdb3df967882node5"
@@ -291,24 +285,44 @@
             "output_guid": "46f3af1bc9f34e53a33ccdb3df967882node1"
         },
         {
-            "id": 1716263403,
-            "input_guid": "355833d991d04c8ab711fcb1f0cb62e8node0",
+            "id": 18446744071679387492,
+            "input_guid": "38030486c402423e9fc7a07020f0c9d9node0",
             "output_guid": "46f3af1bc9f34e53a33ccdb3df967882node0"
         },
         {
-            "id": 18446744072062343558,
-            "input_guid": "1df8c5ad300440458e018b7a6a57d7e7node2",
-            "output_guid": "46f3af1bc9f34e53a33ccdb3df967882node4"
-        },
-        {
-            "id": 2936085840,
+            "id": 18446744072764150751,
             "input_guid": "8bafe10c678e4427bc9d2495788c3be6node2",
             "output_guid": "a1bf9ab89d4f46049ee9fe906fb99ccenode0"
         },
         {
-            "id": 2175297958,
-            "input_guid": "a1bf9ab89d4f46049ee9fe906fb99ccenode16",
-            "output_guid": "1df8c5ad300440458e018b7a6a57d7e7node1"
+            "id": 18446744072581430905,
+            "input_guid": "123e3c2b828a49c3bedcb4a29bcc1eeenode0",
+            "output_guid": "97949a6b486149898b68d4a94d2109bfnode1"
+        },
+        {
+            "id": 18446744072579838952,
+            "input_guid": "fb5414b98e434ae68d69e49e064588c9node0",
+            "output_guid": "97949a6b486149898b68d4a94d2109bfnode0"
+        },
+        {
+            "id": 1113496369,
+            "input_guid": "97949a6b486149898b68d4a94d2109bfnode3",
+            "output_guid": "46f3af1bc9f34e53a33ccdb3df967882node3"
+        },
+        {
+            "id": 205956401,
+            "input_guid": "88d3f3dc686d4942a300d73ca32c5653node0",
+            "output_guid": "46f3af1bc9f34e53a33ccdb3df967882node4"
+        },
+        {
+            "id": 18446744073406478812,
+            "input_guid": "123e3c2b828a49c3bedcb4a29bcc1eeenode0",
+            "output_guid": "97949a6b486149898b68d4a94d2109bfnode2"
+        },
+        {
+            "id": 18446744071949114871,
+            "input_guid": "8bafe10c678e4427bc9d2495788c3be6node2",
+            "output_guid": "fedd70308c7e44bf8892225ed485c39fnode0"
         }
     ],
     "name": "instruction_decoder",
@@ -530,23 +544,13 @@
             "y": 981.0
         },
         {
-            "bits": 1,
-            "guid": "1df8c5ad300440458e018b7a6a57d7e7",
-            "id": 727795609,
-            "name": "OR",
-            "num_inputs": 2,
-            "type": "OrNode",
-            "x": -981.0,
-            "y": 789.0
-        },
-        {
             "guid": "123e3c2b828a49c3bedcb4a29bcc1eee",
             "id": 1334184688,
             "name": "Input",
             "slot": 1,
             "type": "InputNode",
-            "x": -1283.0,
-            "y": 701.0
+            "x": -1533.0,
+            "y": 669.0
         },
         {
             "guid": "fb5414b98e434ae68d69e49e064588c9",
@@ -554,8 +558,8 @@
             "name": "Input",
             "slot": 2,
             "type": "InputNode",
-            "x": -1104.0,
-            "y": 493.0
+            "x": -1405.0,
+            "y": 397.0
         },
         {
             "guid": "54ec564eee124dd2ad2725170094fdab",
@@ -572,8 +576,8 @@
             "name": "Literal",
             "type": "LiteralNode",
             "value": 0,
-            "x": -1022.0,
-            "y": 1099.0
+            "x": -1035.0,
+            "y": 1387.0
         },
         {
             "bits": 1,
@@ -582,8 +586,8 @@
             "name": "Literal",
             "type": "LiteralNode",
             "value": 1,
-            "x": -939.0,
-            "y": 923.0
+            "x": -971.0,
+            "y": 1131.0
         },
         {
             "data_bits": 29,
@@ -628,8 +632,8 @@
             "name": "Input",
             "slot": 0,
             "type": "InputNode",
-            "x": -653.0,
-            "y": 1325.0
+            "x": -701.0,
+            "y": 1437.0
         },
         {
             "bits": 8,
@@ -639,6 +643,44 @@
             "type": "SplitterNode",
             "x": -290.0,
             "y": 1253.0
+        },
+        {
+            "guid": "38030486c402423e9fc7a07020f0c9d9",
+            "id": 1796969218,
+            "name": "Input",
+            "slot": 3,
+            "type": "InputNode",
+            "x": -989.0,
+            "y": 973.0
+        },
+        {
+            "bits": 1,
+            "guid": "97949a6b486149898b68d4a94d2109bf",
+            "id": 952081267,
+            "name": "OR",
+            "num_inputs": 3,
+            "type": "OrNode",
+            "x": -1189.0,
+            "y": 853.0
+        },
+        {
+            "bits": 1,
+            "guid": "88d3f3dc686d4942a300d73ca32c5653",
+            "id": 18446744073623609708,
+            "name": "Literal",
+            "type": "LiteralNode",
+            "value": 0,
+            "x": -987.0,
+            "y": 1259.0
+        },
+        {
+            "guid": "fedd70308c7e44bf8892225ed485c39f",
+            "id": 488878134,
+            "name": "Output",
+            "slot": 17,
+            "type": "OutputNode",
+            "x": 702.0,
+            "y": 1629.0
         }
     ],
     "outputs": [
@@ -709,6 +751,10 @@
         {
             "bits": 1,
             "name": "USE_CONST_AS_B"
+        },
+        {
+            "bits": 29,
+            "name": "debug"
         }
     ]
 }

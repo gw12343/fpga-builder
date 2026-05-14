@@ -1,3 +1,5 @@
-./cmake-build-debug
+cmake-build-debug/**
 Project/main_module.json
 Project/Export
+*.v
+*.obj

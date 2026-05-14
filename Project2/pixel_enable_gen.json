@@ -1,0 +1,166 @@
+{
+    "guid": "a1bbadeed60948a08aa161189a5017ea",
+    "inputs": [
+        {
+            "bits": 1,
+            "name": "enable"
+        },
+        {
+            "bits": 1,
+            "name": "reset"
+        }
+    ],
+    "links": [
+        {
+            "id": 1116570121,
+            "input_guid": "60ee2924897f4b8f8c32a7c2c11fa377node4",
+            "output_guid": "b903cc96dec34a28a2cbfeb124640c07node0"
+        },
+        {
+            "id": 18446744072696391100,
+            "input_guid": "b903cc96dec34a28a2cbfeb124640c07node3",
+            "output_guid": "60ee2924897f4b8f8c32a7c2c11fa377node3"
+        },
+        {
+            "id": 1746976176,
+            "input_guid": "617a2c43c30647e492149ac073a897banode0",
+            "output_guid": "60ee2924897f4b8f8c32a7c2c11fa377node0"
+        },
+        {
+            "id": 18446744071900792114,
+            "input_guid": "02345bd6d9964da0903ab9d8d5fcde20node0",
+            "output_guid": "60ee2924897f4b8f8c32a7c2c11fa377node2"
+        },
+        {
+            "id": 2028155327,
+            "input_guid": "062a7e6802ac4f0f8360e91d7fe6d04dnode0",
+            "output_guid": "60ee2924897f4b8f8c32a7c2c11fa377node1"
+        },
+        {
+            "id": 1375020613,
+            "input_guid": "60ee2924897f4b8f8c32a7c2c11fa377node4",
+            "output_guid": "9170c92065b54ff4a3a571303a3130acnode1"
+        },
+        {
+            "id": 1244372848,
+            "input_guid": "94dd2b02a7d84482b8def14f83a56ad1node0",
+            "output_guid": "9170c92065b54ff4a3a571303a3130acnode0"
+        },
+        {
+            "id": 18446744072659553358,
+            "input_guid": "9170c92065b54ff4a3a571303a3130acnode3",
+            "output_guid": "cc726c1629f7432588b1cad96a026b8fnode0"
+        },
+        {
+            "id": 1811110015,
+            "input_guid": "e0a2b3faa85149efbb91d4aec1fb383fnode0",
+            "output_guid": "b903cc96dec34a28a2cbfeb124640c07node1"
+        },
+        {
+            "id": 18446744073238145616,
+            "input_guid": "6f6e19df3b354333b29ebde3cab7fec3node0",
+            "output_guid": "b903cc96dec34a28a2cbfeb124640c07node2"
+        }
+    ],
+    "name": "pixel_enable_gen",
+    "nodes": [
+        {
+            "bits": 2,
+            "guid": "60ee2924897f4b8f8c32a7c2c11fa377",
+            "id": 112241496,
+            "name": "Register",
+            "type": "RegisterNode",
+            "x": 0.0,
+            "y": 0.0
+        },
+        {
+            "bits": 2,
+            "guid": "b903cc96dec34a28a2cbfeb124640c07",
+            "id": 18446744072988290242,
+            "name": "Adder",
+            "type": "AdderNode",
+            "x": 133.0,
+            "y": 277.0
+        },
+        {
+            "guid": "617a2c43c30647e492149ac073a897ba",
+            "id": 18446744072260508071,
+            "name": "Input",
+            "slot": 0,
+            "type": "InputNode",
+            "x": -349.0,
+            "y": -115.0
+        },
+        {
+            "guid": "02345bd6d9964da0903ab9d8d5fcde20",
+            "id": 18446744072211013277,
+            "name": "Input",
+            "slot": 1,
+            "type": "InputNode",
+            "x": -349.0,
+            "y": 141.0
+        },
+        {
+            "guid": "062a7e6802ac4f0f8360e91d7fe6d04d",
+            "id": 1851449752,
+            "name": "",
+            "type": "ClockNode",
+            "x": -212.0,
+            "y": 53.0
+        },
+        {
+            "bits": 2,
+            "guid": "9170c92065b54ff4a3a571303a3130ac",
+            "id": 1768775496,
+            "name": "Comparator",
+            "type": "ComparatorNode",
+            "x": 465.0,
+            "y": 53.0
+        },
+        {
+            "bits": 2,
+            "guid": "94dd2b02a7d84482b8def14f83a56ad1",
+            "id": 18446744071830487907,
+            "name": "Literal",
+            "type": "LiteralNode",
+            "value": 0,
+            "x": 245.0,
+            "y": -85.0
+        },
+        {
+            "guid": "cc726c1629f7432588b1cad96a026b8f",
+            "id": 417728835,
+            "name": "Output",
+            "slot": 0,
+            "type": "OutputNode",
+            "x": 721.0,
+            "y": 13.0
+        },
+        {
+            "bits": 2,
+            "guid": "e0a2b3faa85149efbb91d4aec1fb383f",
+            "id": 18446744073165083116,
+            "name": "Literal",
+            "type": "LiteralNode",
+            "value": 1,
+            "x": -91.0,
+            "y": 251.0
+        },
+        {
+            "bits": 1,
+            "guid": "6f6e19df3b354333b29ebde3cab7fec3",
+            "id": 1607601638,
+            "name": "Literal",
+            "type": "LiteralNode",
+            "value": 0,
+            "x": -107.0,
+            "y": 443.0
+        }
+    ],
+    "outputs": [
+        {
+            "bits": 1,
+            "name": "pixel_tick"
+        }
+    ]
+}
