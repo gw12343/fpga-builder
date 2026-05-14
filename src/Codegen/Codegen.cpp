@@ -156,8 +156,8 @@ void Codegen::visit(ComparatorNode &node, const int output_slot) {
     const auto a = node.GetAInputPin().GetConnectedPin();
     const auto b = node.GetBInputPin().GetConnectedPin();
 
-    VERIFY_CONNECTION(a);
-    VERIFY_CONNECTION(b);
+    VERIFY_CONNECTION(a)
+    VERIFY_CONNECTION(b)
 
     const auto a_val = EvalNode(a);
     const auto b_val = EvalNode(b);
@@ -172,17 +172,17 @@ void Codegen::visit(ComparatorNode &node, const int output_slot) {
 
     // A > B
     if (output_slot == node.COMPARATOR_G_ID) {
-        RETURN_REG(output_greater);
+        RETURN_REG(output_greater)
     }
 
     // A == B
     if (output_slot == node.COMPARATOR_E_ID) {
-        RETURN_REG(output_equal);
+        RETURN_REG(output_equal)
     }
 
     // A < B
     if (output_slot == node.COMPARATOR_L_ID) {
-        RETURN_REG(output_less);
+        RETURN_REG(output_less)
     }
 
     // Fallback - different output node not recognized??
@@ -194,7 +194,7 @@ void Codegen::visit(CustomModuleNode &node, const int output_slot) {
     START_CHECK_CYCLES
 
     if (!node.module_ref.has_value()) {
-        CircuitError("Refrence to missing module in custom node!", node);
+        CircuitError("Reference to missing module in custom node!", node);
         ERROR_AND_RETURN
     }
 
@@ -228,7 +228,7 @@ void Codegen::visit(CustomModuleNode &node, const int output_slot) {
         // Input pin
         const auto in = node.pins[i].GetConnectedPin();
         // Verify connection to input pin
-        VERIFY_CONNECTION(in);
+        VERIFY_CONNECTION(in)
         // Get input value
         const auto input_val = EvalNode(in);
 
@@ -257,10 +257,10 @@ void Codegen::visit(CustomModuleNode &node, const int output_slot) {
     m_instances.pop_back();
     m_instances += "\n);\n";
 
-    RETURN_REG(output_wires[output_slot - num_inputs].name);
+    RETURN_REG(output_wires[output_slot - num_inputs].name)
 
     END_CHECK_CYCLES
-    //  TODO retunnr??
+    //  TODO return??
 }
 
 void Codegen::visit(SplitterNode &node, const int output_slot) {
@@ -278,7 +278,7 @@ void Codegen::visit(SplitterNode &node, const int output_slot) {
     // Input pin
     const auto in = node.GetInputPin().GetConnectedPin();
     // Verify connection to input pin
-    VERIFY_CONNECTION(in);
+    VERIFY_CONNECTION(in)
     // Get input value
     const auto input_val = EvalNode(in);
 
@@ -302,7 +302,7 @@ void Codegen::visit(SplitterNode &node, const int output_slot) {
     // Skip over the input pin (pin 0)
     const int bit_index = output_slot - 1;
     END_CHECK_CYCLES
-    RETURN_REG(out_wire_names[bit_index]);
+    RETURN_REG(out_wire_names[bit_index])
 }
 
 void Codegen::visit(EdgeNode &node, const int output_slot) {
@@ -318,8 +318,8 @@ void Codegen::visit(EdgeNode &node, const int output_slot) {
     const auto d = node.GetDPin().GetConnectedPin();
     const auto clk = node.GetClockPin().GetConnectedPin();
 
-    VERIFY_CONNECTION(d);
-    VERIFY_CONNECTION(clk);
+    VERIFY_CONNECTION(d)
+    VERIFY_CONNECTION(clk)
 
     const auto d_val = EvalNode(d);
     const auto clk_val = EvalNode(clk);
@@ -349,10 +349,10 @@ void Codegen::visit(EdgeNode &node, const int output_slot) {
 
     // Output selection
     if (output_slot == node.EDGE_OUT_Q_ID) {
-        RETURN_REG(output_rise);
+        RETURN_REG(output_rise)
     }
     if (output_slot == node.EDGE_OUT_NQ_ID) {
-        RETURN_REG(output_fall);
+        RETURN_REG(output_fall)
     }
 
     CircuitError("Invalid connection!", node);
@@ -372,9 +372,9 @@ void Codegen::visit(AdderNode &node, const int output_slot) {
     const auto b = node.GetBInputPin().GetConnectedPin();
     const auto cin = node.GetCarryInputPin().GetConnectedPin();
 
-    VERIFY_CONNECTION(a);
-    VERIFY_CONNECTION(b);
-    VERIFY_CONNECTION(cin);
+    VERIFY_CONNECTION(a)
+    VERIFY_CONNECTION(b)
+    VERIFY_CONNECTION(cin)
 
     const auto a_val = EvalNode(a);
     const auto b_val = EvalNode(b);
@@ -387,11 +387,11 @@ void Codegen::visit(AdderNode &node, const int output_slot) {
 
     // Rising edge option
     if (output_slot == node.ADDER_Q_ID) {
-        RETURN_REG(output_value);
+        RETURN_REG(output_value)
     }
     // Falling edge option
     if (output_slot == node.ADDER_COUT_ID) {
-        RETURN_REG(output_carry);
+        RETURN_REG(output_carry)
     }
 
     // Fallback - different output node not recognized??
@@ -411,8 +411,8 @@ void Codegen::visit(SubtractorNode &node, const int output_slot) {
     const auto a = node.GetAInputPin().GetConnectedPin();
     const auto b = node.GetBInputPin().GetConnectedPin();
 
-    VERIFY_CONNECTION(a);
-    VERIFY_CONNECTION(b);
+    VERIFY_CONNECTION(a)
+    VERIFY_CONNECTION(b)
 
     const auto a_val = EvalNode(a);
     const auto b_val = EvalNode(b);
@@ -425,11 +425,11 @@ void Codegen::visit(SubtractorNode &node, const int output_slot) {
 
     // Rising edge option
     if (output_slot == node.SUBTRACTOR_Q_ID) {
-        RETURN_REG(output_value);
+        RETURN_REG(output_value)
     }
     // Falling edge option
     if (output_slot == node.SUBTRACTOR_COUT_ID) {
-        RETURN_REG(output_carry);
+        RETURN_REG(output_carry)
     }
 
     // Fallback - different output node not recognized??
@@ -451,7 +451,7 @@ void Codegen::visit(DecoderNode &node, const int output_slot) {
     // Input pin
     const auto in = node.GetInputPin().GetConnectedPin();
     // Verify connection to input pin
-    VERIFY_CONNECTION(in);
+    VERIFY_CONNECTION(in)
     // Get input value
     const auto input_val = EvalNode(in);
 
@@ -488,7 +488,7 @@ void Codegen::visit(DecoderNode &node, const int output_slot) {
     // Skip over the input pin (pin 0)
     const int bit_index = output_slot - 1;
     END_CHECK_CYCLES
-    RETURN_REG(out_wire_names[bit_index]);
+    RETURN_REG(out_wire_names[bit_index])
 }
 
 // ===== SINGLE OUTPUT NODES ===========================================================================================
@@ -503,7 +503,7 @@ void Codegen::visit(CombinerNode &node, const int output_slot) {
         // Input pin
         const auto in = node.GetBitInputPin(i).GetConnectedPin();
         // Verify connection to input pin
-        VERIFY_CONNECTION(in);
+        VERIFY_CONNECTION(in)
         // Get input value
         const auto input_val = EvalNode(in);
 
@@ -538,7 +538,7 @@ void Codegen::visit(BitSelectorNode &node, const int output_slot) {
 
     const auto in = node.GetInputPin().GetConnectedPin();
 
-    VERIFY_CONNECTION(in);
+    VERIFY_CONNECTION(in)
 
     const auto in_val = EvalNode(in);
 
@@ -572,7 +572,7 @@ void Codegen::visit(MultiplexerNode &node, const int output_slot) {
         // Input pin
         const auto in = node.GetInputPin(i).GetConnectedPin();
         // Verify connection to input pin
-        VERIFY_CONNECTION(in);
+        VERIFY_CONNECTION(in)
         // Get input value
         const auto input_val = EvalNode(in);
 
@@ -583,7 +583,7 @@ void Codegen::visit(MultiplexerNode &node, const int output_slot) {
     }
 
     const auto s = node.GetSelectInputPin().GetConnectedPin();
-    VERIFY_CONNECTION(s);
+    VERIFY_CONNECTION(s)
 
     const auto select_val = EvalNode(s);
 
@@ -614,8 +614,8 @@ void Codegen::visit(DebounceNode &node, const int output_slot) {
     const auto d = node.GetDPin().GetConnectedPin();
     const auto clk = node.GetClockPin().GetConnectedPin();
 
-    VERIFY_CONNECTION(d);
-    VERIFY_CONNECTION(clk);
+    VERIFY_CONNECTION(d)
+    VERIFY_CONNECTION(clk)
 
     const auto d_val = EvalNode(d);
     const auto clk_val = EvalNode(clk);
@@ -660,8 +660,8 @@ void Codegen::visit(ShifterNode &node, const int output_slot) {
     const auto in = node.GetInputPin().GetConnectedPin();
     const auto dist = node.GetDistancePin().GetConnectedPin();
 
-    VERIFY_CONNECTION(in);
-    VERIFY_CONNECTION(dist);
+    VERIFY_CONNECTION(in)
+    VERIFY_CONNECTION(dist)
 
     const auto in_val = EvalNode(in);
     const auto dist_val = EvalNode(dist);
@@ -687,10 +687,10 @@ void Codegen::visit(RegisterNode &node, const int output_slot) {
     const auto rst = node.GetResetPin().GetConnectedPin();
 
     // Verify connections to pins
-    VERIFY_CONNECTION(enb);
-    VERIFY_CONNECTION(d);
-    VERIFY_CONNECTION(clk);
-    VERIFY_CONNECTION(rst);
+    VERIFY_CONNECTION(enb)
+    VERIFY_CONNECTION(d)
+    VERIFY_CONNECTION(clk)
+    VERIFY_CONNECTION(rst)
 
     // Evaluate inputs
     const auto enb_val = EvalNode(enb);
@@ -728,12 +728,12 @@ void Codegen::visit(CounterNode &node, const int output_slot) {
     const auto load_val = node.GetLoadValuePin().GetConnectedPin();
 
     // Verify connections to pins
-    VERIFY_CONNECTION(enb);
-    VERIFY_CONNECTION(cup);
-    VERIFY_CONNECTION(clk);
-    VERIFY_CONNECTION(rst);
-    VERIFY_CONNECTION(load_enb);
-    VERIFY_CONNECTION(load_val);
+    VERIFY_CONNECTION(enb)
+    VERIFY_CONNECTION(cup)
+    VERIFY_CONNECTION(clk)
+    VERIFY_CONNECTION(rst)
+    VERIFY_CONNECTION(load_enb)
+    VERIFY_CONNECTION(load_val)
 
     // Evaluate inputs
     const auto enb_val = EvalNode(enb);
@@ -775,10 +775,10 @@ void Codegen::visit(DFFNode &node, const int output_slot) {
     const auto clk = node.GetClkPin().GetConnectedPin();
 
     // Verify connections
-    VERIFY_CONNECTION(set);
-    VERIFY_CONNECTION(rst);
-    VERIFY_CONNECTION(d);
-    VERIFY_CONNECTION(clk);
+    VERIFY_CONNECTION(set)
+    VERIFY_CONNECTION(rst)
+    VERIFY_CONNECTION(d)
+    VERIFY_CONNECTION(clk)
 
     const auto set_val = EvalNode(set);
     const auto rst_val = EvalNode(rst);
@@ -796,7 +796,7 @@ void Codegen::visit(DFFNode &node, const int output_slot) {
     m_later += "\t\t\t" + output_reg + " <= " + d_val + ";\n";
     m_later += "\tend\n\n";
 
-    RETURN_REG(output_reg);
+    RETURN_REG(output_reg)
 }
 
 
@@ -810,8 +810,8 @@ void Codegen::visit(ROMNode &node, const int output_slot) {
     const auto adr = node.GetAddressPin().GetConnectedPin();
     const auto clk = node.GetClockPin().GetConnectedPin();
 
-    VERIFY_CONNECTION(adr);
-    VERIFY_CONNECTION(clk);
+    VERIFY_CONNECTION(adr)
+    VERIFY_CONNECTION(clk)
 
     const auto adr_val = EvalNode(adr);
     const auto clk_val = EvalNode(clk);
@@ -851,10 +851,10 @@ void Codegen::visit(RAMNode &node, const int output_slot) {
     const auto load = node.GetLoadPin().GetConnectedPin();
     const auto clk = node.GetClockPin().GetConnectedPin();
 
-    VERIFY_CONNECTION(adr);
-    VERIFY_CONNECTION(in);
-    VERIFY_CONNECTION(load);
-    VERIFY_CONNECTION(clk);
+    VERIFY_CONNECTION(adr)
+    VERIFY_CONNECTION(in)
+    VERIFY_CONNECTION(load)
+    VERIFY_CONNECTION(clk)
 
     const auto adr_val = EvalNode(adr);
     const auto in_val = EvalNode(in);
@@ -892,8 +892,8 @@ void Codegen::visit(MultiplierNode &node, const int output_slot) {
     const auto a = node.GetAInputPin().GetConnectedPin();
     const auto b = node.GetBInputPin().GetConnectedPin();
 
-    VERIFY_CONNECTION(a);
-    VERIFY_CONNECTION(b);
+    VERIFY_CONNECTION(a)
+    VERIFY_CONNECTION(b)
 
     const auto a_val = EvalNode(a);
     const auto b_val = EvalNode(b);
@@ -904,7 +904,7 @@ void Codegen::visit(MultiplierNode &node, const int output_slot) {
     m_inner += "\t\t" + output_value + " = " + a_val + " * " + b_val + ";\n";
 
 
-    CACHE_AND_RETURN(node, output_value, output_slot);
+    CACHE_AND_RETURN(node, output_value, output_slot)
 }
 
 
@@ -919,7 +919,7 @@ void Codegen::visit(BinaryOpNode &node, const int output_slot) {
         // Input pin
         const auto in = node.GetInputPin(i).GetConnectedPin();
         // Verify connection to input pin
-        VERIFY_CONNECTION(in);
+        VERIFY_CONNECTION(in)
         // Get input value
         const auto input_val = EvalNode(in);
 
@@ -944,7 +944,7 @@ void Codegen::visit(UnaryOpNode &node, const int output_slot) {
 
     const auto a = node.GetAInputPin().GetConnectedPin();
 
-    VERIFY_CONNECTION(a);
+    VERIFY_CONNECTION(a)
 
     const auto a_val = EvalNode(a);
 
@@ -992,14 +992,14 @@ void Codegen::visit(OutputNode &node, const int output_slot) {
     START_CHECK_CYCLES
 
     const auto in = node.GetValueInputPin().GetConnectedPin();
-    VERIFY_CONNECTION(in);
+    VERIFY_CONNECTION(in)
 
     const auto in_val = EvalNode(in);
 
     m_inner += "\t\t" + node.module->GetOutputs()[node.slot].name + " = " + in_val + ";\n";
 
     END_CHECK_CYCLES
-    CACHE_AND_RETURN(node, "", output_slot);
+    CACHE_AND_RETURN(node, "", output_slot)
 }
 
 
