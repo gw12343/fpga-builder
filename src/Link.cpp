@@ -31,6 +31,7 @@ void Link::Render() const {
 
     if (!out.has_value() || !in.has_value()) {
         std::cerr << "Invalid link rendering" << std::endl;
+        std::cerr << "btwn  " << output_guid << "   " << input_guid << std::endl;
         return;
     }
 

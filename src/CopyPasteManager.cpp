@@ -116,6 +116,10 @@ void CopyPasteManager::PasteSelection(Module *module, const std::shared_ptr<Erro
 
 
 void CopyPasteManager::HandleCopyPaste(Module *module, const std::shared_ptr<ErrorManager> &error_manager) {
+    // No node copying while editing text
+    if (ImGui::GetIO().WantTextInput)
+        return;
+
     // If copy
     if (ImGui::GetIO().KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_C)) {
         CopySelection(module);

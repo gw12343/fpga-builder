@@ -7,6 +7,7 @@
 #include <fstream>
 
 
+#include "ConstExprEvaluator.h"
 #include "Default/AdderNode.h"
 #include "Default/BinaryOperator/OrNode.h"
 #include "Default/BitSelectorNode.h"
@@ -118,6 +119,11 @@ void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
         m_inner += "\t\t// Output " + module->GetOutputs()[dynamic_cast<OutputNode *>(node.get())->slot].name + "\n";
         node->accept(*this, 0);
         m_return_vals.pop();
+
+        ConstExprEvaluator ev(m_error_manager);
+        const auto s = ev.FindSpace(node, 0);
+        std::cout << "output " << node->GetDisplayName() << "   range: " << s.GetBits() << "  const: " << s.IsConstant()
+                  << "    val: " << s.GetConstantValue() << std::endl;
     }
 
 

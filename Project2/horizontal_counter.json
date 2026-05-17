@@ -241,6 +241,14 @@
         {
             "bits": 10,
             "name": "h_count"
+        },
+        {
+            "bits": 3,
+            "name": "test"
+        },
+        {
+            "bits": 1,
+            "name": "test2"
         }
     ]
 }

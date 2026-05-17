@@ -156,6 +156,10 @@
             src/Default/RAMNode.h
             src/Default/ConfigurableBitRangeNode.h
             src/Default/BitSelectorNode.h
+            src/Codegen/ConstExprEvaluator.h
+            src/Codegen/ConstExprEvaluator.cpp
+            src/Codegen/ConstExprEvaluator.cpp
+            src/Codegen/ResultSpace.h
     )
 
     target_include_directories(fpga_builder PUBLIC

@@ -63,6 +63,8 @@ public:
         return j;
     }
 
+    [[nodiscard]] const std::vector<Pin> &GetPins() { return pins; }
+
     // Override configuration methods
     [[nodiscard]] bool HasConfiguration() const override { return true; }
 
