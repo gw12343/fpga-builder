@@ -81,12 +81,20 @@ ResultSpace ConstExprEvaluator::FindSpace(const std::shared_ptr<Node> &node, con
 }
 
 
-// =================  TODO modules ==============
+uint32_t rotate_left(uint32_t data, uint32_t dist, size_t bits) {
+    const auto mask = MASK(bits);
 
-
-void ConstExprEvaluator::visit(ShifterNode &node, const int output_slot) {
-    RETURN_SPACE(ResultSpace(node.GetDataWidth()))
+    return (data << dist | data >> bits - dist) & mask;
 }
+
+uint32_t rotate_right(uint32_t data, uint32_t dist, size_t bits) {
+    const auto mask = MASK(bits);
+
+    return (data >> dist | data << bits - dist) & mask;
+}
+
+
+// =================  TODO modules ==============
 
 
 void ConstExprEvaluator::visit(MultiplierNode &node, const int output_slot) {
@@ -103,6 +111,7 @@ void ConstExprEvaluator::visit(UnaryOpNode &node, const int output_slot) {
 
 
 // =================== Done
+
 
 void ConstExprEvaluator::visit(ComparatorNode &node, const int output_slot) {
     const auto a = node.GetAInputPin().GetConnectedPin();
@@ -339,6 +348,80 @@ void ConstExprEvaluator::visit(SplitterNode &node, const int output_slot) {
 
     // Each output is a single bit
     RETURN_SPACE(ResultSpace(1))
+}
+void ConstExprEvaluator::visit(ShifterNode &node, const int output_slot) {
+    const auto data = node.GetInputPin().GetConnectedPin();
+    const auto dist = node.GetDistancePin().GetConnectedPin();
+
+    VERIFY_CONNECTION(data)
+    VERIFY_CONNECTION(dist)
+
+    const auto data_space = EvalNode(data);
+    const auto dist_space = EvalNode(dist);
+
+
+    if (data_space.IsConstant() && dist_space.IsConstant()) {
+        // type of bitshift to do
+        //  const char *shift_type_names[5] = {"LSL", "LSR", "ASR", "ROL", "ROR"};
+        const auto shift_type = node.type_index;
+
+        const auto data_mask = MASK(node.GetDataWidth());
+        const auto dist_mask = MASK(node.GetShiftWidth());
+
+        // todo enum shift type?
+        if (shift_type == 0) {
+            const auto left_shift = (data_space.GetConstantValue() & data_mask)
+                                    << (dist_space.GetConstantValue() & dist_mask);
+
+            RETURN_SPACE(ResultSpace(node.GetDataWidth(), data_mask & left_shift))
+        }
+        if (shift_type == 1) {
+            const auto right_shift =
+                    (data_space.GetConstantValue() & data_mask) >> (dist_space.GetConstantValue() & dist_mask);
+
+            RETURN_SPACE(ResultSpace(node.GetDataWidth(), data_mask & right_shift))
+        }
+        if (shift_type == 2) {
+            uint32_t value = (data_space.GetConstantValue() & data_mask);
+
+
+            uint32_t mask = (1u << node.GetDataWidth()) - 1u;
+            uint32_t sign_bit = 1u << (node.GetDataWidth() - 1);
+
+            value &= mask;
+
+            int32_t signed_data;
+
+            if (value & sign_bit) {
+                signed_data = static_cast<int32_t>(value | ~mask);
+            } else {
+                signed_data = static_cast<int32_t>(value);
+            }
+
+
+            int32_t signed_dist = static_cast<int32_t>(dist_space.GetConstantValue() & dist_mask);
+            const auto right_shift_arithmetic = signed_data >> signed_dist;
+
+            RETURN_SPACE(ResultSpace(node.GetDataWidth(), data_mask & right_shift_arithmetic))
+        }
+        if (shift_type == 3) {
+            const auto rol =
+                    rotate_left(data_space.GetConstantValue(), dist_space.GetConstantValue(), node.GetDataWidth());
+
+            RETURN_SPACE(ResultSpace(node.GetDataWidth(), data_mask & rol))
+        }
+        if (shift_type == 4) {
+            const auto ror =
+                    rotate_right(data_space.GetConstantValue(), dist_space.GetConstantValue(), node.GetDataWidth());
+
+            RETURN_SPACE(ResultSpace(node.GetDataWidth(), data_mask & ror))
+        }
+
+        // Unknown type
+        ERROR_AND_RETURN
+    }
+
+    RETURN_SPACE(ResultSpace(node.GetDataWidth()))
 }
 
 // ========== Custom ===================================================================================================
