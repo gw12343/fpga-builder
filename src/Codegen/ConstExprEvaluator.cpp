@@ -80,67 +80,23 @@ ResultSpace ConstExprEvaluator::FindSpace(const std::shared_ptr<Node> &node, con
     return s;
 }
 
+void ConstExprEvaluator::CircuitError(const std::string &msg, const Node &node) {
+    m_failed = true;
+    std::cerr << "ERROR CONSTEXPR EVAL: " << msg << std::endl;
+    std::cerr << "related node: " << node.guid << std::endl;
+    m_error_manager->ThrowError(msg, node);
+}
+
 
 uint32_t rotate_left(uint32_t data, uint32_t dist, size_t bits) {
     const auto mask = MASK(bits);
 
     return (data << dist | data >> bits - dist) & mask;
 }
-
 uint32_t rotate_right(uint32_t data, uint32_t dist, size_t bits) {
     const auto mask = MASK(bits);
 
     return (data >> dist | data << bits - dist) & mask;
-}
-
-
-// =================  TODO modules ==============
-
-
-void ConstExprEvaluator::visit(MultiplierNode &node, const int output_slot) {
-    RETURN_SPACE(ResultSpace(node.GetDataWidth()))
-}
-void ConstExprEvaluator::visit(SubtractorNode &node, const int output_slot) {
-    RETURN_SPACE(ResultSpace(node.GetDataWidth()))
-}
-
-
-void ConstExprEvaluator::visit(UnaryOpNode &node, const int output_slot) {
-    RETURN_SPACE(ResultSpace(node.GetDataWidth()))
-}
-
-
-// =================== Done
-
-
-void ConstExprEvaluator::visit(ComparatorNode &node, const int output_slot) {
-    const auto a = node.GetAInputPin().GetConnectedPin();
-    const auto b = node.GetBInputPin().GetConnectedPin();
-
-    VERIFY_CONNECTION(a)
-    VERIFY_CONNECTION(b)
-
-    const auto a_space = EvalNode(a);
-    const auto b_space = EvalNode(b);
-
-    if (a_space.IsConstant() && b_space.IsConstant()) {
-        const int a_val = a_space.GetConstantValue();
-        const int b_val = b_space.GetConstantValue();
-
-        const bool less_than = a_val < b_val;
-        const bool equal_to = a_val == b_val;
-        const bool greater_than = a_val > b_val;
-
-        if (output_slot == node.COMPARATOR_L_ID)
-            RETURN_SPACE(ResultSpace(1, less_than));
-        if (output_slot == node.COMPARATOR_E_ID)
-            RETURN_SPACE(ResultSpace(1, equal_to));
-        if (output_slot == node.COMPARATOR_G_ID)
-            RETURN_SPACE(ResultSpace(1, greater_than));
-    }
-
-    // All 3 outputs are booleans: 0=false, 1=true
-    RETURN_SPACE(ResultSpace(1))
 }
 
 
@@ -270,6 +226,28 @@ void ConstExprEvaluator::visit(BinaryOpNode &node, const int output_slot) {
     CircuitError("invalid operation", node);
     ERROR_AND_RETURN;
 }
+void ConstExprEvaluator::visit(UnaryOpNode &node, const int output_slot) {
+    const auto in = node.GetAInputPin().GetConnectedPin();
+
+    VERIFY_CONNECTION(in)
+
+    const auto in_space = EvalNode(in);
+
+    if (!in_space.IsConstant()) {
+        RETURN_SPACE(ResultSpace(node.GetDataWidth()))
+    }
+
+
+    const int mask = MASK(node.GetDataWidth());
+
+    if (node.GetSerializationType() == "NotNode") {
+        const auto not_val = ~in_space.GetConstantValue();
+        RETURN_SPACE(ResultSpace(node.GetDataWidth(), not_val & mask));
+    }
+
+    CircuitError("invalid operation", node);
+    ERROR_AND_RETURN;
+}
 void ConstExprEvaluator::visit(MultiplexerNode &node, const int output_slot) {
     const auto select = node.GetSelectInputPin().GetConnectedPin();
     // Verify connection to select pin
@@ -341,7 +319,7 @@ void ConstExprEvaluator::visit(SplitterNode &node, const int output_slot) {
         // output_slot is the pin index (including inputs) and the first output is index 1
         const int bit_index = output_slot - 1;
 
-        const auto bit = 0b1 & (in_val >> bit_index);
+        const auto bit = 1u & (in_val >> bit_index);
 
         RETURN_SPACE(ResultSpace(1, bit))
     }
@@ -418,19 +396,57 @@ void ConstExprEvaluator::visit(ShifterNode &node, const int output_slot) {
         }
 
         // Unknown type
+        CircuitError("invalid shift type", node);
         ERROR_AND_RETURN
     }
 
     RETURN_SPACE(ResultSpace(node.GetDataWidth()))
 }
 
-// ========== Custom ===================================================================================================
+// ========== Misc =====================================================================================================
 void ConstExprEvaluator::visit(CustomModuleNode &node, const int output_slot) {
     const auto out_pin = node.GetPins().at(output_slot);
 
     // Assume not constant
     RETURN_SPACE(ResultSpace(out_pin.GetDataType().GetBitWidth()))
 }
+void ConstExprEvaluator::visit(ClockNode &node, const int output_slot) { RETURN_SPACE(ResultSpace(1)) }
+void ConstExprEvaluator::visit(EdgeNode &node, const int output_slot) { RETURN_SPACE(ResultSpace(1)) }
+void ConstExprEvaluator::visit(DebounceNode &node, const int output_slot) { RETURN_SPACE(ResultSpace(1)) }
+void ConstExprEvaluator::visit(LiteralNode &node, const int output_slot) {
+    RETURN_SPACE(ResultSpace(node.GetDataWidth(), node.value));
+}
+void ConstExprEvaluator::visit(ComparatorNode &node, const int output_slot) {
+    const auto a = node.GetAInputPin().GetConnectedPin();
+    const auto b = node.GetBInputPin().GetConnectedPin();
+
+    VERIFY_CONNECTION(a)
+    VERIFY_CONNECTION(b)
+
+    const auto a_space = EvalNode(a);
+    const auto b_space = EvalNode(b);
+
+    if (a_space.IsConstant() && b_space.IsConstant()) {
+        const int a_val = a_space.GetConstantValue();
+        const int b_val = b_space.GetConstantValue();
+
+        const bool less_than = a_val < b_val;
+        const bool equal_to = a_val == b_val;
+        const bool greater_than = a_val > b_val;
+
+        if (output_slot == node.COMPARATOR_L_ID)
+            RETURN_SPACE(ResultSpace(1, less_than));
+        if (output_slot == node.COMPARATOR_E_ID)
+            RETURN_SPACE(ResultSpace(1, equal_to));
+        if (output_slot == node.COMPARATOR_G_ID)
+            RETURN_SPACE(ResultSpace(1, greater_than));
+    }
+
+    // All 3 outputs are booleans: 0=false, 1=true
+    RETURN_SPACE(ResultSpace(1))
+}
+
+// ========== ARITHMETIC ===============================================================================================
 void ConstExprEvaluator::visit(AdderNode &node, const int output_slot) {
     const auto a = node.GetAInputPin().GetConnectedPin();
     const auto b = node.GetBInputPin().GetConnectedPin();
@@ -448,7 +464,7 @@ void ConstExprEvaluator::visit(AdderNode &node, const int output_slot) {
         const int mask = MASK(node.GetDataWidth());
         const int a_masked = mask & a_space.GetConstantValue();
         const int b_masked = mask & b_space.GetConstantValue();
-        const int cin_masked = 0b1 & cin_space.GetConstantValue();
+        const int cin_masked = 1u & cin_space.GetConstantValue();
 
         uint64_t wide_sum = static_cast<uint64_t>(a_masked + b_masked + cin_masked);
         uint32_t sum = static_cast<uint32_t>(wide_sum);
@@ -458,10 +474,11 @@ void ConstExprEvaluator::visit(AdderNode &node, const int output_slot) {
             RETURN_SPACE(ResultSpace(node.GetDataWidth(), sum & mask))
         }
         if (output_slot == node.ADDER_COUT_ID) {
-            RETURN_SPACE(ResultSpace(1, (wide_sum >> node.GetDataWidth()) & 1))
+            RETURN_SPACE(ResultSpace(1, (wide_sum >> node.GetDataWidth()) & 1u))
         }
 
         // Unknown output
+        CircuitError("invalid output", node);
         ERROR_AND_RETURN
     }
 
@@ -474,13 +491,77 @@ void ConstExprEvaluator::visit(AdderNode &node, const int output_slot) {
     }
 
     // Unknown output
+    CircuitError("invalid output", node);
     ERROR_AND_RETURN
 }
-void ConstExprEvaluator::visit(ClockNode &node, const int output_slot) { RETURN_SPACE(ResultSpace(1)) }
-void ConstExprEvaluator::visit(EdgeNode &node, const int output_slot) { RETURN_SPACE(ResultSpace(1)) }
-void ConstExprEvaluator::visit(DebounceNode &node, const int output_slot) { RETURN_SPACE(ResultSpace(1)) }
-void ConstExprEvaluator::visit(LiteralNode &node, const int output_slot) {
-    RETURN_SPACE(ResultSpace(node.GetDataWidth(), node.value));
+void ConstExprEvaluator::visit(SubtractorNode &node, const int output_slot) {
+    const auto a = node.GetAInputPin().GetConnectedPin();
+    const auto b = node.GetBInputPin().GetConnectedPin();
+
+    VERIFY_CONNECTION(a)
+    VERIFY_CONNECTION(b)
+
+    const auto a_space = EvalNode(a);
+    const auto b_space = EvalNode(b);
+
+    if (a_space.IsConstant() && b_space.IsConstant()) {
+        const int mask = MASK(node.GetDataWidth());
+        const int a_masked = mask & a_space.GetConstantValue();
+        const int b_masked = mask & b_space.GetConstantValue();
+
+        uint64_t wide_diff = static_cast<uint64_t>(a_masked - b_masked);
+        uint32_t diff = static_cast<uint32_t>(wide_diff);
+
+
+        if (output_slot == node.SUBTRACTOR_Q_ID) {
+            RETURN_SPACE(ResultSpace(node.GetDataWidth(), diff & mask))
+        }
+        if (output_slot == node.SUBTRACTOR_COUT_ID) {
+            RETURN_SPACE(ResultSpace(1, (wide_diff >> node.GetDataWidth()) & 1u))
+        }
+
+        // Unknown output
+        CircuitError("invalid output", node);
+        ERROR_AND_RETURN
+    }
+
+
+    if (output_slot == node.SUBTRACTOR_Q_ID) {
+        RETURN_SPACE(ResultSpace(node.GetDataWidth()))
+    }
+    if (output_slot == node.SUBTRACTOR_COUT_ID) {
+        RETURN_SPACE(ResultSpace(1))
+    }
+
+    // Unknown output
+    CircuitError("invalid output", node);
+    ERROR_AND_RETURN
+}
+void ConstExprEvaluator::visit(MultiplierNode &node, const int output_slot) {
+    const auto a = node.GetAInputPin().GetConnectedPin();
+    const auto b = node.GetBInputPin().GetConnectedPin();
+
+    VERIFY_CONNECTION(a)
+    VERIFY_CONNECTION(b)
+
+    const auto a_space = EvalNode(a);
+    const auto b_space = EvalNode(b);
+
+    if (a_space.IsConstant() && b_space.IsConstant()) {
+        const int mask = MASK(node.GetDataWidth());
+        const int a_masked = mask & a_space.GetConstantValue();
+        const int b_masked = mask & b_space.GetConstantValue();
+
+        uint64_t wide_product = static_cast<uint64_t>(a_masked * b_masked);
+        uint32_t product = static_cast<uint32_t>(wide_product);
+
+        // bool carry_out = product >> node.GetDataWidth() & 1u;
+
+        RETURN_SPACE(ResultSpace(node.GetDataWidth(), product & mask))
+    }
+
+
+    RETURN_SPACE(ResultSpace(node.GetDataWidth()))
 }
 
 // ========== IO =======================================================================================================
@@ -499,12 +580,4 @@ void ConstExprEvaluator::visit(OutputNode &node, const int output_slot) {
     }
 
     RETURN_SPACE(out_space)
-}
-
-
-void ConstExprEvaluator::CircuitError(const std::string &msg, const Node &node) {
-    m_failed = true;
-    std::cerr << "ERROR CONSTEXPR EVAL: " << msg << std::endl;
-    std::cerr << "related node: " << node.guid << std::endl;
-    m_error_manager->ThrowError(msg, node);
 }
