@@ -7,9 +7,11 @@
 #include <stack>
 
 
+#include "ConstExprEvaluator.h"
 #include "Module.h"
 #include "UI/ErrorManager.h"
 #include "Visitor.h"
+
 
 class Codegen final : public Visitor {
 public:
@@ -71,4 +73,5 @@ private:
     std::map<std::string, std::string> m_visited_nodes;
 
     std::shared_ptr<ErrorManager> m_error_manager;
+    std::shared_ptr<ConstExprEvaluator> m_const_eval;
 };

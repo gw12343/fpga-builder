@@ -19,14 +19,12 @@ module main_module (
 );
 
 // === wire/reg declarations ================================
-wire [0:0] number_literal0 = 1'd1;
 reg [0:0] bin_op_result0;
 wire [3:0] vga_out_custom_out_color_r0;
 wire [3:0] vga_out_custom_out_color_g0;
 wire [3:0] vga_out_custom_out_color_b0;
 wire [0:0] vga_out_custom_out_VS0;
 wire [0:0] vga_out_custom_out_HS0;
-wire [3:0] number_literal1 = 4'd15;
 reg [3:0] sub_out0;
 reg sub_carry_out0;
 reg [3:0] mux_result0;
@@ -35,7 +33,7 @@ reg [3:0] mux_result0;
 // === module instances =====================================
 vga_out custom_node0 (
 	.sys_clk(sys_clk),
-	.enable(number_literal0),
+	.enable(1'd1),
 	.reset(bin_op_result0),
 	.color_r(vga_out_custom_out_color_r0),
 	.color_g(vga_out_custom_out_color_g0),
@@ -52,7 +50,7 @@ vga_out custom_node0 (
 		// Output VGA_VS
 		VGA_VS = vga_out_custom_out_VS0;
 		// Output VGA_R
-		{sub_carry_out0, sub_out0} = {1'b0, number_literal1} - {1'b0, vga_out_custom_out_color_r0};
+		{sub_carry_out0, sub_out0} = {1'b0, 4'd15} - {1'b0, vga_out_custom_out_color_r0};
 		case (BTNU)
 			1'd0: mux_result0 = vga_out_custom_out_color_r0;
 			1'd1: mux_result0 = sub_out0;

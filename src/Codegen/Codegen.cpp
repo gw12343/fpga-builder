@@ -57,6 +57,16 @@
     }
 
 
+#define TO_CONST(space) (std::to_string(space.GetBits()) + "'d" + std::to_string(space.GetConstantValue()))
+
+#define CACHE_AND_RETURN_CONSTANT(node, space, slot)                                                                   \
+    {                                                                                                                  \
+        m_visited_nodes[NODE_KEY(slot)] = TO_CONST(space);                                                             \
+        m_return_vals.emplace(TO_CONST(space));                                                                        \
+        return;                                                                                                        \
+    }
+
+
 #define RETURN_REG(val)                                                                                                \
     {                                                                                                                  \
         m_return_vals.emplace(val);                                                                                    \
@@ -89,11 +99,13 @@
     }
 #define END_CHECK_CYCLES m_active_nodes.pop();
 
+#define FIND_SPACE(n) m_const_eval->EvalNode(n)
 
 Codegen::Codegen(std::shared_ptr<ErrorManager> error_man) : m_failed(false), m_error_manager(std::move(error_man)) {}
 
 void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
     m_failed = false;
+    m_const_eval = std::make_shared<ConstExprEvaluator>(m_error_manager);
     std::string header = "module " + module->GetName() + " (";
     for (const auto &[name, bits]: module->GetInputs()) {
         if (bits == 1)
@@ -113,17 +125,13 @@ void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
 
     const std::string footer = "endmodule";
 
+
     for (const auto &node: module->GetNodes()) {
         if (node->GetSerializationType() != "OutputNode")
             continue;
         m_inner += "\t\t// Output " + module->GetOutputs()[dynamic_cast<OutputNode *>(node.get())->slot].name + "\n";
         node->accept(*this, 0);
         m_return_vals.pop();
-
-        ConstExprEvaluator ev(m_error_manager);
-        const auto s = ev.FindSpace(node, 0);
-        std::cout << "output " << node->GetDisplayName() << "   range: " << s.GetBits() << "  const: " << s.IsConstant()
-                  << "    val: " << s.GetConstantValue() << std::endl;
     }
 
 
@@ -710,7 +718,7 @@ void Codegen::visit(RegisterNode &node, const int output_slot) {
     m_later += "\talways @(posedge " + clk_val + ") begin\n";
     m_later += "\t\tif (" + rst_val + ") \n";
     m_later += "\t\t\t" + output_reg + " <= " + std::to_string(node.GetDataWidth()) + "'b0;\n";
-    m_later += "\t\telse if (" + enb_val + " )\n";
+    m_later += "\t\telse if (" + enb_val + ")\n";
     m_later += "\t\t\t" + output_reg + " <= " + d_val + ";\n";
     m_later += "\tend\n\n";
 
@@ -741,26 +749,87 @@ void Codegen::visit(CounterNode &node, const int output_slot) {
     VERIFY_CONNECTION(load_enb)
     VERIFY_CONNECTION(load_val)
 
+
     // Evaluate inputs
-    const auto enb_val = EvalNode(enb);
-    const auto cup_val = EvalNode(cup);
     const auto clk_val = EvalNode(clk);
+    const auto cup_val = EvalNode(cup);
     const auto rst_val = EvalNode(rst);
     const auto load_enb_val = EvalNode(load_enb);
     const auto load_val_val = EvalNode(load_val);
+    const auto enb_val = EvalNode(enb);
+
+    const auto load_enb_space = FIND_SPACE(load_enb);
+    const auto count_dir_space = FIND_SPACE(cup);
+    const auto enable_space = FIND_SPACE(enb);
+
 
     m_decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + output_reg + ";\n";
 
     // counter block
     m_later += "\talways @(posedge " + clk_val + ") begin\n";
+
     m_later += "\t\tif (" + rst_val + ") begin \n";
     m_later += "\t\t\t" + output_reg + " <= " + std::to_string(node.GetDataWidth()) + "'b0;\n";
-    m_later += "\t\tend else if (" + load_enb_val + " ) begin\n";
-    m_later += "\t\t\t" + output_reg + " <= " + load_val_val + ";\n";
-    m_later += "\t\tend else if (" + enb_val + " & " + cup_val + " ) begin\n";
-    m_later += "\t\t\t" + output_reg + " <= " + output_reg + " + 1;\n";
-    m_later += "\t\tend else if (" + enb_val + " & ~" + cup_val + " ) begin\n";
-    m_later += "\t\t\t" + output_reg + " <= " + output_reg + " - 1;\n";
+
+    if (!enable_space.IsConstant()) {
+        m_later += "\t\tend else begin\n";
+    }
+
+    bool load_branch = false;
+
+    // Check if the load enable is constant, and if it is make sure it is not always loading
+    if (!load_enb_space.IsConstant()) {
+        load_branch = true;
+        m_later += "\t\t\tif (" + load_enb_val + ") begin\n";
+        m_later += "\t\t\t\t" + output_reg + " <= " + load_val_val + ";\n";
+    } else if (load_enb_space.IsConstant() && load_enb_space.GetConstantValue() != 0) {
+        CircuitError("counter always loads!", node);
+        ERROR_AND_RETURN
+    }
+
+
+    if ((load_enb_space.IsConstant() && enable_space.IsConstant()) &&
+        (load_enb_space.GetConstantValue() != 0 || enable_space.GetConstantValue() != 0)) {
+        m_later += "\t\tend else begin\n";
+    }
+
+
+    const std::string pref = load_branch ? "end else " : "";
+
+    // Check if count direction is the same (always up or always down), and optimize accordingly
+    if (count_dir_space.IsConstant()) {
+        const auto count_up = count_dir_space.GetConstantValue() == 1 ? 1 : 0;
+        const auto op = count_up ? "+" : "-";
+
+        if (!enable_space.IsConstant()) {
+            // Conditional count
+            m_later += "\t\t\t" + pref + "if (" + enb_val + ")\n";
+            m_later += "\t\t\t\t" + output_reg + " <= " + output_reg + " " + op + " 1;\n";
+        } else if (enable_space.GetConstantValue() != 0) {
+            // Always count
+            m_later += "\t\t\t" + output_reg + " <= " + output_reg + " " + op + " 1;\n";
+        }
+    } else {
+        if (!enable_space.IsConstant()) {
+            m_later += "\t\t\t" + pref + "if (" + enb_val + ") begin\n";
+
+            // If enable is set: increment if cup 1, decrement if cup 0
+            m_later += "\t\t\t\tif (" + cup_val + ")\n";
+            m_later += "\t\t\t\t\t" + output_reg + " <= " + output_reg + " + 1;\n";
+            m_later += "\t\t\t\telse\n";
+            m_later += "\t\t\t\t\t" + output_reg + " <= " + output_reg + " - 1;\n";
+            m_later += "\t\t\tend\n";
+
+        } else if (enable_space.GetConstantValue() != 0) {
+            // Increment if 1, decrement if 0
+            m_later += "\t\t\tend else if (" + cup_val + ") begin\n";
+            m_later += "\t\t\t\t" + output_reg + " <= " + output_reg + " + 1;\n";
+            m_later += "\t\t\tend else if (~" + cup_val + ") begin\n";
+            m_later += "\t\t\t\t" + output_reg + " <= " + output_reg + " - 1;\n";
+        }
+    }
+
+
     m_later += "\t\tend\n";
     m_later += "\tend\n\n";
 
@@ -975,12 +1044,14 @@ void Codegen::visit(LiteralNode &node, const int output_slot) {
     CHECK_CACHE
     START_CHECK_CYCLES
 
-    std::string wire_name = GetSafeWireName("number_literal");
-    m_decls += "wire [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + wire_name + " = " +
-               std::to_string(node.GetDataWidth()) + "'d" + std::to_string(node.value) + ";\n";
+    // std::string wire_name = GetSafeWireName("number_literal");
+    // m_decls += "wire [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + wire_name + " = " +
+    //            std::to_string(node.GetDataWidth()) + "'d" + std::to_string(node.value) + ";\n";
 
     END_CHECK_CYCLES
-    CACHE_AND_RETURN(node, wire_name, output_slot)
+    // CACHE_AND_RETURN(node, wire_name, output_slot)
+
+    CACHE_AND_RETURN(node, std::to_string(node.GetDataWidth()) + "'d" + std::to_string(node.value), output_slot)
 }
 
 
@@ -1000,9 +1071,18 @@ void Codegen::visit(OutputNode &node, const int output_slot) {
     const auto in = node.GetValueInputPin().GetConnectedPin();
     VERIFY_CONNECTION(in)
 
-    const auto in_val = EvalNode(in);
+    const auto s = FIND_SPACE(in);
 
-    m_inner += "\t\t" + node.module->GetOutputs()[node.slot].name + " = " + in_val + ";\n";
+    std::cout << "   range: " << s.GetBits() << "  const: " << s.IsConstant() << "    val: " << s.GetConstantValue()
+              << std::endl;
+
+    if (s.IsConstant()) {
+        m_inner += "\t\t" + node.module->GetOutputs()[node.slot].name + " = " + TO_CONST(s) + ";\n";
+    } else {
+        const auto in_val = EvalNode(in);
+        m_inner += "\t\t" + node.module->GetOutputs()[node.slot].name + " = " + in_val + ";\n";
+    }
+
 
     END_CHECK_CYCLES
     CACHE_AND_RETURN(node, "", output_slot)
