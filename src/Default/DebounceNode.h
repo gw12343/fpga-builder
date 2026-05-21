@@ -11,25 +11,20 @@ static auto DEBOUNCE_IN_PIN_CLK = "Clk";
 
 class DebounceNode final : public Node {
 public:
+    [[nodiscard]] std::shared_ptr<Node> Clone() const override;
     [[nodiscard]] std::string GetSerializationType() const override { return "DebounceNode"; }
-
-    void accept(Visitor &v, const int output_slot) override { v.visit(*this, output_slot); }
-
-    [[nodiscard]] std::shared_ptr<Node> Clone() const override {
-        return std::make_unique<DebounceNode>(module, GUID::generate_guid());
-    }
-
     [[nodiscard]] int GetNodeWidth() const override { return 100; }
-    static constexpr ImVec4 COLOR = {0.729f, 0.455f, 0.067f, 1.0f};
     [[nodiscard]] ImVec4 GetUIColor() const override { return COLOR; }
 
-    explicit DebounceNode(Module *module) : DebounceNode(module, GUID::generate_guid()) {}
+    DebounceNode(Module *module, const std::string &guid);
+
+    explicit DebounceNode(Module *module);
 
 
-    DebounceNode(Module *module, const std::string &guid) :
-        Node(guid, module, "Debounce", {{DEBOUNCE_IN_PIN_D, PinDataType(1)}, {DEBOUNCE_IN_PIN_CLK, PinDataType(1)}},
-             {{"Q", PinDataType(1)}}) {}
+    void accept(Visitor &v, int output_slot) override;
 
-    Pin GetDPin() { return FindPin(DEBOUNCE_IN_PIN_D).value(); }
-    Pin GetClockPin() { return FindPin(DEBOUNCE_IN_PIN_CLK).value(); }
+    Pin GetDPin();
+    Pin GetClockPin();
+
+    static constexpr ImVec4 COLOR = {0.729f, 0.455f, 0.067f, 1.0f};
 };

@@ -4,50 +4,33 @@
 
 #pragma once
 #include "ConfigurableBitWidthNode.h"
-#include "Node.h"
 
 static auto SPLITTER_IN_PIN_VAL = "Value";
-
 
 class SplitterNode final : public ConfigurableBitWidthNode {
 public:
     [[nodiscard]] std::string GetSerializationType() const override { return "SplitterNode"; }
 
-    void accept(Visitor &v, const int output_slot) override { v.visit(*this, output_slot); }
+    void accept(Visitor &v, int output_slot) override;
 
-    [[nodiscard]] std::shared_ptr<Node> Clone() const override {
-        return std::make_unique<SplitterNode>(module, GUID::generate_guid(), bits);
-    }
+    [[nodiscard]] std::shared_ptr<Node> Clone() const override;
 
     static constexpr ImVec4 COLOR = {0.325f, 0.290f, 0.718f, 1.0f};
     [[nodiscard]] ImVec4 GetUIColor() const override { return COLOR; }
     [[nodiscard]] int GetNodeWidth() const override { return 150; }
 
 
-    static std::string GetBitOutPinName(const int n) { return "Bit " + std::to_string(n); }
+    static std::string GetBitOutPinName(int n);
 
     // Pre-configured
-    SplitterNode(Module *module, const std::string &guid, const int bit_width) :
-        ConfigurableBitWidthNode(guid, module, "Splitter", bit_width) {
-        InitPinsAfterConfig();
-    }
-
+    SplitterNode(Module *module, const std::string &guid, int bit_width);
+    // New node
     explicit SplitterNode(Module *module) : ConfigurableBitWidthNode(module, "Splitter") {}
 
 
-    void InitPinsAfterConfig() override {
-        // Inputs
-        pins.push_back((Pin){SPLITTER_IN_PIN_VAL, ax::NodeEditor::PinKind::Input, *this, 0, PinDataType(bits)});
-
-        // Outputs
-        int n = 1;
-        for (int i = 0; i < bits; i++) {
-            Pin new_output(GetBitOutPinName(i), ax::NodeEditor::PinKind::Output, *this, n++, PinDataType(1));
-            pins.push_back(new_output);
-        }
-    }
+    void InitPinsAfterConfig() override;
 
 
-    Pin GetInputPin() { return FindPin(SPLITTER_IN_PIN_VAL).value(); }
-    Pin GetBitOutputPin(const int i) { return FindPin(GetBitOutPinName(i)).value(); }
+    Pin GetInputPin();
+    Pin GetBitOutputPin(int i);
 };

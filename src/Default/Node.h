@@ -55,14 +55,7 @@ public:
 
     // Serialization
     [[nodiscard]] virtual std::string GetSerializationType() const = 0;
-    [[nodiscard]] virtual nlohmann::json ToJson() const {
-        return {{"type", GetSerializationType()},
-                {"guid", guid},
-                {"name", name},
-                {"id", id.Get()},
-                {"x", last_pos.x == FLT_MAX ? start_pos.x : last_pos.x},
-                {"y", last_pos.y == FLT_MAX ? start_pos.y : last_pos.y}};
-    }
+    [[nodiscard]] virtual nlohmann::json ToJson() const;
 
     // Helpers
     std::optional<Pin> FindPin(const std::string &name);

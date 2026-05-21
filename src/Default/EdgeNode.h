@@ -12,33 +12,26 @@ static auto EDGE_IN_PIN_CLK = "Clk";
 static auto EDGE_OUT_PIN_Q = "Q";
 static auto EDGE_OUT_PIN_NQ = "!Q";
 
-class EdgeNode final : public Node {
+class EdgeNode : public Node {
 public:
+    [[nodiscard]] std::shared_ptr<Node> Clone() const override;
     [[nodiscard]] std::string GetSerializationType() const override { return "EdgeNode"; }
-
-    void accept(Visitor &v, const int output_slot) override { v.visit(*this, output_slot); }
-
-    [[nodiscard]] std::shared_ptr<Node> Clone() const override {
-        return std::make_unique<EdgeNode>(module, GUID::generate_guid());
-    }
-
     [[nodiscard]] int GetNodeWidth() const override { return 100; }
-    static constexpr ImVec4 COLOR = {0.729f, 0.455f, 0.067f, 1.0f};
     [[nodiscard]] ImVec4 GetUIColor() const override { return COLOR; }
 
-    explicit EdgeNode(Module *module) : EdgeNode(module, GUID::generate_guid()) {}
+    void accept(Visitor &v, int output_slot) override;
 
 
-    EdgeNode(Module *module, const std::string &guid) :
-        Node(guid, module, "Edge", {{EDGE_IN_PIN_D, PinDataType(1)}, {EDGE_IN_PIN_CLK, PinDataType(1)}},
-             {{EDGE_OUT_PIN_Q, PinDataType(1)}, {EDGE_OUT_PIN_NQ, PinDataType(1)}}),
+    EdgeNode(Module *module, const std::string &guid);
 
-        EDGE_OUT_Q_ID(FindPin(EDGE_OUT_PIN_Q).value().GetNodeIndex()),
-        EDGE_OUT_NQ_ID(FindPin(EDGE_OUT_PIN_NQ).value().GetNodeIndex()) {}
+    explicit EdgeNode(Module *module);
 
-    Pin GetDPin() { return FindPin(EDGE_IN_PIN_D).value(); }
-    Pin GetClockPin() { return FindPin(EDGE_IN_PIN_CLK).value(); }
+    Pin GetDPin();
+    Pin GetClockPin();
+
 
     const int EDGE_OUT_Q_ID;
     const int EDGE_OUT_NQ_ID;
+
+    static constexpr ImVec4 COLOR = {0.729f, 0.455f, 0.067f, 1.0f};
 };

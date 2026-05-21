@@ -8,36 +8,23 @@
 class ConfigurableBitWidthNode : public Node {
 public:
     // Constructor for new node
-    ConfigurableBitWidthNode(Module *parent, const std::string &name) : Node(parent, name) { bits = defaultBitsToUse; }
+    ConfigurableBitWidthNode(Module *parent, const std::string &name);
     // Constructor for saved node
-    ConfigurableBitWidthNode(const std::string &saved_guid, Module *parent, const std::string &name,
-                             const int data_bits) :
-        Node(saved_guid, parent, name) {
-        bits = data_bits;
-    }
+    ConfigurableBitWidthNode(const std::string &saved_guid, Module *parent, const std::string &name, int data_bits);
 
 
     // Save bit width to json
-    [[nodiscard]] nlohmann::json ToJson() const override {
-        nlohmann::json j = Node::ToJson();
-        j["bits"] = bits;
-        return j;
-    }
+    [[nodiscard]] nlohmann::json ToJson() const override;
 
     // Override configuration methods
     [[nodiscard]] bool HasConfiguration() const override { return true; }
-
-    void RenderConfiguration() override {
-        if (ImGui::DragInt("# Data Bits", &bits, 1, 1, 16)) {
-            defaultBitsToUse = bits;
-        }
-    }
+    void RenderConfiguration() override;
 
     // Helpers
     [[nodiscard]] int GetDataWidth() const { return bits; }
-    [[nodiscard]] std::string GetDisplayName() const override { return name + " (" + std::to_string(bits) + "bit)"; }
+    [[nodiscard]] std::string GetDisplayName() const override;
 
-    static inline int defaultBitsToUse = 4; // TODO save per-project runtime val
+    static inline int defaultBitsToUse = 4;
 
 protected:
     int bits;

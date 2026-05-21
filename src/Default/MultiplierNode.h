@@ -14,36 +14,20 @@ static auto MULTIPLIER_OUT_PIN_Q = "Q";
 class MultiplierNode final : public ConfigurableBitWidthNode {
 public:
     [[nodiscard]] std::string GetSerializationType() const override { return "MultiplierNode"; }
-
-    void accept(Visitor &v, const int output_slot) override { v.visit(*this, output_slot); }
-
-    [[nodiscard]] std::shared_ptr<Node> Clone() const override {
-        return std::make_unique<MultiplierNode>(module, GUID::generate_guid(), bits);
-    }
-
-    static constexpr ImVec4 COLOR = {0.560f, 0.1f, 0.07f, 1.0f};
-    [[nodiscard]] ImVec4 GetUIColor() const override { return COLOR; }
-
+    [[nodiscard]] std::shared_ptr<Node> Clone() const override;
 
     // Pre-configured
-    MultiplierNode(Module *module, const std::string &guid, const int bit_width) :
-        ConfigurableBitWidthNode(guid, module, "Multiplier", bit_width) {
-        InitPinsAfterConfig();
-    }
+    MultiplierNode(Module *module, const std::string &guid, int bit_width);
+    // New node
+    explicit MultiplierNode(Module *module);
 
-    explicit MultiplierNode(Module *module) : ConfigurableBitWidthNode(module, "Multiplier") {}
-
-    void InitPinsAfterConfig() override {
-        int n = 0;
-        // Inputs
-        pins.push_back((Pin){MULTIPLIER_IN_PIN_A, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(bits)});
-        pins.push_back((Pin){MULTIPLIER_IN_PIN_B, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(bits)});
-
-        // Outputs
-        pins.push_back((Pin){MULTIPLIER_OUT_PIN_Q, ax::NodeEditor::PinKind::Output, *this, n, PinDataType(bits)});
-    }
+    void accept(Visitor &v, int output_slot) override;
+    void InitPinsAfterConfig() override;
 
 
-    Pin GetAInputPin() { return FindPin(MULTIPLIER_IN_PIN_A).value(); }
-    Pin GetBInputPin() { return FindPin(MULTIPLIER_IN_PIN_B).value(); }
+    [[nodiscard]] ImVec4 GetUIColor() const override { return COLOR; }
+    Pin GetAInputPin();
+    Pin GetBInputPin();
+
+    static constexpr ImVec4 COLOR = {0.560f, 0.1f, 0.07f, 1.0f};
 };

@@ -36,6 +36,16 @@ Node::Node(std::string saved_guid, Module *parent, std::string name) : name(std:
 }
 
 
+[[nodiscard]] nlohmann::json Node::ToJson() const {
+    return {{"type", GetSerializationType()},
+            {"guid", guid},
+            {"name", name},
+            {"id", id.Get()},
+            {"x", last_pos.x == FLT_MAX ? start_pos.x : last_pos.x},
+            {"y", last_pos.y == FLT_MAX ? start_pos.y : last_pos.y}};
+}
+
+
 void Node::InitPins(const std::vector<PinCreationData> &inputs, const std::vector<PinCreationData> &outputs) {
     int i = 0;
     for (const auto &[name, type]: inputs) {

@@ -93,7 +93,6 @@
             src/Codegen/Codegen.cpp
             src/Codegen/Codegen.h
             src/Default/BinaryOperator/OrNode.h
-            src/Default/BinaryOperator/AndNode.h
             src/CircuitSerializer.cpp
             src/CircuitSerializer.h
             src/Default/MultiplexerNode.h
@@ -160,6 +159,38 @@
             src/Codegen/ConstExprEvaluator.cpp
             src/Codegen/ConstExprEvaluator.cpp
             src/Codegen/ResultSpace.h
+            src/Default/BinaryOperator/AndNode.cpp
+            src/Default/BinaryOperator/NandNode.cpp
+            src/Default/BinaryOperator/BinaryOpNode.cpp
+            src/Default/ConfigurableDataAndNumInputsNode.cpp
+            src/Default/ConfigurableDataAndSelectBitWidthNode.cpp
+            src/Default/ConfigurableBitWidthNode.cpp
+            src/Default/ConfigurableBitRangeNode.cpp
+            src/Default/BinaryOperator/NorNode.cpp
+            src/Default/SubtractorNode.cpp
+            src/Default/SplitterNode.cpp
+            src/Default/ShifterNode.cpp
+            src/Default/ROMNode.cpp
+            src/Default/RegisterNode.cpp
+            src/Default/RamNode.cpp
+            src/Default/MultiplierNode.cpp
+            src/Default/MultiplexerNode.cpp
+            src/Default/LiteralNode.cpp
+            src/Default/EdgeNode.cpp
+            src/Default/DFFNode.cpp
+            src/Default/DecoderNode.cpp
+            src/Default/DebounceNode.cpp
+            src/Default/CustomModuleNode.cpp
+            src/Default/CounterNode.cpp
+            src/Default/ComparatorNode.cpp
+            src/Default/CombinerNode.cpp
+            src/Default/ClockNode.cpp
+            src/Default/BitSelectorNode.cpp
+            src/Default/AdderNode.cpp
+            src/Default/UnaryOperator/UnaryOpNode.cpp
+            src/Default/UnaryOperator/NotNode.cpp
+            src/Default/BinaryOperator/OrNode.cpp
+            src/Default/BinaryOperator/XOrNode.cpp
     )
 
     target_include_directories(fpga_builder PUBLIC

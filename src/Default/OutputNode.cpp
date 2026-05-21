@@ -4,10 +4,23 @@
 
 #include "OutputNode.h"
 
+#include "GUID.h"
 #include "Module.h"
 #include "Pins/Pin.h"
 
 #define IN_PIN_VALUE "Value"
+
+nlohmann::json OutputNode::ToJson() const {
+    nlohmann::json j = Node::ToJson();
+    j["slot"] = slot;
+    return j;
+}
+
+void OutputNode::accept(Visitor &v, const int output_slot) { v.visit(*this, output_slot); }
+
+std::shared_ptr<Node> OutputNode::Clone() const {
+    return std::make_unique<OutputNode>(module, GUID::generate_guid(), slot);
+}
 
 void OutputNode::RenderInternals() {
     ImGui::PushItemWidth(60);
