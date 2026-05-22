@@ -71,126 +71,80 @@
     )
 
 
-    add_executable(fpga_builder src/main.cpp
-            src/Module.cpp
-            src/Module.h
-            src/UI/Renderer.cpp
-            src/UI/Renderer.h
-            src/Pins/Pin.cpp
-            src/Pins/Pin.h
-            src/GUID.cpp
-            src/GUID.h
-            src/Default/Node.cpp
-            src/Default/Node.h
-            src/Link.cpp
-            src/Link.h
-            src/Default/OutputNode.cpp
-            src/Default/OutputNode.h
-            src/Default/BinaryOperator/BinaryOpNode.h
-            src/Default/InputNode.cpp
-            src/Default/InputNode.h
-            src/Codegen/Visitor.h
-            src/Codegen/Codegen.cpp
-            src/Codegen/Codegen.h
-            src/Default/BinaryOperator/OrNode.h
-            src/CircuitSerializer.cpp
-            src/CircuitSerializer.h
-            src/Default/MultiplexerNode.h
-            src/Default/BinaryOperator/AndNode.h
-            src/Default/BinaryOperator/XOrNode.h
-            src/Default/LiteralNode.h
-            src/Default/BinaryOperator/NorNode.h
-            src/Codegen/Codegen.cpp
-            src/Codegen/Codegen.h
-            src/Codegen/Codegen.h
-            src/Default/DFFNode.h
-            src/Default/DebounceNode.h
-            src/Default/EdgeNode.h
-            src/UI/ErrorManager.cpp
-            src/UI/ErrorManager.h
-            src/Pins/PinDataType.h
-            src/UI/Lib/IconsFontAwesome6.h
-            src/Default/ClockNode.h
-            src/Default/UnaryOperator/UnaryOpNode.h
-            src/Default/UnaryOperator/NotNode.h
-            src/Pins/PinDataType.cpp
-            src/Default/SplitterNode.h
-            src/Default/CounterNode.h
-            src/Default/CombinerNode.h
-            src/Default/RegisterNode.h
-            src/Default/AdderNode.h
-            src/Default/ConfigurableBitWidthNode.h
-            src/Default/ConfigurableBitWidthNode.h
-            src/Default/ConfigurableDataAndSelectBitWidthNode.h
-            src/UI/ConfigManager.cpp
-            src/UI/ConfigManager.h
-            src/UI/Toolbox.cpp
-            src/UI/Toolbox.h
-            src/UI/Topbar.cpp
-            src/UI/Topbar.h
-            src/UI/Lib/ImGuiNotify.h
-            src/UI/Lib/TextEditor.h
-            src/UI/Lib/TextEditor.cpp
-            src/UI/OutputViewer.cpp
-            src/UI/OutputViewer.h
-            src/CopyPasteManager.cpp
-            src/CopyPasteManager.h
-            src/UI/ModuleUI.cpp
-            src/Project/Project.h
-            src/Project/Project.cpp
-            src/Default/CustomModuleNode.h
-            src/UI/ProjectUI.cpp
-            src/UI/NodeUI.cpp
+    add_executable(fpga_builder
+            src/main.cpp
+
+            src/CircuitSerializer.h src/CircuitSerializer.cpp
+            src/CopyPasteManager.h src/CopyPasteManager.cpp
+            src/GUID.h src/GUID.cpp
+            src/Link.h src/Link.cpp
+            src/Module.h src/Module.cpp
             src/pch.h
-            src/pch.h
-            src/Default/ConfigurableDataAndNumInputsNode.h
-            src/Default/DecoderNode.h
-            src/Default/BinaryOperator/NandNode.h
-            src/Default/SubtractorNode.h
-            src/Default/MultiplierNode.h
-            src/Default/ROMNode.h
-            src/Default/ComparatorNode.h
-            src/Default/ComparatorNode.h
-            src/Default/ShifterNode.h
-            src/Default/RAMNode.h
-            src/Default/ConfigurableBitRangeNode.h
-            src/Default/BitSelectorNode.h
-            src/Codegen/ConstExprEvaluator.h
-            src/Codegen/ConstExprEvaluator.cpp
-            src/Codegen/ConstExprEvaluator.cpp
+
+            src/Codegen/Codegen.h src/Codegen/Codegen.cpp
+            src/Codegen/ConstExprEvaluator.h src/Codegen/ConstExprEvaluator.cpp
             src/Codegen/ResultSpace.h
-            src/Default/BinaryOperator/AndNode.cpp
-            src/Default/BinaryOperator/NandNode.cpp
-            src/Default/BinaryOperator/BinaryOpNode.cpp
-            src/Default/ConfigurableDataAndNumInputsNode.cpp
-            src/Default/ConfigurableDataAndSelectBitWidthNode.cpp
-            src/Default/ConfigurableBitWidthNode.cpp
-            src/Default/ConfigurableBitRangeNode.cpp
-            src/Default/BinaryOperator/NorNode.cpp
-            src/Default/SubtractorNode.cpp
-            src/Default/SplitterNode.cpp
-            src/Default/ShifterNode.cpp
-            src/Default/ROMNode.cpp
-            src/Default/RegisterNode.cpp
-            src/Default/RamNode.cpp
-            src/Default/MultiplierNode.cpp
-            src/Default/MultiplexerNode.cpp
-            src/Default/LiteralNode.cpp
-            src/Default/EdgeNode.cpp
-            src/Default/DFFNode.cpp
-            src/Default/DecoderNode.cpp
-            src/Default/DebounceNode.cpp
-            src/Default/CustomModuleNode.cpp
-            src/Default/CounterNode.cpp
-            src/Default/ComparatorNode.cpp
-            src/Default/CombinerNode.cpp
-            src/Default/ClockNode.cpp
-            src/Default/BitSelectorNode.cpp
-            src/Default/AdderNode.cpp
-            src/Default/UnaryOperator/UnaryOpNode.cpp
-            src/Default/UnaryOperator/NotNode.cpp
-            src/Default/BinaryOperator/OrNode.cpp
-            src/Default/BinaryOperator/XOrNode.cpp
+            src/Codegen/Visitor.h
+
+            src/Node/Arithmetic/AdderNode.h src/Node/Arithmetic/AdderNode.cpp
+            src/Node/Arithmetic/MultiplierNode.h src/Node/Arithmetic/MultiplierNode.cpp
+            src/Node/Arithmetic/SubtractorNode.h src/Node/Arithmetic/SubtractorNode.cpp
+
+            src/Node/BitwiseOperator/AndNode.h src/Node/BitwiseOperator/AndNode.cpp
+            src/Node/BitwiseOperator/BinaryOpNode.h src/Node/BitwiseOperator/BinaryOpNode.cpp
+            src/Node/BitwiseOperator/NandNode.h src/Node/BitwiseOperator/NandNode.cpp
+            src/Node/BitwiseOperator/NorNode.h src/Node/BitwiseOperator/NorNode.cpp
+            src/Node/BitwiseOperator/OrNode.h src/Node/BitwiseOperator/OrNode.cpp
+            src/Node/BitwiseOperator/XOrNode.h src/Node/BitwiseOperator/XOrNode.cpp
+
+            src/Node/Memory/CounterNode.h src/Node/Memory/CounterNode.cpp
+            src/Node/Memory/DFFNode.h src/Node/Memory/DFFNode.cpp
+            src/Node/Memory/RAMNode.h src/Node/Memory/RAMNode.cpp
+            src/Node/Memory/RegisterNode.h src/Node/Memory/RegisterNode.cpp
+            src/Node/Memory/ROMNode.h src/Node/Memory/ROMNode.cpp
+
+            src/Node/BitwiseOperator/NotNode.h src/Node/BitwiseOperator/NotNode.cpp
+            src/Node/BitwiseOperator/UnaryOpNode.h src/Node/BitwiseOperator/UnaryOpNode.cpp
+
+            src/Node/Wiring/LiteralNode.h src/Node/Wiring/LiteralNode.cpp
+            src/Node/Wiring/MultiplexerNode.h src/Node/Wiring/MultiplexerNode.cpp
+
+            src/Node/Wiring/BitSelectorNode.h src/Node/Wiring/BitSelectorNode.cpp
+            src/Node/Default/ClockNode.h src/Node/Default/ClockNode.cpp
+            src/Node/Wiring/CombinerNode.h src/Node/Wiring/CombinerNode.cpp
+            src/Node/Default/ComparatorNode.h src/Node/Default/ComparatorNode.cpp
+            src/Node/ConfigurableBitRangeNode.h src/Node/ConfigurableBitRangeNode.cpp
+            src/Node/ConfigurableBitWidthNode.h src/Node/ConfigurableBitWidthNode.cpp
+            src/Node/ConfigurableDataAndNumInputsNode.h src/Node/ConfigurableDataAndNumInputsNode.cpp
+            src/Node/ConfigurableDataAndSelectBitWidthNode.h src/Node/ConfigurableDataAndSelectBitWidthNode.cpp
+            src/Node/CustomModuleNode.h src/Node/CustomModuleNode.cpp
+            src/Node/Default/DebounceNode.h src/Node/Default/DebounceNode.cpp
+            src/Node/Default/DecoderNode.h src/Node/Default/DecoderNode.cpp
+            src/Node/Default/EdgeNode.h src/Node/Default/EdgeNode.cpp
+            src/Node/IO/InputNode.h src/Node/IO/InputNode.cpp
+            src/Node/Node.h src/Node/Node.cpp
+            src/Node/IO/OutputNode.h src/Node/IO/OutputNode.cpp
+            src/Node/BitwiseOperator/ShifterNode.h src/Node/BitwiseOperator/ShifterNode.cpp
+            src/Node/Wiring/SplitterNode.h src/Node/Wiring/SplitterNode.cpp
+
+            src/Pins/Pin.h src/Pins/Pin.cpp
+            src/Pins/PinDataType.h src/Pins/PinDataType.cpp
+
+            src/Project/Project.h src/Project/Project.cpp
+
+            src/UI/ConfigManager.h src/UI/ConfigManager.cpp
+            src/UI/ErrorManager.h src/UI/ErrorManager.cpp
+            src/UI/ModuleUI.cpp
+            src/UI/NodeUI.cpp
+            src/UI/OutputViewer.h src/UI/OutputViewer.cpp
+            src/UI/ProjectUI.cpp
+            src/UI/Renderer.h src/UI/Renderer.cpp
+            src/UI/Toolbox.h src/UI/Toolbox.cpp
+            src/UI/Topbar.h src/UI/Topbar.cpp
+
+            src/UI/Lib/IconsFontAwesome6.h
+            src/UI/Lib/ImGuiNotify.h
+            src/UI/Lib/TextEditor.h src/UI/Lib/TextEditor.cpp
     )
 
     target_include_directories(fpga_builder PUBLIC

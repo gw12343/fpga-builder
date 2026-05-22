@@ -3,8 +3,8 @@
 //
 
 #include "ConfigManager.h"
-#include "Default/Node.h"
 #include "Module.h"
+#include "Node/Node.h"
 
 
 #define NODE_CONFIG_TITLE "Configure Node"

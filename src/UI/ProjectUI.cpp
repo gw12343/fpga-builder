@@ -2,7 +2,7 @@
 // Created by Gabe on 4/30/2026.
 //
 
-#include "Default/CustomModuleNode.h"
+#include "Node/CustomModuleNode.h"
 #include "Project/Project.h"
 
 void Project::Render(const std::shared_ptr<ErrorManager> &error_manager,

@@ -3,10 +3,10 @@
 //
 
 #include "Pin.h"
-#include "Default/Node.h"
 #include "GUID.h"
 #include "Link.h"
 #include "Module.h"
+#include "Node/Node.h"
 
 #include <utility>
 

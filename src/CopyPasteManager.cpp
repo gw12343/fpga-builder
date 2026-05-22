@@ -4,8 +4,8 @@
 
 #include "CopyPasteManager.h"
 
-#include "Default/ConfigurableDataAndSelectBitWidthNode.h"
 #include "Link.h"
+#include "Node/ConfigurableDataAndSelectBitWidthNode.h"
 #include "Pins/Pin.h"
 
 

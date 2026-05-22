@@ -5,8 +5,8 @@
 #pragma once
 
 #include "ConfigManager.h"
-#include "Default/Node.h"
 #include "Module.h"
+#include "Node/Node.h"
 
 using NodeCreator = std::function<std::shared_ptr<Node>(const std::shared_ptr<Module> &)>;
 

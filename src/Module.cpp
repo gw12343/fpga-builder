@@ -6,10 +6,10 @@
 
 
 #include "CircuitSerializer.h"
-#include "Default/CustomModuleNode.h"
-#include "Default/Node.h"
 #include "GUID.h"
 #include "Link.h"
+#include "Node/CustomModuleNode.h"
+#include "Node/Node.h"
 
 
 Module::Module(Project *parent, const std::string &name) : Module(parent, name, GUID::generate_guid()) {}

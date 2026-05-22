@@ -2,8 +2,8 @@
 // Created by Gabe on 4/30/2026.
 //
 
-#include "Default/Node.h"
 #include "ErrorManager.h"
+#include "Node/Node.h"
 
 void Node::Render(const std::shared_ptr<ErrorManager> &error_manager) {
     const bool is_error = error_manager->GetErrorNodeGuid() == guid;

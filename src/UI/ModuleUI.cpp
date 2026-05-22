@@ -6,11 +6,11 @@
 #include <iostream>
 #include "CopyPasteManager.h"
 
-#include "Default/InputNode.h"
-#include "Default/Node.h"
-#include "Default/OutputNode.h"
 #include "GUID.h"
 #include "Link.h"
+#include "Node/IO/InputNode.h"
+#include "Node/IO/OutputNode.h"
+#include "Node/Node.h"
 
 
 void Module::Render(const std::shared_ptr<ErrorManager> &error_manager,
