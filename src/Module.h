@@ -60,6 +60,9 @@ public:
     void RemoveNode(const std::string &guid);
     void AddNode(const std::shared_ptr<Node> &node);
     void AddLink(const Link &link);
+    void RemoveLink(ax::NodeEditor::LinkId id);
+
+
     void Rename(const std::string &new_name);
 
     void ExecuteCommand(std::shared_ptr<Command> command);

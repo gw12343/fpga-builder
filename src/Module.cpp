@@ -7,6 +7,7 @@
 
 #include "CircuitSerializer.h"
 #include "Events/Command.h"
+#include "Events/CreateLinkCommand.h"
 #include "GUID.h"
 #include "Link.h"
 #include "Node/CustomModuleNode.h"
@@ -37,6 +38,8 @@ bool Module::CreateLink(const Pin &a, const Pin &b) {
 
     printf("%s   %s\n", out_pin_guid.c_str(), in_pin_guid.c_str());
 
+    std::vector<Link> displaced;
+
     for (const auto &link: m_links) {
         if (link.output_guid == out_pin_guid && link.input_guid == in_pin_guid) {
             // link already exists
@@ -44,12 +47,15 @@ bool Module::CreateLink(const Pin &a, const Pin &b) {
         }
         if (link.output_guid == out_pin_guid) {
             // remove old connection to this input and replace with current
-            std::erase_if(m_links, [&](const Link &l) { return l.id == link.id; });
+            displaced.push_back(link);
         }
     }
 
     if (b.CanConnect(a)) {
-        m_links.emplace_back(this, out_pin_guid, in_pin_guid);
+        Link l{this, out_pin_guid, in_pin_guid};
+        auto cmd = std::make_shared<CreateLinkCommand>(shared_from_this(), l, displaced);
+        ExecuteCommand(cmd);
+
         return true;
     }
 
@@ -132,6 +138,11 @@ void Module::RemoveNode(const std::string &guid) {
 
 void Module::AddNode(const std::shared_ptr<Node> &node) { m_nodes.push_back(node); }
 void Module::AddLink(const Link &link) { m_links.push_back(link); }
+
+void Module::RemoveLink(ax::NodeEditor::LinkId id) {
+    std::erase_if(m_links, [id](Link l) { return l.id == id; });
+}
+
 
 void Module::Rename(const std::string &new_name) {
     CircuitSerializer::RenameModuleFile(m_project, this, new_name);
