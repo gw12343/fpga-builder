@@ -151,6 +151,7 @@ void Module::Rename(const std::string &new_name) {
 
 void Module::ExecuteCommand(std::shared_ptr<Command> command) {
     m_undo_stack.push_back(command);
+    m_redo_stack.clear();
     command->execute();
 }
 

@@ -8,7 +8,16 @@
 #include <iostream>
 
 
-void CreateNodeCommand::execute() { m_module->AddNode(m_new_node); }
+void CreateNodeCommand::execute() {
+    m_module->AddNode(m_new_node);
+
+    // send to right position?
+    // only matters if this is a redo, and
+    if (m_new_node->last_pos.x != FLT_MAX && m_new_node->last_pos.x != FLT_MAX) {
+        m_new_node->start_pos = m_new_node->last_pos;
+        m_new_node->last_pos = {FLT_MAX, FLT_MAX};
+    }
+}
 
 void CreateNodeCommand::undo() { m_module->RemoveNode(m_new_node->guid); }
 
