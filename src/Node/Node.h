@@ -13,7 +13,7 @@
 class ErrorManager;
 class Module;
 
-class Node {
+class Node : public std::enable_shared_from_this<Node> {
 
 public:
     virtual ~Node() = default;
@@ -68,4 +68,7 @@ public:
 
     ImVec2 last_pos;
     ImVec2 start_pos;
+
+    ImVec2 drag_start_pos;
+    bool m_is_dragging = false;
 };

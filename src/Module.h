@@ -3,6 +3,7 @@
 //
 
 #pragma once
+#include <stack>
 
 class Pin;
 class Link;
@@ -10,7 +11,7 @@ class Node;
 class ErrorManager;
 class Project;
 class CopyPasteManager;
-
+class Command;
 
 namespace ax::NodeEditor {
     struct Config;
@@ -24,7 +25,7 @@ struct IO {
     int bits;
 };
 
-class Module {
+class Module : public std::enable_shared_from_this<Module> {
 public:
     Module(Project *parent, const std::string &name);
     Module(Project *parent, std::string name, std::string saved_guid);
@@ -56,14 +57,27 @@ public:
     [[nodiscard]] const std::vector<Link> &GetLinks() const { return m_links; }
     [[nodiscard]] const std::vector<std::shared_ptr<Node>> &GetNodes() const { return m_nodes; }
 
+    void RemoveNode(const std::string &guid);
     void AddNode(const std::shared_ptr<Node> &node);
     void AddLink(const Link &link);
     void Rename(const std::string &new_name);
 
+    void ExecuteCommand(std::shared_ptr<Command> command);
+    void Undo();
+    void Redo();
+
+    std::shared_ptr<Module> GetPtr() { return shared_from_this(); }
+
 private:
+    void RenderUndoRedoList();
     void RenderModuleSettings();
     void RenderNodes(const std::shared_ptr<ErrorManager> &error_manager) const;
     void RenderLinks() const;
+
+
+    std::deque<std::shared_ptr<Command>> m_undo_stack;
+    std::deque<std::shared_ptr<Command>> m_redo_stack;
+
 
     std::vector<std::shared_ptr<Node>> m_nodes;
     std::vector<Link> m_links;

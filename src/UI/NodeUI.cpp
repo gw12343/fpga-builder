@@ -2,7 +2,12 @@
 // Created by Gabe on 4/30/2026.
 //
 
+#include <iostream>
+
+
 #include "ErrorManager.h"
+#include "Events/MoveNodeCommand.h"
+#include "Module.h"
 #include "Node/Node.h"
 
 void Node::Render(const std::shared_ptr<ErrorManager> &error_manager) {
@@ -19,8 +24,32 @@ void Node::Render(const std::shared_ptr<ErrorManager> &error_manager) {
 
     if (last_pos.x == FLT_MAX && last_pos.y == FLT_MAX) {
         SetNodePosition(id, start_pos);
+        last_pos = start_pos;
     }
-    last_pos = GetNodePosition(id);
+
+
+    const auto new_pos = GetNodePosition(id);
+    const bool different_from_last = new_pos.x != last_pos.x || new_pos.y != last_pos.y;
+
+    if (!m_is_dragging && different_from_last) {
+        std::cout << "start dragging" << std::endl;
+        m_is_dragging = true;
+        drag_start_pos = last_pos;
+    } else if (m_is_dragging && !different_from_last && !ImGui::IsMouseDown(0)) {
+        std::cout << "end dragging" << std::endl;
+        m_is_dragging = false;
+
+        auto cmd = std::make_shared<MoveNodeCommand>(module->GetPtr(), shared_from_this(), drag_start_pos, new_pos);
+        module->ExecuteCommand(cmd);
+
+        drag_start_pos = {0, 0};
+        std::cout << "moved from (" << std::to_string(drag_start_pos.x) + ", "
+                  << std::to_string(drag_start_pos.y) + ")  to  (" << std::to_string(new_pos.x) + ", "
+                  << std::to_string(new_pos.y) + ")" << std::endl;
+    }
+
+
+    last_pos = new_pos;
 
     ImDrawList *drawList = ImGui::GetWindowDrawList();
 

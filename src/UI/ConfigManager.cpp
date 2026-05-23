@@ -3,6 +3,7 @@
 //
 
 #include "ConfigManager.h"
+#include "Events/CreateNodeCommand.h"
 #include "Module.h"
 #include "Node/Node.h"
 
@@ -57,7 +58,12 @@ void ConfigManager::ConfigureAndAdd(const std::shared_ptr<Module> &module, const
     if (!node->HasConfiguration()) {
         ImGui::InsertNotification(
                 {ImGuiToastType::Success, 3000, "Added new node: %s", node->GetDisplayName().c_str()});
-        module->AddNode(node);
+
+        auto cmd = std::make_shared<CreateNodeCommand>(module, node);
+        module->ExecuteCommand(cmd);
+        // module->AddNode(node);
+
+
         return;
     }
 

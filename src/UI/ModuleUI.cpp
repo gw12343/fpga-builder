@@ -6,6 +6,7 @@
 #include <iostream>
 #include "CopyPasteManager.h"
 
+#include "Events/Command.h"
 #include "GUID.h"
 #include "Link.h"
 #include "Node/IO/InputNode.h"
@@ -104,6 +105,7 @@ void Module::Render(const std::shared_ptr<ErrorManager> &error_manager,
 
 
     RenderModuleSettings();
+    RenderUndoRedoList();
 }
 
 
@@ -236,5 +238,31 @@ void Module::RenderModuleSettings() {
         ImGui::EndTable();
     }
 
+    ImGui::End();
+}
+
+void Module::RenderUndoRedoList() {
+    ImGui::Begin("Undo Redo");
+
+    if (ImGui::Button("Undo")) {
+        Undo();
+    }
+
+    if (ImGui::Button("Redo")) {
+        Redo();
+    }
+
+    ImGui::Text("undo stack (%d): ", m_undo_stack.size());
+
+    int n = 0;
+    for (const auto c: m_undo_stack) {
+        ImGui::Button(("(u" + std::to_string(n++) + ") " + c->str()).c_str());
+    }
+
+    ImGui::Text("redo stack (%d): ", m_redo_stack.size());
+    n = 0;
+    for (const auto c: m_redo_stack) {
+        ImGui::Button(("(r" + std::to_string(n++) + ") " + c->str()).c_str());
+    }
     ImGui::End();
 }

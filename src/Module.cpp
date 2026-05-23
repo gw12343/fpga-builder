@@ -6,6 +6,7 @@
 
 
 #include "CircuitSerializer.h"
+#include "Events/Command.h"
 #include "GUID.h"
 #include "Link.h"
 #include "Node/CustomModuleNode.h"
@@ -124,12 +125,42 @@ void Module::RefreshAllCustomModuleNodes(const std::shared_ptr<Module> &updated_
 
 void Module::AddInput(const IO &io) { m_inputs.push_back(io); }
 void Module::AddOutput(const IO &io) { m_outputs.push_back(io); }
+
+void Module::RemoveNode(const std::string &guid) {
+    std::erase_if(m_nodes, [guid](std::shared_ptr<Node> n) { return n->guid == guid; });
+}
+
 void Module::AddNode(const std::shared_ptr<Node> &node) { m_nodes.push_back(node); }
 void Module::AddLink(const Link &link) { m_links.push_back(link); }
 
 void Module::Rename(const std::string &new_name) {
     CircuitSerializer::RenameModuleFile(m_project, this, new_name);
     m_name = new_name;
+}
+
+void Module::ExecuteCommand(std::shared_ptr<Command> command) {
+    m_undo_stack.push_back(command);
+    command->execute();
+}
+
+void Module::Undo() {
+    if (m_undo_stack.size() > 0) {
+        auto c = m_undo_stack.back();
+        m_undo_stack.pop_back();
+
+        c->undo();
+        m_redo_stack.push_back(c);
+    }
+}
+
+void Module::Redo() {
+    if (m_redo_stack.size() > 0) {
+        auto c = m_redo_stack.back();
+        m_redo_stack.pop_back();
+
+        c->execute();
+        m_undo_stack.push_back(c);
+    }
 }
 
 void Module::RenderNodes(const std::shared_ptr<ErrorManager> &error_manager) const {

@@ -46,6 +46,7 @@
             ${imgui_SOURCE_DIR}/backends/imgui_impl_sdl3.cpp
             ${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp
             ${imgui_SOURCE_DIR}/misc/cpp/imgui_stdlib.cpp
+            src/Events/CreateNodeCommand.h
     )
 
 
@@ -145,6 +146,10 @@
             src/UI/Lib/IconsFontAwesome6.h
             src/UI/Lib/ImGuiNotify.h
             src/UI/Lib/TextEditor.h src/UI/Lib/TextEditor.cpp
+            src/Events/Command.h
+            src/Events/CreateNodeCommand.cpp
+            src/Events/MoveNodeCommand.h
+            src/Events/MoveNodeCommand.cpp
     )
 
     target_include_directories(fpga_builder PUBLIC
