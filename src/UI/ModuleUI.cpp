@@ -7,6 +7,8 @@
 #include "CopyPasteManager.h"
 
 #include "Events/Command.h"
+#include "Events/DeleteLinkCommand.h"
+#include "Events/DeleteNodeCommand.h"
 #include "GUID.h"
 #include "Link.h"
 #include "Node/IO/InputNode.h"
@@ -71,15 +73,28 @@ void Module::Render(const std::shared_ptr<ErrorManager> &error_manager,
                     for (auto &node: m_nodes) {
                         if (node->id == deletedNodeId) {
 
+                            std::vector<Link> displaced_links;
+
                             // check all pins on node
                             for (const auto &pin: node->pins) {
                                 auto guid = pin.GetGuid();
-                                std::erase_if(m_links, [guid](const Link &l) {
-                                    return l.input_guid == guid || l.output_guid == guid;
-                                });
+                                // std::erase_if(m_links, [guid](const Link &l) {
+                                //     return l.input_guid == guid || l.output_guid == guid;
+                                // });
+                                for (const auto &l: m_links) {
+                                    if (l.input_guid == guid || l.output_guid == guid) {
+                                        displaced_links.push_back(l);
+                                    }
+                                }
                             }
 
-                            std::erase_if(m_nodes, [deletedNodeId](const auto &n) { return n->id == deletedNodeId; });
+                            // std::erase_if(m_nodes, [deletedNodeId](const auto &n) { return n->id == deletedNodeId;
+                            // });
+
+                            std::cout << " delete node cmd" << std::endl;
+                            auto cmd = std::make_shared<DeleteNodeCommand>(shared_from_this(), node, displaced_links);
+                            ExecuteCommand(cmd);
+
                             break;
                         }
                     }
@@ -88,8 +103,13 @@ void Module::Render(const std::shared_ptr<ErrorManager> &error_manager,
 
             while (QueryDeletedLink(&deletedLinkId)) {
                 if (ax::NodeEditor::AcceptDeletedItem()) {
+                    for (const auto &l: m_links) {
+                        if (l.id != deletedLinkId)
+                            continue;
 
-                    std::erase_if(m_links, [deletedLinkId](const Link &l) { return l.id == deletedLinkId; });
+                        auto cmd = std::make_shared<DeleteLinkCommand>(shared_from_this(), l);
+                        ExecuteCommand(cmd);
+                    }
                     break;
                 }
             }

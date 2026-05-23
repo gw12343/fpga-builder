@@ -152,6 +152,10 @@
             src/Events/MoveNodeCommand.cpp
             src/Events/CreateLinkCommand.h
             src/Events/CreateLinkCommand.cpp
+            src/Events/DeleteLinkCommand.cpp
+            src/Events/DeleteLinkCommand.h
+            src/Events/DeleteNodeCommand.h
+            src/Events/DeleteNodeCommand.cpp
     )
 
     target_include_directories(fpga_builder PUBLIC

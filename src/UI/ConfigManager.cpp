@@ -40,7 +40,11 @@ void ConfigManager::Render(const std::optional<std::shared_ptr<Module>> &module)
                                        m_current_node->GetDisplayName().c_str()});
 
             m_current_node->InitPinsAfterConfig();
-            module.value()->AddNode(m_current_node);
+
+            auto cmd = std::make_shared<CreateNodeCommand>(module.value(), m_current_node);
+            module.value()->ExecuteCommand(cmd);
+            // module.value()->AddNode(m_current_node);
+
             m_current_node.reset();
         }
 
