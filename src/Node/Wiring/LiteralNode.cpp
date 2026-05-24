@@ -22,8 +22,9 @@ nlohmann::json LiteralNode::ToJson() const {
 
 void LiteralNode::RenderInternals() {
     ImGui::PushItemWidth(60);
-    int old_val = value;
-    bool f = ImGui::SliderInt(("##" + guid).c_str(), &value, 0, powl(2, bits) - 1);
+    const int old_val = value;
+    const bool f = ImGui::SliderInt(("##" + guid).c_str(), &value, 0, powl(2, bits) - 1);
+
     if (value < 0) {
         value = 0;
     } else if (value > powl(2, bits) - 1) {
@@ -31,8 +32,8 @@ void LiteralNode::RenderInternals() {
     }
 
     if (f && value != old_val) {
-        auto cmd = std::make_shared<NumericParameterChangeCommand>(module->shared_from_this(), shared_from_this(),
-                                                                   old_val, value, 0);
+        const auto cmd = std::make_shared<NumericParameterChangeCommand>(module->shared_from_this(), shared_from_this(),
+                                                                         old_val, value, 0);
         module->ExecuteCommand(cmd);
     }
 

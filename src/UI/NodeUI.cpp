@@ -39,8 +39,8 @@ void Node::Render(const std::shared_ptr<ErrorManager> &error_manager) {
         std::cout << "end dragging" << std::endl;
         m_is_dragging = false;
 
-        auto cmd = std::make_shared<MoveNodeCommand>(module->GetPtr(), shared_from_this(), drag_start_pos, new_pos);
-        module->ExecuteCommand(cmd);
+        module->m_node_moves.emplace_back(shared_from_this(), drag_start_pos, new_pos);
+
 
         drag_start_pos = {0, 0};
         std::cout << "moved from (" << std::to_string(drag_start_pos.x) + ", "

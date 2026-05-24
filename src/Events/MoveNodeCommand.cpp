@@ -4,14 +4,18 @@
 
 #include "MoveNodeCommand.h"
 void MoveNodeCommand::execute() {
-    m_node->last_pos = {FLT_MAX, FLT_MAX};
-    m_node->start_pos = m_end_pos;
-    m_node->m_is_dragging = false;
+    for (auto &[node, start, end]: m_node_moves) {
+        node->last_pos = {FLT_MAX, FLT_MAX};
+        node->start_pos = end;
+        node->m_is_dragging = false;
+    }
 }
 void MoveNodeCommand::undo() {
-    m_node->last_pos = {FLT_MAX, FLT_MAX};
-    m_node->start_pos = m_start_pos;
-    m_node->m_is_dragging = false;
+    for (auto &[node, start, end]: m_node_moves) {
+        node->last_pos = {FLT_MAX, FLT_MAX};
+        node->start_pos = start;
+        node->m_is_dragging = false;
+    }
 }
 
-std::string MoveNodeCommand::str() { return "Move node: " + m_node->GetDisplayName() + "   guid: " + m_node->guid; }
+std::string MoveNodeCommand::str() { return "Move " + std::to_string(m_node_moves.size()) + " nodes"; }

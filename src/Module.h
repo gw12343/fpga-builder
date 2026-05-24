@@ -5,6 +5,8 @@
 #pragma once
 #include <stack>
 
+#include "Events/MoveNodeCommand.h"
+
 class Pin;
 class Link;
 class Node;
@@ -70,10 +72,12 @@ public:
 
     std::shared_ptr<Module> GetPtr() { return shared_from_this(); }
 
+    std::vector<NodeMove> m_node_moves;
+
 private:
     void RenderUndoRedoList();
     void RenderModuleSettings();
-    void RenderNodes(const std::shared_ptr<ErrorManager> &error_manager) const;
+    void RenderNodes(const std::shared_ptr<ErrorManager> &error_manager);
     void RenderLinks() const;
 
 

@@ -159,6 +159,8 @@
             src/Events/PasteCommand.cpp
             src/Events/NumericParameterChangeCommand.h
             src/Events/NumericParameterChangeCommand.cpp
+            src/Events/StringParameterChangeCommand.h
+            src/Events/StringParameterChangeCommand.cpp
     )
 
     target_include_directories(fpga_builder PUBLIC

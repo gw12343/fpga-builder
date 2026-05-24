@@ -3,7 +3,9 @@
 //
 
 #include "ROMNode.h"
+#include "Events/StringParameterChangeCommand.h"
 #include "GUID.h"
+#include "Module.h"
 
 void ROMNode::accept(Visitor &v, const int output_slot) { v.visit(*this, output_slot); }
 
@@ -42,7 +44,15 @@ std::string ROMNode::GetDisplayName() const {
 
 void ROMNode::RenderInternals() {
     ImGui::PushItemWidth(60);
-    ImGui::InputText(("ROM file##" + guid).c_str(), &m_rom_file);
+    const std::string old_val = m_rom_file;
+    const bool f = ImGui::InputText(("ROM file##" + guid).c_str(), &m_rom_file);
+
+    if (f && m_rom_file != old_val) {
+        const auto cmd = std::make_shared<StringParameterChangeCommand>(module->shared_from_this(), shared_from_this(),
+                                                                        old_val, m_rom_file, 0);
+        module->ExecuteCommand(cmd);
+    }
+
     ImGui::PopItemWidth();
 }
 

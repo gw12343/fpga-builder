@@ -19,7 +19,7 @@ public:
     [[nodiscard]] ImVec4 GetUIColor() const override { return COLOR; }
     [[nodiscard]] std::string GetDisplayName() const override;
 
-    RAMNode(Module *module, const std::string &guid, const int data_bits, const int select_bits);
+    RAMNode(Module *module, const std::string &guid, int data_bits, int select_bits);
     explicit RAMNode(Module *module);
 
     void accept(Visitor &v, int output_slot) override;

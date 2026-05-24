@@ -186,9 +186,17 @@ void Module::Redo() {
     }
 }
 
-void Module::RenderNodes(const std::shared_ptr<ErrorManager> &error_manager) const {
+void Module::RenderNodes(const std::shared_ptr<ErrorManager> &error_manager) {
+    m_node_moves.clear();
     for (const auto &node: m_nodes)
         node->Render(error_manager);
+
+    if (m_node_moves.size() > 0) {
+        std::cout << "moves: " << m_node_moves.size() << std::endl;
+
+        const auto cmd = std::make_shared<MoveNodeCommand>(shared_from_this(), m_node_moves);
+        ExecuteCommand(cmd);
+    }
 }
 
 void Module::RenderLinks() const {
