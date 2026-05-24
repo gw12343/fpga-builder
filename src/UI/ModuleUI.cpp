@@ -170,37 +170,34 @@ void Module::Render(const std::shared_ptr<ErrorManager> &error_manager) {
             ax::NodeEditor::NodeId deletedNodeId;
 
 
+            std::set<Link> displaced_links;
+            std::vector<std::shared_ptr<Node>> deleted_nodes;
+
             while (QueryDeletedNode(&deletedNodeId)) {
                 if (ax::NodeEditor::AcceptDeletedItem()) {
                     for (auto &node: m_nodes) {
                         if (node->id == deletedNodeId) {
-
-                            std::vector<Link> displaced_links;
-
                             // check all pins on node
                             for (const auto &pin: node->pins) {
                                 auto guid = pin.GetGuid();
-                                // std::erase_if(m_links, [guid](const Link &l) {
-                                //     return l.input_guid == guid || l.output_guid == guid;
-                                // });
+
                                 for (const auto &l: m_links) {
                                     if (l.input_guid == guid || l.output_guid == guid) {
-                                        displaced_links.push_back(l);
+                                        displaced_links.insert(l);
                                     }
                                 }
                             }
 
-                            // std::erase_if(m_nodes, [deletedNodeId](const auto &n) { return n->id == deletedNodeId;
-                            // });
-
-                            std::cout << " delete node cmd" << std::endl;
-                            auto cmd = std::make_shared<DeleteNodeCommand>(shared_from_this(), node, displaced_links);
-                            ExecuteCommand(cmd);
-
-                            break;
+                            deleted_nodes.push_back(node);
                         }
                     }
                 }
+            }
+
+            if (!displaced_links.empty() || !deleted_nodes.empty()) {
+                std::cout << " delete node cmd" << std::endl;
+                auto cmd = std::make_shared<DeleteNodeCommand>(shared_from_this(), deleted_nodes, displaced_links);
+                ExecuteCommand(cmd);
             }
 
             std::vector<Link> deleted_links;

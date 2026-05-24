@@ -44,3 +44,7 @@ void Link::Render() const {
 
     ax::NodeEditor::Link(id, outPin.GetId(), inPin.GetId(), link_color, static_cast<float>(link_thickness));
 }
+
+
+bool Link::operator==(const Link &other) const { return id == other.id; }
+bool Link::operator<(const Link &other) const { return id.Get() < other.id.Get(); }

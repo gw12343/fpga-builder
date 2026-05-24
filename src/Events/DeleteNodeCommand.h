@@ -3,6 +3,7 @@
 //
 #pragma once
 
+#include <set>
 #include <vector>
 
 
@@ -13,9 +14,9 @@
 
 class DeleteNodeCommand : public Command {
 public:
-    DeleteNodeCommand(std::shared_ptr<Module> module, std::shared_ptr<Node> new_node,
-                      std::vector<Link> displaced_links) :
-        Command(module), m_new_node(new_node), m_displaced_links(displaced_links) {}
+    DeleteNodeCommand(std::shared_ptr<Module> module, std::vector<std::shared_ptr<Node>> deleted_nodes,
+                      std::set<Link> displaced_links) :
+        Command(module), m_deleted_nodes(deleted_nodes), m_displaced_links(displaced_links) {}
 
 
     void execute() override;
@@ -23,6 +24,6 @@ public:
     std::string str() override;
 
 private:
-    std::shared_ptr<Node> m_new_node;
-    std::vector<Link> m_displaced_links;
+    std::vector<std::shared_ptr<Node>> m_deleted_nodes;
+    std::set<Link> m_displaced_links;
 };
