@@ -58,6 +58,11 @@ void Node::InitPins(const std::vector<PinCreationData> &inputs, const std::vecto
         pins.push_back(new_output);
     }
 }
+void Node::Select(bool append) {
+    BeginNode(id);
+    ax::NodeEditor::EndNode();
+    SelectNode(id, append);
+}
 
 
 std::optional<Pin> Node::FindPin(const std::string &name) {

@@ -88,6 +88,15 @@ std::optional<Node *> Module::GetNode(const ax::NodeEditor::NodeId &id) const {
     return std::nullopt;
 }
 
+std::optional<Link> Module::GetLink(const ax::NodeEditor::LinkId &id) const {
+    for (const auto &link: m_links) {
+        if (link.id == id) {
+            return link;
+        }
+    }
+    return std::nullopt;
+}
+
 std::optional<Pin> Module::GetPin(const std::string &guid) {
     for (const auto &node: m_nodes) {
         for (auto pin: node->pins) {
@@ -130,6 +139,7 @@ void Module::RefreshAllCustomModuleNodes(const std::shared_ptr<Module> &updated_
 
 
 void Module::AddInput(const IO &io) { m_inputs.push_back(io); }
+
 void Module::AddOutput(const IO &io) { m_outputs.push_back(io); }
 
 void Module::RemoveNode(const std::string &guid) {
@@ -137,6 +147,7 @@ void Module::RemoveNode(const std::string &guid) {
 }
 
 void Module::AddNode(const std::shared_ptr<Node> &node) { m_nodes.push_back(node); }
+
 void Module::AddLink(const Link &link) { m_links.push_back(link); }
 
 void Module::RemoveLink(ax::NodeEditor::LinkId id) {

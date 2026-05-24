@@ -10,7 +10,6 @@ class Link;
 class Node;
 class ErrorManager;
 class Project;
-class CopyPasteManager;
 class Command;
 
 namespace ax::NodeEditor {
@@ -31,14 +30,14 @@ public:
     Module(Project *parent, std::string name, std::string saved_guid);
     ~Module();
 
-    void Render(const std::shared_ptr<ErrorManager> &error_manager,
-                const std::shared_ptr<CopyPasteManager> &copy_paste_manager);
+    void Render(const std::shared_ptr<ErrorManager> &error_manager);
 
     bool CreateLink(const Pin &a, const Pin &b);
     void DeleteAllLinksConnected(const std::shared_ptr<Node> &node);
 
     [[nodiscard]] std::optional<Node *> GetNode(const std::string &guid) const;
     [[nodiscard]] std::optional<Node *> GetNode(const ax::NodeEditor::NodeId &id) const;
+    [[nodiscard]] std::optional<Link> GetLink(const ax::NodeEditor::LinkId &id) const;
 
     std::optional<Pin> GetPin(const std::string &guid);
     std::optional<Pin> GetPin(const ax::NodeEditor::PinId &id);
@@ -80,6 +79,10 @@ private:
 
     std::deque<std::shared_ptr<Command>> m_undo_stack;
     std::deque<std::shared_ptr<Command>> m_redo_stack;
+
+
+    std::vector<std::shared_ptr<Node>> m_copied_nodes;
+    std::vector<Link> m_copied_links;
 
 
     std::vector<std::shared_ptr<Node>> m_nodes;

@@ -4,7 +4,6 @@
 
 #pragma once
 
-class CopyPasteManager;
 class ErrorManager;
 class Module;
 
@@ -12,8 +11,7 @@ class Project {
 public:
     explicit Project(const std::string &workspace);
 
-    void Render(const std::shared_ptr<ErrorManager> &error_manager,
-                const std::shared_ptr<CopyPasteManager> &copy_paste_manager);
+    void Render(const std::shared_ptr<ErrorManager> &error_manager);
 
     void RegisterModule(const std::shared_ptr<Module> &m);
 

@@ -76,7 +76,6 @@
             src/main.cpp
 
             src/CircuitSerializer.h src/CircuitSerializer.cpp
-            src/CopyPasteManager.h src/CopyPasteManager.cpp
             src/GUID.h src/GUID.cpp
             src/Link.h src/Link.cpp
             src/Module.h src/Module.cpp
@@ -156,6 +155,8 @@
             src/Events/DeleteLinkCommand.h
             src/Events/DeleteNodeCommand.h
             src/Events/DeleteNodeCommand.cpp
+            src/Events/PasteCommand.h
+            src/Events/PasteCommand.cpp
     )
 
     target_include_directories(fpga_builder PUBLIC

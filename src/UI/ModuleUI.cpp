@@ -4,20 +4,20 @@
 
 
 #include <iostream>
-#include "CopyPasteManager.h"
 
 #include "Events/Command.h"
 #include "Events/DeleteLinkCommand.h"
 #include "Events/DeleteNodeCommand.h"
+#include "Events/PasteCommand.h"
 #include "GUID.h"
 #include "Link.h"
+#include "Module.h"
 #include "Node/IO/InputNode.h"
 #include "Node/IO/OutputNode.h"
 #include "Node/Node.h"
 
 
-void Module::Render(const std::shared_ptr<ErrorManager> &error_manager,
-                    const std::shared_ptr<CopyPasteManager> &copy_paste_manager) {
+void Module::Render(const std::shared_ptr<ErrorManager> &error_manager) {
     {
         SetCurrentEditor(m_context);
         PushStyleColor(ax::NodeEditor::StyleColor_Bg, ImVec4(0.125, 0.125, 0.125, 1));
@@ -25,7 +25,111 @@ void Module::Render(const std::shared_ptr<ErrorManager> &error_manager,
         ax::NodeEditor::Begin("Node Editor");
 
 
-        copy_paste_manager->HandleCopyPaste(this, error_manager);
+        {
+            if (!ImGui::GetIO().WantTextInput) {
+                // If copy
+                if (ImGui::GetIO().KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_C)) {
+                    std::cout << "copy nodes" << std::endl;
+
+                    m_copied_nodes.clear();
+                    m_copied_links.clear();
+
+
+                    std::vector<ax::NodeEditor::NodeId> copied_node_ids;
+                    std::vector<std::string> copied_node_guids;
+                    copied_node_ids.resize(ax::NodeEditor::GetSelectedObjectCount());
+                    const int node_count =
+                            GetSelectedNodes(copied_node_ids.data(), static_cast<int>(copied_node_ids.size()));
+                    copied_node_ids.resize(node_count);
+
+                    for (const auto &n: copied_node_ids) {
+                        auto node = GetNode(n);
+                        m_copied_nodes.push_back(node.value()->shared_from_this());
+                        copied_node_guids.push_back(node.value()->guid);
+                    }
+
+                    for (const auto &link: m_links) {
+                        const auto &in_pin_op = GetPin(link.input_guid);
+                        const auto &out_pin_op = GetPin(link.output_guid);
+                        if (!in_pin_op || !out_pin_op)
+                            continue;
+
+                        auto &node_in = in_pin_op.value().GetNode();
+                        auto &node_out = out_pin_op.value().GetNode();
+
+                        if (std::ranges::find(copied_node_guids, node_in.guid) == copied_node_guids.end())
+                            continue;
+                        if (std::ranges::find(copied_node_guids, node_out.guid) == copied_node_guids.end())
+                            continue;
+
+                        m_copied_links.push_back(link);
+                    }
+
+                    std::cout << std::to_string(m_copied_nodes.size()) << " nodes" << std::endl;
+                    std::cout << std::to_string(m_copied_links.size()) << " links" << std::endl;
+                } else if (ImGui::GetIO().KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_V)) {
+                    std::cout << "paste nodes" << std::endl;
+
+                    std::vector<std::shared_ptr<Node>> paste_command_nodes;
+                    std::vector<Link> paste_command_links;
+
+                    std::map<std::string, std::string> guid_map;
+                    std::map<std::string, std::shared_ptr<Node>> node_copies;
+                    // Copy saved nodes
+                    for (const auto &n: m_copied_nodes) {
+                        auto node_copy = n->Clone();
+                        node_copy->start_pos = {n->last_pos.x + 50, n->last_pos.y + 50};
+                        node_copy->last_pos = {FLT_MAX, FLT_MAX};
+                        node_copy->m_is_dragging = false;
+
+                        guid_map[n->guid] = node_copy->guid;
+                        node_copies[node_copy->guid] = node_copy;
+
+                        paste_command_nodes.push_back(node_copy);
+                        AddNode(node_copy);
+                    }
+
+
+                    // Copy saved links
+                    for (const auto &l: m_copied_links) {
+                        const auto &in_pin_op = GetPin(l.input_guid);
+                        const auto &out_pin_op = GetPin(l.output_guid);
+
+
+                        auto &node_in = in_pin_op.value().GetNode();
+                        auto &node_out = out_pin_op.value().GetNode();
+
+
+                        const auto &new_node_input_id = guid_map[node_in.guid];
+                        const auto &new_node_output_id = guid_map[node_out.guid];
+
+
+                        const auto &new_node_in_op = node_copies[new_node_input_id];
+                        const auto &new_node_out_op = node_copies[new_node_output_id];
+
+
+                        std::string in_suffix =
+                                l.input_guid.substr(node_in.guid.size(), l.input_guid.size() - node_in.guid.size());
+
+                        std::string new_in_id = new_node_in_op->guid + in_suffix;
+
+                        std::string out_suffix =
+                                l.output_guid.substr(node_out.guid.size(), l.output_guid.size() - node_out.guid.size());
+
+                        std::string new_out_id = new_node_out_op->guid + out_suffix;
+
+                        // Link link_copy{this, new_out_id, new_in_id};
+                        // AddLink(link_copy);
+                        paste_command_links.emplace_back(this, new_out_id, new_in_id);
+                    }
+
+
+                    auto cmd = std::make_shared<PasteCommand>(shared_from_this(), paste_command_nodes,
+                                                              paste_command_links);
+                    ExecuteCommand(cmd);
+                }
+            }
+        }
 
 
         if (ax::NodeEditor::BeginCreate()) {
@@ -42,8 +146,6 @@ void Module::Render(const std::shared_ptr<ErrorManager> &error_manager,
                             ax::NodeEditor::RejectNewItem(ImColor(255, 0, 0), 2.0f);
 
                         } else {
-
-                            // ax::NodeEditor::AcceptNewItem() return true when user release mouse button.
                             if (ax::NodeEditor::AcceptNewItem()) {
 
                                 Pin outPin = out.value();

@@ -35,6 +35,8 @@ public:
 
     void InitPins(const std::vector<PinCreationData> &inputs, const std::vector<PinCreationData> &outputs);
 
+    void Select(bool append);
+
     virtual void accept(Visitor &v, int output_slot) = 0;
 
     [[nodiscard]] virtual std::shared_ptr<Node> Clone() const = 0;

@@ -5,8 +5,7 @@
 #include "Node/CustomModuleNode.h"
 #include "Project/Project.h"
 
-void Project::Render(const std::shared_ptr<ErrorManager> &error_manager,
-                     const std::shared_ptr<CopyPasteManager> &copy_paste_manager) {
+void Project::Render(const std::shared_ptr<ErrorManager> &error_manager) {
     ImGui::Begin("Project Viewer");
     ImGui::Text("Project Name: '%s'", m_name.c_str());
     ImGui::Text("Author: %s", m_author.c_str());
@@ -75,7 +74,7 @@ void Project::Render(const std::shared_ptr<ErrorManager> &error_manager,
 
     if (sel.has_value()) {
         const auto &selected_module = sel->get();
-        selected_module->Render(error_manager, copy_paste_manager);
+        selected_module->Render(error_manager);
     } else {
         ImGui::Text("Select a module to get started."); // TODO center?
     }
