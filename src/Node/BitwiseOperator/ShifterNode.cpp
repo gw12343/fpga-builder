@@ -4,7 +4,9 @@
 
 
 #include "ShifterNode.h"
+#include "Events/NumericParameterChangeCommand.h"
 #include "GUID.h"
+#include "Module.h"
 
 std::shared_ptr<Node> ShifterNode::Clone() const {
     return std::make_unique<ShifterNode>(module, GUID::generate_guid(), bits, type_index);
@@ -57,7 +59,15 @@ std::string ShifterNode::GetShiftOperator(const std::string &in, const std::stri
 
 void ShifterNode::RenderInternals() {
     ImGui::PushItemWidth(150);
-    ImGui::SliderInt(("##" + guid).c_str(), &type_index, 0, IM_ARRAYSIZE(shift_type_names) - 1);
+    int old_val = type_index;
+    bool f = ImGui::SliderInt(("##" + guid).c_str(), &type_index, 0, IM_ARRAYSIZE(shift_type_names) - 1);
     ImGui::PopItemWidth();
+
+    if (f && type_index != old_val) {
+        auto cmd = std::make_shared<NumericParameterChangeCommand>(module->shared_from_this(), shared_from_this(),
+                                                                   old_val, type_index, 0);
+        module->ExecuteCommand(cmd);
+    }
+
     ImGui::Text("%s", shift_type_names[type_index]);
 }

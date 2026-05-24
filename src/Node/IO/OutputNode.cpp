@@ -4,6 +4,7 @@
 
 #include "OutputNode.h"
 
+#include "Events/NumericParameterChangeCommand.h"
 #include "GUID.h"
 #include "Module.h"
 #include "Pins/Pin.h"
@@ -24,10 +25,18 @@ std::shared_ptr<Node> OutputNode::Clone() const {
 
 void OutputNode::RenderInternals() {
     ImGui::PushItemWidth(60);
-    ImGui::SliderInt(("Output Slot##" + guid).c_str(), &slot, 0, static_cast<int>(module->GetOutputs().size()) - 1);
+    int old_val = slot;
+    bool f = ImGui::SliderInt(("Output Slot##" + guid).c_str(), &slot, 0,
+                              static_cast<int>(module->GetOutputs().size()) - 1);
     ImGui::PopItemWidth();
 
-    ImGui::Text("Selected: %s", module->GetOutputs()[slot].name.c_str());
+    if (f && slot != old_val) {
+        auto cmd = std::make_shared<NumericParameterChangeCommand>(module->shared_from_this(), shared_from_this(),
+                                                                   old_val, slot, 0);
+        module->ExecuteCommand(cmd);
+    }
+
+    ImGui::Text("%s", module->GetOutputs()[slot].name.c_str());
 }
 
 Pin OutputNode::GetValueInputPin() { return FindPin(IN_PIN_VALUE).value(); }

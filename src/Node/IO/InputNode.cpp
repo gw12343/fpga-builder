@@ -4,6 +4,7 @@
 
 #include "InputNode.h"
 
+#include "Events/NumericParameterChangeCommand.h"
 #include "Module.h"
 #include "Pins/Pin.h"
 
@@ -19,10 +20,18 @@ std::shared_ptr<Node> InputNode::Clone() const {
 
 void InputNode::RenderInternals() {
     ImGui::PushItemWidth(60);
-    ImGui::SliderInt(("Input Slot##" + guid).c_str(), &slot, 0, static_cast<int>(module->GetInputs().size()) - 1);
+    int old_val = slot;
+    bool f = ImGui::SliderInt(("Input Slot##" + guid).c_str(), &slot, 0,
+                              static_cast<int>(module->GetInputs().size()) - 1);
     ImGui::PopItemWidth();
 
-    ImGui::Text("Selected: %s", module->GetInputs()[slot].name.c_str());
+    if (f && slot != old_val) {
+        auto cmd = std::make_shared<NumericParameterChangeCommand>(module->shared_from_this(), shared_from_this(),
+                                                                   old_val, slot, 0);
+        module->ExecuteCommand(cmd);
+    }
+
+    ImGui::Text("%s", module->GetInputs()[slot].name.c_str());
 }
 
 InputNode::InputNode(Module *module, const std::string &guid, const int input) :

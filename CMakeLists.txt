@@ -157,6 +157,8 @@
             src/Events/DeleteNodeCommand.cpp
             src/Events/PasteCommand.h
             src/Events/PasteCommand.cpp
+            src/Events/NumericParameterChangeCommand.h
+            src/Events/NumericParameterChangeCommand.cpp
     )
 
     target_include_directories(fpga_builder PUBLIC

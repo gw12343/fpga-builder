@@ -4,7 +4,9 @@
 
 #include "LiteralNode.h"
 
+#include "Events/NumericParameterChangeCommand.h"
 #include "GUID.h"
+#include "Module.h"
 
 void LiteralNode::accept(Visitor &v, const int output_slot) { v.visit(*this, output_slot); }
 
@@ -20,11 +22,18 @@ nlohmann::json LiteralNode::ToJson() const {
 
 void LiteralNode::RenderInternals() {
     ImGui::PushItemWidth(60);
-    ImGui::SliderInt(("##" + guid).c_str(), &value, 0, powl(2, bits) - 1);
+    int old_val = value;
+    bool f = ImGui::SliderInt(("##" + guid).c_str(), &value, 0, powl(2, bits) - 1);
     if (value < 0) {
         value = 0;
     } else if (value > powl(2, bits) - 1) {
         value = powl(2, bits) - 1;
+    }
+
+    if (f && value != old_val) {
+        auto cmd = std::make_shared<NumericParameterChangeCommand>(module->shared_from_this(), shared_from_this(),
+                                                                   old_val, value, 0);
+        module->ExecuteCommand(cmd);
     }
 
     ImGui::PopItemWidth();
