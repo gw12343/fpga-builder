@@ -27,6 +27,12 @@ void Module::Render(const std::shared_ptr<ErrorManager> &error_manager) {
 
         {
             if (!ImGui::GetIO().WantTextInput) {
+                if (ImGui::GetIO().KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_Z)) {
+                    Undo();
+                } else if (ImGui::GetIO().KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_Y)) {
+                    Redo();
+                }
+
                 // If copy
                 if (ImGui::GetIO().KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_C)) {
                     std::cout << "copy nodes" << std::endl;
