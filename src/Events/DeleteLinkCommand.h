@@ -9,13 +9,12 @@
 
 class DeleteLinkCommand : public Command {
 public:
-    DeleteLinkCommand(std::shared_ptr<Module> module, Link link) :
-        Command(module), m_link(link) {}
+    DeleteLinkCommand(std::shared_ptr<Module> module, std::vector<Link> links) : Command(module), m_links(links) {}
 
     void execute() override;
     void undo() override;
     std::string str() override;
 
 private:
-    Link m_link;
+    std::vector<Link> m_links;
 };

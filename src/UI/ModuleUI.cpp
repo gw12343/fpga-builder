@@ -203,17 +203,21 @@ void Module::Render(const std::shared_ptr<ErrorManager> &error_manager) {
                 }
             }
 
+            std::vector<Link> deleted_links;
             while (QueryDeletedLink(&deletedLinkId)) {
                 if (ax::NodeEditor::AcceptDeletedItem()) {
                     for (const auto &l: m_links) {
                         if (l.id != deletedLinkId)
                             continue;
 
-                        auto cmd = std::make_shared<DeleteLinkCommand>(shared_from_this(), l);
-                        ExecuteCommand(cmd);
+                        deleted_links.push_back(l);
                     }
-                    break;
                 }
+            }
+
+            if (!deleted_links.empty()) {
+                const auto cmd = std::make_shared<DeleteLinkCommand>(shared_from_this(), deleted_links);
+                ExecuteCommand(cmd);
             }
         }
 

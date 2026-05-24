@@ -6,10 +6,15 @@
 
 #include "Module.h"
 
-void DeleteLinkCommand::execute() { m_module->RemoveLink(m_link.id); }
-void DeleteLinkCommand::undo() { m_module->AddLink(m_link); }
-
-std::string DeleteLinkCommand::str() {
-    return "Delete link: " + std::to_string(m_link.id.Get()) + "    from: " + m_link.input_guid + "  to  " +
-           m_link.output_guid;
+void DeleteLinkCommand::execute() {
+    for (const auto &link: m_links) {
+        m_module->RemoveLink(link.id);
+    }
 }
+void DeleteLinkCommand::undo() {
+    for (const auto &link: m_links) {
+        m_module->AddLink(link);
+    }
+}
+
+std::string DeleteLinkCommand::str() { return "Delete " + std::to_string(m_links.size()) + " links"; }

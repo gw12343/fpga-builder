@@ -12,9 +12,9 @@ struct NodeMove {
     ImVec2 end_pos;
 };
 
-class MoveNodeCommand : public Command {
+class MoveNodesCommand : public Command {
 public:
-    MoveNodeCommand(std::shared_ptr<Module> module, std::vector<NodeMove> node_moves) :
+    MoveNodesCommand(std::shared_ptr<Module> module, std::vector<NodeMove> node_moves) :
         Command(module), m_node_moves(node_moves) {}
 
     void execute() override;

@@ -6,7 +6,7 @@
 
 
 #include "ErrorManager.h"
-#include "Events/MoveNodeCommand.h"
+#include "Events/MoveNodesCommand.h"
 #include "Module.h"
 #include "Node/Node.h"
 

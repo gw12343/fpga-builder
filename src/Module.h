@@ -5,7 +5,7 @@
 #pragma once
 #include <stack>
 
-#include "Events/MoveNodeCommand.h"
+#include "Events/MoveNodesCommand.h"
 
 class Pin;
 class Link;

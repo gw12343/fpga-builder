@@ -194,7 +194,7 @@ void Module::RenderNodes(const std::shared_ptr<ErrorManager> &error_manager) {
     if (m_node_moves.size() > 0) {
         std::cout << "moves: " << m_node_moves.size() << std::endl;
 
-        const auto cmd = std::make_shared<MoveNodeCommand>(shared_from_this(), m_node_moves);
+        const auto cmd = std::make_shared<MoveNodesCommand>(shared_from_this(), m_node_moves);
         ExecuteCommand(cmd);
     }
 }

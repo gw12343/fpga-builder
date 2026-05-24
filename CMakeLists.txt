@@ -147,8 +147,8 @@
             src/UI/Lib/TextEditor.h src/UI/Lib/TextEditor.cpp
             src/Events/Command.h
             src/Events/CreateNodeCommand.cpp
-            src/Events/MoveNodeCommand.h
-            src/Events/MoveNodeCommand.cpp
+            src/Events/MoveNodesCommand.h
+            src/Events/MoveNodesCommand.cpp
             src/Events/CreateLinkCommand.h
             src/Events/CreateLinkCommand.cpp
             src/Events/DeleteLinkCommand.cpp
