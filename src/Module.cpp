@@ -146,7 +146,14 @@ void Module::RemoveNode(const std::string &guid) {
     std::erase_if(m_nodes, [guid](std::shared_ptr<Node> n) { return n->guid == guid; });
 }
 
-void Module::AddNode(const std::shared_ptr<Node> &node) { m_nodes.push_back(node); }
+void Module::AddNode(const std::shared_ptr<Node> &node) {
+    m_nodes.push_back(node);
+    if (node->GetSerializationType() == "CustomNode") {
+        auto custom_node = std::static_pointer_cast<CustomModuleNode>(node);
+
+        // custom_node->InitPins();
+    }
+}
 
 void Module::AddLink(const Link &link) { m_links.push_back(link); }
 

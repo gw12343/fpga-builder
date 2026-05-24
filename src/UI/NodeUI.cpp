@@ -39,13 +39,16 @@ void Node::Render(const std::shared_ptr<ErrorManager> &error_manager) {
         std::cout << "end dragging" << std::endl;
         m_is_dragging = false;
 
-        module->m_node_moves.emplace_back(shared_from_this(), drag_start_pos, new_pos);
+        if (drag_start_pos.x != FLT_MAX && drag_start_pos.y != FLT_MAX && new_pos.x != FLT_MAX &&
+            new_pos.y != FLT_MAX) {
+            module->m_node_moves.emplace_back(shared_from_this(), drag_start_pos, new_pos);
 
 
-        drag_start_pos = {0, 0};
-        std::cout << "moved from (" << std::to_string(drag_start_pos.x) + ", "
-                  << std::to_string(drag_start_pos.y) + ")  to  (" << std::to_string(new_pos.x) + ", "
-                  << std::to_string(new_pos.y) + ")" << std::endl;
+            drag_start_pos = {0, 0};
+            std::cout << "moved from (" << std::to_string(drag_start_pos.x) + ", "
+                      << std::to_string(drag_start_pos.y) + ")  to  (" << std::to_string(new_pos.x) + ", "
+                      << std::to_string(new_pos.y) + ")" << std::endl;
+        }
     }
 
 

@@ -18,6 +18,7 @@ void CustomModuleNode::InitPinsAfterConfig() {
     std::cout << "INIT PINS CUSTOM: " << module_guid << std::endl;
     std::cout << "has val: " << module_ref.has_value() << std::endl;
     pins.clear();
+    module_ref = module->GetProject()->GetModule(module_guid);
     if (!module_ref.has_value())
         return;
 
