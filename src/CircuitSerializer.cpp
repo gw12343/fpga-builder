@@ -33,8 +33,10 @@
 #include "Node/Memory/RegisterNode.h"
 #include "Node/Wiring/BitSelectorNode.h"
 #include "Node/Wiring/CombinerNode.h"
+#include "Node/Wiring/InputTunnelNode.h"
 #include "Node/Wiring/LiteralNode.h"
 #include "Node/Wiring/MultiplexerNode.h"
+#include "Node/Wiring/OutputTunnelNode.h"
 #include "Node/Wiring/SplitterNode.h"
 #include "Project/Project.h"
 
@@ -67,6 +69,12 @@ std::unique_ptr<Node> CircuitSerializer::NodeFromJson(const json &j, Module *m) 
         p = std::make_unique<OutputNode>(m, guid, j.at("slot").get<int>());
     } else if (type == "InputNode") {
         p = std::make_unique<InputNode>(m, guid, j.at("slot").get<int>());
+    } else if (type == "InputTunnelNode") {
+        p = std::make_unique<InputTunnelNode>(m, guid, j.at("net_name").get<std::string>(),
+                                              j.at("data_bits").get<int>());
+    } else if (type == "OutputTunnelNode") {
+        p = std::make_unique<OutputTunnelNode>(m, guid, j.at("net_name").get<std::string>(),
+                                               j.at("data_bits").get<int>());
     } else if (type == "BitSelectorNode") {
         p = std::make_unique<BitSelectorNode>(m, guid, j.at("input_width").get<int>(),
                                               j.at("range_start_bit").get<int>(), j.at("range_end_bit").get<int>());

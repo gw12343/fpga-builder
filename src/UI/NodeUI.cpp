@@ -13,6 +13,8 @@
 void Node::Render(const std::shared_ptr<ErrorManager> &error_manager) {
     const bool is_error = error_manager->GetErrorNodeGuid() == guid;
 
+    PushStyle();
+
     if (is_error) {
         PushStyleColor(ax::NodeEditor::StyleColor_NodeBg, ImVec4(160 / 255.0, 60 / 255.0, 90 / 255.0, 255 / 255.0));
         PushStyleColor(ax::NodeEditor::StyleColor_NodeBorder,
@@ -64,20 +66,23 @@ void Node::Render(const std::shared_ptr<ErrorManager> &error_manager) {
     const ImVec2 titleMin = ImGui::GetCursorScreenPos();
     const auto titleMax = ImVec2(titleMin.x + nodeWidth, titleMin.y + labelSize.y + PADDING);
 
-    // reserve space
-    ImGui::Dummy(ImVec2(nodeWidth, labelSize.y + PADDING));
+    if (GetDisplayName() != "") {
+        // reserve space
+        ImGui::Dummy(ImVec2(nodeWidth, labelSize.y + PADDING));
 
-    // draw background directly onto the node's draw list
-    drawList->AddRectFilled(
-            titleMin, titleMax,
-            IM_COL32(GetUIColor().x * 255.0, GetUIColor().y * 255.0, GetUIColor().z * 255.0, GetUIColor().w * 255.0));
+        // draw background directly onto the node's draw list
+        drawList->AddRectFilled(titleMin, titleMax,
+                                IM_COL32(GetUIColor().x * 255.0, GetUIColor().y * 255.0, GetUIColor().z * 255.0,
+                                         GetUIColor().w * 255.0));
 
-    // draw centered label on top
-    const float labelX = titleMin.x + (nodeWidth - labelSize.x) * 0.5f;
-    const float labelY = titleMin.y + PADDING * 0.5f;
-    drawList->AddText(ImGui::GetFont(), ImGui::GetFontSize(), ImVec2(labelX, labelY), IM_COL32(255, 255, 255, 255),
-                      label);
-
+        // draw centered label on top
+        const float labelX = titleMin.x + (nodeWidth - labelSize.x) * 0.5f;
+        const float labelY = titleMin.y + PADDING * 0.5f;
+        drawList->AddText(ImGui::GetFont(), ImGui::GetFontSize(), ImVec2(labelX, labelY), IM_COL32(255, 255, 255, 255),
+                          label);
+    } else {
+        ImGui::Dummy(ImVec2(nodeWidth, 0));
+    }
 
     RenderInternals();
 
@@ -111,6 +116,8 @@ void Node::Render(const std::shared_ptr<ErrorManager> &error_manager) {
     if (is_error) {
         ax::NodeEditor::PopStyleColor(2);
     }
+
+    PopStyle();
 }
 
 void Node::RenderInternals() {}

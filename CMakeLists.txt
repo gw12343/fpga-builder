@@ -161,6 +161,12 @@
             src/Events/NumericParameterChangeCommand.cpp
             src/Events/StringParameterChangeCommand.h
             src/Events/StringParameterChangeCommand.cpp
+            src/Node/Wiring/InputTunnelNode.h
+            src/Node/Wiring/InputTunnelNode.cpp
+            src/Node/Wiring/OutputTunnelNode.h
+            src/Node/Wiring/OutputTunnelNode.cpp
+            src/Node/Wiring/ConfigurableTunnelNode.h
+            src/Node/Wiring/ConfigurableTunnelNode.cpp
     )
 
     target_include_directories(fpga_builder PUBLIC

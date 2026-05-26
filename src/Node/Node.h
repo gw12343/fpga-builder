@@ -45,6 +45,8 @@ public:
     void Render(const std::shared_ptr<ErrorManager> &error_manager);
     virtual void RenderInternals();
     [[nodiscard]] virtual int GetNodeWidth() const { return 175; }
+    virtual void PushStyle() {}
+    virtual void PopStyle() {}
 
     static constexpr ImVec4 COLOR = {1.0, 0.5, 0.5, 1.0};
     [[nodiscard]] virtual ImVec4 GetUIColor() const { return COLOR; }
