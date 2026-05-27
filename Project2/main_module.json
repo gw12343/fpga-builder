@@ -415,11 +415,6 @@
             "id": 18446744073348862729,
             "input_guid": "9bed0b9666714053941ad659a14ef270node10",
             "output_guid": "db32b0668f804ac6a942e1fe682acabanode13"
-        },
-        {
-            "id": 2359854060,
-            "input_guid": "fbfa0770d789434c955184fbb8748781node0",
-            "output_guid": "3f58b21f915e429aa448e28ade748b65node0"
         }
     ],
     "name": "main_module",
@@ -706,26 +701,6 @@
             "type": "CombinerNode",
             "x": 4250.0,
             "y": 261.0
-        },
-        {
-            "data_bits": 4,
-            "guid": "3f58b21f915e429aa448e28ade748b65",
-            "id": 788875400,
-            "name": "Input Tunnel",
-            "net_name": "hello",
-            "type": "InputTunnelNode",
-            "x": 1362.0,
-            "y": 756.0
-        },
-        {
-            "data_bits": 4,
-            "guid": "fbfa0770d789434c955184fbb8748781",
-            "id": 3063301295,
-            "name": "Output Tunnel",
-            "net_name": "hello",
-            "type": "OutputTunnelNode",
-            "x": 1186.0,
-            "y": 708.0
         }
     ],
     "outputs": [

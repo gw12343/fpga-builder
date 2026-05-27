@@ -40,3 +40,5 @@ void InputTunnelNode::InitPinsAfterConfig() {
 
 
 void InputTunnelNode::accept(Visitor &v, const int output_slot) { v.visit(*this, output_slot); }
+
+Pin InputTunnelNode::GetInputPin() { return FindPin(GetTunnelPinName()).value(); }

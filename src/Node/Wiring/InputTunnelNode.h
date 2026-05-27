@@ -25,5 +25,7 @@ public:
 
     void accept(Visitor &v, int output_slot) override;
 
+    Pin GetInputPin();
+
     static constexpr ImVec4 COLOR = {0.0f, 0.0f, 0.0f, 0.0f};
 };

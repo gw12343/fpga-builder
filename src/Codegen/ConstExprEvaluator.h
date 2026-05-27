@@ -24,7 +24,8 @@ public:
         return _val;
     }
 
-
+    void visit(OutputTunnelNode &node, int output_slot) override;
+    void visit(InputTunnelNode &node, int output_slot) override;
     void visit(BitSelectorNode &node, int output_slot) override;
     void visit(RAMNode &node, int output_slot) override;
     void visit(ShifterNode &node, int output_slot) override;
@@ -55,6 +56,7 @@ private:
     std::stack<ResultSpace> m_return_vals;
     std::map<std::string, ResultSpace> m_visited_nodes;
     std::shared_ptr<ErrorManager> m_error_manager;
+    std::map<std::string, ResultSpace> m_visited_tunnels;
 
     void CircuitError(const std::string &msg, const Node &node);
 };

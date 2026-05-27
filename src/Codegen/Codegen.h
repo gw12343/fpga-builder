@@ -19,6 +19,8 @@ public:
 
     void GenerateCode(const std::shared_ptr<Module> &module);
 
+    void visit(OutputTunnelNode &node, int output_slot) override;
+    void visit(InputTunnelNode &node, int output_slot) override;
     void visit(BitSelectorNode &node, int output_slot) override;
     void visit(RAMNode &node, int output_slot) override;
     void visit(ShifterNode &node, int output_slot) override;
@@ -74,4 +76,6 @@ private:
 
     std::shared_ptr<ErrorManager> m_error_manager;
     std::shared_ptr<ConstExprEvaluator> m_const_eval;
+
+    std::map<std::string, std::string> m_visited_tunnels;
 };

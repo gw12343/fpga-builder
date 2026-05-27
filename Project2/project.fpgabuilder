@@ -1,6 +1,6 @@
 {
     "author": "gw",
-    "last_saved": 1779821850607,
+    "last_saved": 1779850735359,
     "module_files": [
         "instruction_decoder.json",
         "instruction_splitter.json",
@@ -16,7 +16,7 @@
         "testing.json"
     ],
     "name": "New Project2",
-    "selected_module": 2,
+    "selected_module": 11,
     "time_created": 1777434014282,
     "top_level_node_guid": "274503748e194d7397018655226b8573",
     "workspace_path": "../Project2"
