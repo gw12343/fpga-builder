@@ -522,8 +522,8 @@
             "module_guid": "7d15db07e38745aaad1e5ad7d161e7fc",
             "name": "Custom",
             "type": "CustomNode",
-            "x": 4367.0,
-            "y": 1029.0
+            "x": 4369.0,
+            "y": 933.0
         },
         {
             "bits": 29,
@@ -531,8 +531,8 @@
             "id": 729390482,
             "name": "Splitter",
             "type": "SplitterNode",
-            "x": 3909.0,
-            "y": 1173.0
+            "x": 3921.0,
+            "y": 1013.0
         },
         {
             "bits": 32,
@@ -540,8 +540,8 @@
             "id": 18446744073698832059,
             "name": "Combiner",
             "type": "CombinerNode",
-            "x": 4113.0,
-            "y": 1173.0
+            "x": 4125.0,
+            "y": 1013.0
         },
         {
             "bits": 1,
@@ -550,8 +550,8 @@
             "name": "Literal",
             "type": "LiteralNode",
             "value": 0,
-            "x": 3827.0,
-            "y": 2219.0
+            "x": 3839.0,
+            "y": 2059.0
         },
         {
             "guid": "ca946142d0cb4b78a4d334609139af8e",

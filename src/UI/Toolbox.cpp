@@ -20,9 +20,9 @@
 #include "Node/BitwiseOperator/NorNode.h"
 #include "Node/BitwiseOperator/OrNode.h"
 #include "Node/BitwiseOperator/XOrNode.h"
+#include "Node/CustomModuleNode.h"
 #include "Node/Default/ClockNode.h"
 #include "Node/Default/ComparatorNode.h"
-#include "Node/CustomModuleNode.h"
 #include "Node/Default/DebounceNode.h"
 #include "Node/Default/DecoderNode.h"
 #include "Node/Default/EdgeNode.h"
@@ -33,8 +33,10 @@
 #include "Node/Memory/RAMNode.h"
 #include "Node/Memory/ROMNode.h"
 #include "Node/Memory/RegisterNode.h"
+#include "Node/Wiring/InputTunnelNode.h"
 #include "Node/Wiring/LiteralNode.h"
 #include "Node/Wiring/MultiplexerNode.h"
+#include "Node/Wiring/OutputTunnelNode.h"
 
 
 #define NODE_MIN_BTN_SIZE 150
@@ -63,6 +65,8 @@ Toolbox::Toolbox() {
     ADD_NODE_TO_CATEGORY("Wiring", "Multiplexer", MultiplexerNode);
     ADD_NODE_TO_CATEGORY("Wiring", "Decoder", DecoderNode);
     ADD_NODE_TO_CATEGORY("Wiring", "Bit Selector", BitSelectorNode);
+    ADD_NODE_TO_CATEGORY("Wiring", "Tunnel In", InputTunnelNode);
+    ADD_NODE_TO_CATEGORY("Wiring", "Tunnel Out", OutputTunnelNode);
 
     ADD_NODE_TO_CATEGORY("IO", "Input", InputNode);
     ADD_NODE_TO_CATEGORY("IO", "Output", OutputNode);
@@ -126,34 +130,10 @@ void Toolbox::Render(const std::optional<std::shared_ptr<Module>> &module,
     }
 
 
-    // NODE_BTN("NOT", NotNode);
-    //
-    // NODE_BTN("OR", OrNode);
-    // NODE_BTN("NOR", NorNode);
-    // NODE_BTN("AND", AndNode);
-    // NODE_BTN("XOR", XOrNode);
-
-    // NODE_BTN("MUX", MultiplexerNode);
-    // NODE_BTN("SPLITTER", SplitterNode);
-    // NODE_BTN("COMBINER", CombinerNode);
-    // NODE_BTN("#", LiteralNode);
-
-
-    // NODE_BTN("COUNTER", CounterNode);
-    // NODE_BTN("DFF", DFFNode);
-    // NODE_BTN("REGISTER", RegisterNode);
-
-    // NODE_BTN("ADDER", AdderNode);
-
-    // NODE_BTN("DEBOUNCE", DebounceNode);
-    // NODE_BTN("EDGE", EdgeNode);
-    // NODE_BTN(ICON_FA_WAVE_SQUARE, ClockNode);
-
     if (new_node) {
         if (module.has_value())
             config_manager->ConfigureAndAdd(module.value(), new_node);
     }
-
 
     ImGui::End();
 }

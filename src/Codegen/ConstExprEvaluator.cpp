@@ -15,16 +15,18 @@
 #include "Node/Arithmetic/MultiplierNode.h"
 #include "Node/Arithmetic/SubtractorNode.h"
 #include "Node/BitwiseOperator/BinaryOpNode.h"
-#include "Node/Default/ComparatorNode.h"
 #include "Node/CustomModuleNode.h"
+#include "Node/Default/ComparatorNode.h"
 #include "Node/Default/DecoderNode.h"
 #include "Node/IO/OutputNode.h"
 #include "Node/Memory/CounterNode.h"
 #include "Node/Memory/RAMNode.h"
 #include "Node/Memory/ROMNode.h"
 #include "Node/Memory/RegisterNode.h"
+#include "Node/Wiring/InputTunnelNode.h"
 #include "Node/Wiring/LiteralNode.h"
 #include "Node/Wiring/MultiplexerNode.h"
+#include "Node/Wiring/OutputTunnelNode.h"
 
 
 #define NODE_KEY(n) (node.guid + "-slot-" + std::to_string(n))
@@ -79,6 +81,57 @@ ResultSpace ConstExprEvaluator::FindSpace(const std::shared_ptr<Node> &node, con
     m_return_vals.pop();
     return s;
 }
+
+
+void ConstExprEvaluator::visit(InputTunnelNode &node, int output_slot) {
+
+    const auto in = node.GetInputPin().GetConnectedPin();
+
+    VERIFY_CONNECTION(in)
+
+    const auto in_space = EvalNode(in);
+
+
+    CACHE_AND_RETURN(node, in_space, output_slot)
+}
+
+
+void ConstExprEvaluator::visit(OutputTunnelNode &node, int output_slot) {
+    const auto &net = node.GetNetName();
+
+    if (m_visited_tunnels.contains(net)) {
+        CACHE_AND_RETURN(node, m_visited_tunnels[net], output_slot)
+    }
+
+    // TODO check for multiple inputs to net
+    for (const auto &n: node.module->GetNodes()) {
+        if (n->GetSerializationType() != "InputTunnelNode")
+            continue;
+
+        const auto input = std::static_pointer_cast<InputTunnelNode>(n);
+
+        if (input->GetNetName() != node.GetNetName())
+            continue;
+        // Same nets, ensure same bitwidth
+        if (input->GetDataWidth() != node.GetDataWidth()) {
+            CircuitError("Mismatched tunnel bit widths!", node);
+            ERROR_AND_RETURN
+        }
+
+        // Evaluate tunnel
+        n->accept(*this, 0);
+        const auto _val = m_return_vals.top();
+        m_return_vals.pop();
+
+        m_visited_tunnels[net] = _val;
+        CACHE_AND_RETURN(node, _val, output_slot)
+    }
+
+
+    CircuitError("No tunnel input!", node);
+    ERROR_AND_RETURN
+}
+
 
 void ConstExprEvaluator::CircuitError(const std::string &msg, const Node &node) {
     m_failed = true;

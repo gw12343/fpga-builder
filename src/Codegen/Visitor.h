@@ -5,6 +5,8 @@
 #pragma once
 
 
+class OutputTunnelNode;
+class InputTunnelNode;
 class BitSelectorNode;
 class RAMNode;
 class ShifterNode;
@@ -34,6 +36,8 @@ class Visitor {
 public:
     virtual ~Visitor() = default;
 
+    virtual void visit(OutputTunnelNode &node, int output_slot) {}
+    virtual void visit(InputTunnelNode &node, int output_slot) {}
     virtual void visit(BitSelectorNode &node, int output_slot) {}
     virtual void visit(RAMNode &node, int output_slot) {}
     virtual void visit(ShifterNode &node, int output_slot) {}

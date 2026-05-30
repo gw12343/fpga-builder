@@ -67,21 +67,6 @@
             "output_guid": "f14da7926442461d852212f13cf83ce8node0"
         },
         {
-            "id": 18446744072059668421,
-            "input_guid": "f14da7926442461d852212f13cf83ce8node2",
-            "output_guid": "8fe5576e789f4f168e41e47b14fcdac6node2"
-        },
-        {
-            "id": 2067755586,
-            "input_guid": "f14da7926442461d852212f13cf83ce8node2",
-            "output_guid": "cb7d68d305694312a3eb9d2673be2ef9node2"
-        },
-        {
-            "id": 853572476,
-            "input_guid": "f14da7926442461d852212f13cf83ce8node2",
-            "output_guid": "e471eac95c4444848ae07aeb47ecc3d1node2"
-        },
-        {
             "id": 1764712972,
             "input_guid": "e471eac95c4444848ae07aeb47ecc3d1node3",
             "output_guid": "d096298b79da4fcca5076586d9f53b90node0"
@@ -395,6 +380,26 @@
             "id": 18446744072974513822,
             "input_guid": "f3f354148de14c09923148256a603e5cnode3",
             "output_guid": "2bb22cc1cebe4233b4fe792dcb1d1fd6node0"
+        },
+        {
+            "id": 1856245516,
+            "input_guid": "f14da7926442461d852212f13cf83ce8node2",
+            "output_guid": "43e82fc26a0c4319b07b9c7b5af4e6d2node0"
+        },
+        {
+            "id": 1453799188,
+            "input_guid": "f5102918aa98455aac2df4fab4ae849bnode0",
+            "output_guid": "8fe5576e789f4f168e41e47b14fcdac6node2"
+        },
+        {
+            "id": 4027194930,
+            "input_guid": "f5102918aa98455aac2df4fab4ae849bnode0",
+            "output_guid": "cb7d68d305694312a3eb9d2673be2ef9node2"
+        },
+        {
+            "id": 382669660,
+            "input_guid": "f5102918aa98455aac2df4fab4ae849bnode0",
+            "output_guid": "e471eac95c4444848ae07aeb47ecc3d1node2"
         }
     ],
     "name": "vga_out",
@@ -478,8 +483,8 @@
             "name": "AND",
             "num_inputs": 2,
             "type": "AndNode",
-            "x": 1976.0,
-            "y": 1557.0
+            "x": 1096.0,
+            "y": 53.0
         },
         {
             "data_bits": 4,
@@ -711,6 +716,26 @@
             "value": 0,
             "x": 2325.0,
             "y": 443.0
+        },
+        {
+            "data_bits": 1,
+            "guid": "f5102918aa98455aac2df4fab4ae849b",
+            "id": 1350298877,
+            "name": "Output Tunnel",
+            "net_name": "visible",
+            "type": "OutputTunnelNode",
+            "x": 3435.0,
+            "y": 676.0
+        },
+        {
+            "data_bits": 1,
+            "guid": "43e82fc26a0c4319b07b9c7b5af4e6d2",
+            "id": 594990436,
+            "name": "Input Tunnel",
+            "net_name": "visible",
+            "type": "InputTunnelNode",
+            "x": 1291.0,
+            "y": 100.0
         }
     ],
     "outputs": [

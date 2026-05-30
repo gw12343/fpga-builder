@@ -5,6 +5,8 @@
 #include "Codegen.h"
 
 #include <fstream>
+#include <intrin.h>
+#include <set>
 
 
 #include "../Node/BitwiseOperator/ShifterNode.h"
@@ -18,9 +20,9 @@
 #include "Node/Arithmetic/MultiplierNode.h"
 #include "Node/Arithmetic/SubtractorNode.h"
 #include "Node/BitwiseOperator/OrNode.h"
+#include "Node/CustomModuleNode.h"
 #include "Node/Default/ClockNode.h"
 #include "Node/Default/ComparatorNode.h"
-#include "Node/CustomModuleNode.h"
 #include "Node/Default/DebounceNode.h"
 #include "Node/Default/DecoderNode.h"
 #include "Node/Default/EdgeNode.h"
@@ -31,8 +33,10 @@
 #include "Node/Memory/RAMNode.h"
 #include "Node/Memory/ROMNode.h"
 #include "Node/Memory/RegisterNode.h"
+#include "Node/Wiring/InputTunnelNode.h"
 #include "Node/Wiring/LiteralNode.h"
 #include "Node/Wiring/MultiplexerNode.h"
+#include "Node/Wiring/OutputTunnelNode.h"
 
 #define OUTPUT_DIR "/Export/"
 
@@ -106,6 +110,22 @@ Codegen::Codegen(std::shared_ptr<ErrorManager> error_man) : m_failed(false), m_e
 void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
     m_failed = false;
     m_const_eval = std::make_shared<ConstExprEvaluator>(m_error_manager);
+
+
+    // ensure only 1 input per net
+    std::set<std::string> net_inputs;
+    for (const auto &n: module->GetNodes()) {
+        if (n->GetSerializationType() != "InputTunnelNode")
+            continue;
+        const auto input = std::static_pointer_cast<InputTunnelNode>(n);
+        if (net_inputs.contains(input->GetNetName())) {
+            CircuitError("Multiple net inputs defined for net '" + input->GetNetName() + "'", *n);
+        }
+
+        net_inputs.insert(input->GetNetName());
+    }
+
+
     std::string header = "module " + module->GetName() + " (";
     for (const auto &[name, bits]: module->GetInputs()) {
         if (bits == 1)
@@ -506,6 +526,54 @@ void Codegen::visit(DecoderNode &node, const int output_slot) {
 }
 
 // ===== SINGLE OUTPUT NODES ===========================================================================================
+void Codegen::visit(OutputTunnelNode &node, int output_slot) {
+    CHECK_CACHE
+
+    const auto &net = node.GetNetName();
+
+    if (m_visited_tunnels.contains(net)) {
+        CACHE_AND_RETURN(node, m_visited_tunnels[net], output_slot)
+    }
+
+    for (const auto &n: node.module->GetNodes()) {
+        if (n->GetSerializationType() != "InputTunnelNode")
+            continue;
+
+        const auto input = std::static_pointer_cast<InputTunnelNode>(n);
+
+        if (input->GetNetName() != node.GetNetName())
+            continue;
+        // Same nets, ensure same bitwidth
+        if (input->GetDataWidth() != node.GetDataWidth()) {
+            CircuitError("Mismatched tunnel bit widths!", node);
+            ERROR_AND_RETURN
+        }
+
+        // Evaluate tunnel
+        n->accept(*this, 0);
+        const auto _val = m_return_vals.top();
+        m_return_vals.pop();
+
+        m_visited_tunnels[net] = _val;
+        CACHE_AND_RETURN(node, _val, output_slot)
+    }
+
+
+    CircuitError("No tunnel input!", node);
+    ERROR_AND_RETURN
+}
+
+void Codegen::visit(InputTunnelNode &node, int output_slot) {
+    CHECK_CACHE
+
+    const auto in = node.GetInputPin().GetConnectedPin();
+    VERIFY_CONNECTION(in)
+    const auto in_val = EvalNode(in);
+
+    CACHE_AND_RETURN(node, in_val, output_slot)
+}
+
+
 void Codegen::visit(CombinerNode &node, const int output_slot) {
     CHECK_CACHE
     START_CHECK_CYCLES
