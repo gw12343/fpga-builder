@@ -5,10 +5,14 @@
 
 #include <iostream>
 
+#include "Events/ChangeIOWidthCommand.h"
 #include "Events/Command.h"
+#include "Events/CreateIOCommand.h"
+#include "Events/DeleteIOCommand.h"
 #include "Events/DeleteLinkCommand.h"
 #include "Events/DeleteNodeCommand.h"
 #include "Events/PasteCommand.h"
+#include "Events/RenameIOCommand.h"
 #include "GUID.h"
 #include "Link.h"
 #include "Module.h"
@@ -263,26 +267,49 @@ void Module::RenderModuleSettings() {
 
 
         for (int i = 0; i < m_inputs.size(); ++i) {
-            std::string name = m_inputs[i].name;
 
-            if (ImGui::InputText(("##INPUT" + std::to_string(i)).c_str(), &name)) {
-                m_inputs[i].name = name;
+            std::string name = m_inputs[i].name;
+            if (ImGui::InputText(("##INPUT" + std::to_string(i)).c_str(), &m_inputs[i].name)) {
+                if (m_inputs[i].name != name) {
+                    auto cmd = std::make_shared<RenameIOCommand>(shared_from_this(), i, true, name, m_inputs[i].name);
+                    ExecuteCommand(cmd);
+                }
             }
             ImGui::SameLine();
 
             ImGui::PushItemWidth(30);
+
+
+            int old_bits = m_inputs.at(i).bits;
             if (ImGui::InputInt(("##INPUTS-BITS" + std::to_string(i)).c_str(), &m_inputs.at(i).bits, 0, 0)) {
-                for (const auto &node: m_nodes) {
-                    if (node->GetSerializationType() != "InputNode")
-                        continue;
+                if (old_bits != m_inputs.at(i).bits) {
 
-                    const auto &input_node = std::dynamic_pointer_cast<InputNode>(node);
-                    if (input_node->slot != i)
-                        continue;
 
-                    DeleteAllLinksConnected(input_node);
+                    std::set<Link> displaced_links;
 
-                    input_node->UpdateBits(m_inputs.at(i).bits);
+
+                    for (const auto &node: m_nodes) {
+                        if (node->GetSerializationType() != "InputNode")
+                            continue;
+
+                        const auto &input_node = std::dynamic_pointer_cast<InputNode>(node);
+                        if (input_node->slot != i)
+                            continue;
+
+                        for (const auto &pin: node->pins) {
+                            for (const auto &link: m_links) {
+
+                                if (link.input_guid == pin.GetGuid() || link.output_guid == pin.GetGuid()) {
+                                    displaced_links.insert(link);
+                                }
+                            }
+                        }
+                    }
+
+
+                    auto cmd = std::make_shared<ChangeIOWidthCommand>(shared_from_this(), i, true, old_bits,
+                                                                      m_inputs.at(i).bits, displaced_links);
+                    ExecuteCommand(cmd);
                 }
             }
 
@@ -302,14 +329,15 @@ void Module::RenderModuleSettings() {
 
 
         if (ImGui::Button("+##INPUTS-PLUS", ImVec2(width, 0))) {
-            m_inputs.emplace_back("New Input", 1);
+            const auto cmd = std::make_shared<CreateIOCommand>(shared_from_this(), IO("New Input", 1), true);
+            ExecuteCommand(cmd);
         }
 
 
         ImGui::SameLine();
         if (ImGui::Button("-##INPUTS-MINUS", ImVec2(width, 0))) {
-            if (!m_inputs.empty())
-                m_inputs.pop_back();
+            const auto cmd = std::make_shared<DeleteIOCommand>(shared_from_this(), m_inputs.back(), true);
+            ExecuteCommand(cmd);
         }
 
         ImGui::TableNextColumn();
@@ -321,26 +349,25 @@ void Module::RenderModuleSettings() {
 
         for (int i = 0; i < m_outputs.size(); i++) {
             std::string name = m_outputs.at(i).name;
-            if (ImGui::InputText(("##OUTPUT" + std::to_string(i)).c_str(), &name)) {
-                m_outputs[i].name = name;
+            if (ImGui::InputText(("##OUTPUT" + std::to_string(i)).c_str(), &m_outputs[i].name)) {
+                if (m_outputs[i].name != name) {
+                    auto cmd = std::make_shared<RenameIOCommand>(shared_from_this(), i, false, name, m_outputs[i].name);
+                    ExecuteCommand(cmd);
+                }
             }
             ImGui::SameLine();
 
             ImGui::PushItemWidth(30);
+
+            int old_bits = m_outputs.at(i).bits;
             if (ImGui::InputInt(("##OUTPUTS-BITS" + std::to_string(i)).c_str(), &m_outputs.at(i).bits, 0, 0)) {
-                for (const auto &node: m_nodes) {
-                    if (node->GetSerializationType() != "OutputNode")
-                        continue;
-
-                    const auto &output_node = std::dynamic_pointer_cast<OutputNode>(node);
-                    if (output_node->slot != i)
-                        continue;
-
-                    DeleteAllLinksConnected(output_node);
-
-                    output_node->UpdateBits(m_outputs.at(i).bits);
+                if (old_bits != m_outputs.at(i).bits) {
+                    auto cmd = std::make_shared<ChangeIOWidthCommand>(shared_from_this(), i, false, old_bits,
+                                                                      m_outputs.at(i).bits, std::set<Link>());
+                    ExecuteCommand(cmd);
                 }
             }
+
             ImGui::PopItemWidth();
 
             ImGui::SameLine();
@@ -355,12 +382,13 @@ void Module::RenderModuleSettings() {
         ImGui::Separator();
 
         if (ImGui::Button("+##OUTPUTS-PLUS", ImVec2(width, 0))) {
-            m_outputs.emplace_back("New Output", 1);
+            const auto cmd = std::make_shared<CreateIOCommand>(shared_from_this(), IO("New Output", 1), false);
+            ExecuteCommand(cmd);
         }
         ImGui::SameLine();
         if (ImGui::Button("-##OUTPUTS-MINUS", ImVec2(width, 0))) {
-            if (!m_outputs.empty())
-                m_outputs.pop_back();
+            const auto cmd = std::make_shared<DeleteIOCommand>(shared_from_this(), m_outputs.back(), false);
+            ExecuteCommand(cmd);
         }
 
 

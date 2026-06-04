@@ -49,8 +49,8 @@ public:
     [[nodiscard]] std::string GetName() const { return m_name; }
     [[nodiscard]] std::string GetGuid() const { return m_guid; }
     [[nodiscard]] Project *GetProject() const { return m_project; }
-    [[nodiscard]] const std::vector<IO> &GetInputs() const { return m_inputs; }
-    [[nodiscard]] const std::vector<IO> &GetOutputs() const { return m_outputs; }
+    [[nodiscard]] std::vector<IO> &GetInputs() { return m_inputs; }
+    [[nodiscard]] std::vector<IO> &GetOutputs() { return m_outputs; }
 
     void AddInput(const IO &io);
     void AddOutput(const IO &io);

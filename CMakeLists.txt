@@ -167,6 +167,16 @@
             src/Node/Wiring/OutputTunnelNode.cpp
             src/Node/Wiring/ConfigurableTunnelNode.h
             src/Node/Wiring/ConfigurableTunnelNode.cpp
+            src/Events/CreateIOCommand.h
+            src/Events/CreateIOCommand.cpp
+            src/Events/DeleteIOCommand.h
+            src/Events/DeleteIOCommand.cpp
+            src/Events/RenameIOCommand.h
+            src/Events/RenameIOCommand.cpp
+            src/Events/RenameIOCommand.cpp
+            src/Events/ChangeIOWidthCommand.h
+            src/Events/ChangeIOWidthCommand.cpp
+            src/Events/ChangeIOWidthCommand.cpp
     )
 
     target_include_directories(fpga_builder PUBLIC

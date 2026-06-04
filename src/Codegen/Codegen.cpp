@@ -5,21 +5,18 @@
 #include "Codegen.h"
 
 #include <fstream>
-#include <intrin.h>
 #include <set>
 
 
-#include "../Node/BitwiseOperator/ShifterNode.h"
-#include "../Node/BitwiseOperator/UnaryOpNode.h"
-#include "../Node/Wiring/BitSelectorNode.h"
-#include "../Node/Wiring/CombinerNode.h"
-#include "../Node/Wiring/SplitterNode.h"
 #include "ConstExprEvaluator.h"
 #include "Module.h"
+
 #include "Node/Arithmetic/AdderNode.h"
 #include "Node/Arithmetic/MultiplierNode.h"
 #include "Node/Arithmetic/SubtractorNode.h"
 #include "Node/BitwiseOperator/OrNode.h"
+#include "Node/BitwiseOperator/ShifterNode.h"
+#include "Node/BitwiseOperator/UnaryOpNode.h"
 #include "Node/CustomModuleNode.h"
 #include "Node/Default/ClockNode.h"
 #include "Node/Default/ComparatorNode.h"
@@ -33,10 +30,13 @@
 #include "Node/Memory/RAMNode.h"
 #include "Node/Memory/ROMNode.h"
 #include "Node/Memory/RegisterNode.h"
+#include "Node/Wiring/BitSelectorNode.h"
+#include "Node/Wiring/CombinerNode.h"
 #include "Node/Wiring/InputTunnelNode.h"
 #include "Node/Wiring/LiteralNode.h"
 #include "Node/Wiring/MultiplexerNode.h"
 #include "Node/Wiring/OutputTunnelNode.h"
+#include "Node/Wiring/SplitterNode.h"
 
 #define OUTPUT_DIR "/Export/"
 
@@ -149,7 +149,8 @@ void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
     for (const auto &node: module->GetNodes()) {
         if (node->GetSerializationType() != "OutputNode")
             continue;
-        m_inner += "\t\t// Output " + module->GetOutputs()[dynamic_cast<OutputNode *>(node.get())->slot].name + "\n";
+        m_inner +=
+                "\t\t// Output " + module->GetOutputs()[std::static_pointer_cast<OutputNode>(node)->slot].name + "\n";
         node->accept(*this, 0);
         m_return_vals.pop();
     }
