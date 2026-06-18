@@ -16,6 +16,7 @@ static auto SUBTRACTOR_OUT_PIN_COUT = "Carry Out";
 class SubtractorNode final : public ConfigurableBitWidthNode {
 public:
     [[nodiscard]] std::string GetSerializationType() const override { return "SubtractorNode"; }
+    [[nodiscard]] bool IsSequential() const override { return false; }
 
     void accept(Visitor &v, int output_slot) override;
 

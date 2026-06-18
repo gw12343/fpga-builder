@@ -24,6 +24,8 @@ public:
     [[nodiscard]] bool HasConfiguration() const override { return true; }
     [[nodiscard]] std::string GetDisplayName() const override;
 
+    [[nodiscard]] bool IsSequential() const override { return true; }
+
     // Constructor for new node
     explicit CustomModuleNode(Module *parent);
     // Constructor for saved node

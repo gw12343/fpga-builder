@@ -15,6 +15,7 @@ public:
     [[nodiscard]] std::string GetSerializationType() const override { return "CombinerNode"; }
     [[nodiscard]] ImVec4 GetUIColor() const override { return COLOR; }
     [[nodiscard]] int GetNodeWidth() const override { return 150; }
+    [[nodiscard]] bool IsSequential() const override { return false; }
 
     CombinerNode(Module *module, const std::string &guid, int data_width);
     explicit CombinerNode(Module *module);

@@ -22,6 +22,8 @@ public:
         return "????";
     }
 
+    [[nodiscard]] bool IsSequential() const override { return false; }
+
     static std::string GetBitInPinName(int n);
 
     Pin GetInputPin(int n);

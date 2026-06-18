@@ -15,6 +15,7 @@ public:
     [[nodiscard]] nlohmann::json ToJson() const override;
     [[nodiscard]] int GetNodeWidth() const override { return 225; }
     [[nodiscard]] ImVec4 GetUIColor() const override { return COLOR; }
+    [[nodiscard]] bool IsSequential() const override { return !m_async_read; } // if syncronous
 
     void accept(Visitor &v, int output_slot) override;
 

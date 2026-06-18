@@ -37,6 +37,10 @@ public:
 
     void Select(bool append);
 
+
+    int GetNumInputs();
+    int GetNumOutputs();
+
     virtual void accept(Visitor &v, int output_slot) = 0;
 
     [[nodiscard]] virtual std::shared_ptr<Node> Clone() const = 0;
@@ -56,6 +60,7 @@ public:
     virtual void RenderConfiguration() {}
     virtual void InitPinsAfterConfig() {}
     [[nodiscard]] virtual std::string GetDisplayName() const { return name; }
+    [[nodiscard]] virtual bool IsSequential() const { return false; }
 
     // Serialization
     [[nodiscard]] virtual std::string GetSerializationType() const = 0;

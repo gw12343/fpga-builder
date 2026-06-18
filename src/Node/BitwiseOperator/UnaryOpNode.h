@@ -13,6 +13,7 @@ class UnaryOpNode : public ConfigurableBitWidthNode {
 public:
     [[nodiscard]] int GetNodeWidth() const override { return 125; }
     [[nodiscard]] ImVec4 GetUIColor() const override { return COLOR; }
+    [[nodiscard]] bool IsSequential() const override { return false; }
 
     // Pre-configured
     UnaryOpNode(Module *module, const std::string &guid, const std::string &name, const int bit_width);

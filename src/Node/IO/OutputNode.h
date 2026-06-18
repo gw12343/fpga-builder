@@ -10,17 +10,17 @@
 class OutputNode final : public Node {
 
 public:
+    [[nodiscard]] std::shared_ptr<Node> Clone() const override;
     [[nodiscard]] std::string GetSerializationType() const override { return "OutputNode"; }
-
     [[nodiscard]] nlohmann::json ToJson() const override;
+    [[nodiscard]] ImVec4 GetUIColor() const override { return COLOR; }
+    [[nodiscard]] bool IsSequential() const override { return false; }
 
     static constexpr ImVec4 COLOR = {0.094f, 0.373f, 0.647f, 1.0f};
-    [[nodiscard]] ImVec4 GetUIColor() const override { return COLOR; }
 
 
     void accept(Visitor &v, int output_slot) override;
 
-    [[nodiscard]] std::shared_ptr<Node> Clone() const override;
 
     void RenderInternals() override;
 

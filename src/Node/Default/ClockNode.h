@@ -13,6 +13,7 @@ public:
     [[nodiscard]] std::string GetSerializationType() const override { return "ClockNode"; }
     [[nodiscard]] int GetNodeWidth() const override { return 25; }
     [[nodiscard]] ImVec4 GetUIColor() const override { return COLOR; }
+    [[nodiscard]] bool IsSequential() const override { return false; }
 
     explicit ClockNode(Module *module);
     ClockNode(Module *module, const std::string &guid);

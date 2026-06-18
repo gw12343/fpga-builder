@@ -16,6 +16,7 @@ public:
     [[nodiscard]] std::shared_ptr<Node> Clone() const override;
     [[nodiscard]] std::string GetSerializationType() const override { return "DFFNode"; }
     [[nodiscard]] ImVec4 GetUIColor() const override { return COLOR; }
+    [[nodiscard]] bool IsSequential() const override { return true; }
 
     explicit DFFNode(Module *module);
     DFFNode(Module *module, const std::string &guid);

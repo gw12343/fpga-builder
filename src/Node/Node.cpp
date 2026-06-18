@@ -15,7 +15,6 @@ Node::Node(Module *parent, const std::string &name, const std::vector<PinCreatio
            const std::vector<PinCreationData> &outputs) :
     Node(GUID::generate_guid(), parent, name, inputs, outputs) {}
 
-
 Node::Node(std::string saved_guid, Module *parent, std::string in_name, const std::vector<PinCreationData> &inputs,
            const std::vector<PinCreationData> &outputs) {
     module = parent;
@@ -35,7 +34,6 @@ Node::Node(std::string saved_guid, Module *parent, std::string name) : name(std:
     id = GUID::to_id(guid);
 }
 
-
 [[nodiscard]] nlohmann::json Node::ToJson() const {
     return {{"type", GetSerializationType()},
             {"guid", guid},
@@ -44,7 +42,6 @@ Node::Node(std::string saved_guid, Module *parent, std::string name) : name(std:
             {"x", last_pos.x == FLT_MAX ? start_pos.x : last_pos.x},
             {"y", last_pos.y == FLT_MAX ? start_pos.y : last_pos.y}};
 }
-
 
 void Node::InitPins(const std::vector<PinCreationData> &inputs, const std::vector<PinCreationData> &outputs) {
     int i = 0;
@@ -62,6 +59,14 @@ void Node::Select(bool append) {
     BeginNode(id);
     ax::NodeEditor::EndNode();
     SelectNode(id, append);
+}
+
+int Node::GetNumInputs() {
+    return std::ranges::count_if(pins, [](Pin n) { return n.GetDirection() == ax::NodeEditor::PinKind::Input; });
+}
+
+int Node::GetNumOutputs() {
+    return std::ranges::count_if(pins, [](Pin n) { return n.GetDirection() == ax::NodeEditor::PinKind::Output; });
 }
 
 

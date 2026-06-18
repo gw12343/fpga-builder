@@ -13,6 +13,7 @@ public:
     [[nodiscard]] nlohmann::json ToJson() const override;
     [[nodiscard]] ImVec4 GetUIColor() const override { return COLOR; }
     [[nodiscard]] int GetNodeWidth() const override { return 125; }
+    [[nodiscard]] bool IsSequential() const override { return false; }
 
     // Pre-configured
     LiteralNode(Module *module, const std::string &guid, int bit_width, int val);

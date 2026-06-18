@@ -17,6 +17,7 @@ public:
     [[nodiscard]] std::shared_ptr<Node> Clone() const override;
     [[nodiscard]] std::string GetSerializationType() const override { return "AdderNode"; }
     [[nodiscard]] ImVec4 GetUIColor() const override { return COLOR; }
+    [[nodiscard]] bool IsSequential() const override { return false; }
 
     // Pre-configured
     AdderNode(Module *module, const std::string &guid, const int bit_width);

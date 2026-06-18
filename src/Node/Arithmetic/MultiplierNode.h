@@ -15,6 +15,7 @@ class MultiplierNode final : public ConfigurableBitWidthNode {
 public:
     [[nodiscard]] std::string GetSerializationType() const override { return "MultiplierNode"; }
     [[nodiscard]] std::shared_ptr<Node> Clone() const override;
+    [[nodiscard]] bool IsSequential() const override { return false; }
 
     // Pre-configured
     MultiplierNode(Module *module, const std::string &guid, int bit_width);

@@ -13,8 +13,11 @@ static auto REGISTER_IN_PIN_D = "D";
 
 class RegisterNode final : public ConfigurableBitWidthNode {
 public:
-    [[nodiscard]] std::string GetSerializationType() const override { return "RegisterNode"; }
     [[nodiscard]] std::shared_ptr<Node> Clone() const override;
+    [[nodiscard]] std::string GetSerializationType() const override { return "RegisterNode"; }
+    [[nodiscard]] int GetNodeWidth() const override { return 150; }
+    [[nodiscard]] ImVec4 GetUIColor() const override { return COLOR; }
+    [[nodiscard]] bool IsSequential() const override { return true; }
 
     void accept(Visitor &v, int output_slot) override;
     void InitPinsAfterConfig() override;
@@ -24,8 +27,6 @@ public:
     // New node
     explicit RegisterNode(Module *module) : ConfigurableBitWidthNode(module, "Register") {}
 
-    [[nodiscard]] int GetNodeWidth() const override { return 150; }
-    [[nodiscard]] ImVec4 GetUIColor() const override { return COLOR; }
 
     Pin GetEnablePin();
     Pin GetClkPin();

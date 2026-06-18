@@ -14,6 +14,7 @@ public:
     [[nodiscard]] std::string GetSerializationType() const override { return "InputNode"; }
     [[nodiscard]] nlohmann::json ToJson() const override;
     [[nodiscard]] ImVec4 GetUIColor() const override { return COLOR; }
+    [[nodiscard]] bool IsSequential() const override { return false; }
 
     explicit InputNode(Module *module, const std::string &guid = GUID::generate_guid(), int input = 0);
 

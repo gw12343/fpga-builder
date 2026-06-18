@@ -15,6 +15,7 @@ public:
     [[nodiscard]] std::string GetSerializationType() const override { return "DebounceNode"; }
     [[nodiscard]] int GetNodeWidth() const override { return 100; }
     [[nodiscard]] ImVec4 GetUIColor() const override { return COLOR; }
+    [[nodiscard]] bool IsSequential() const override { return true; }
 
     DebounceNode(Module *module, const std::string &guid);
 

@@ -18,6 +18,7 @@ public:
     [[nodiscard]] std::string GetSerializationType() const override { return "EdgeNode"; }
     [[nodiscard]] int GetNodeWidth() const override { return 100; }
     [[nodiscard]] ImVec4 GetUIColor() const override { return COLOR; }
+    [[nodiscard]] bool IsSequential() const override { return true; }
 
     void accept(Visitor &v, int output_slot) override;
 

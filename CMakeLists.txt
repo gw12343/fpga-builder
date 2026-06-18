@@ -173,6 +173,8 @@
             src/Events/ChangeIOWidthCommand.h
             src/Events/ChangeIOWidthCommand.cpp
             src/Events/ChangeIOWidthCommand.cpp
+            src/Codegen/MultipassCodegen.h
+            src/Codegen/MultipassCodegen.cpp
     )
 
     target_include_directories(fpga_builder PUBLIC

@@ -14,6 +14,7 @@ public:
     [[nodiscard]] std::shared_ptr<Node> Clone() const override;
     [[nodiscard]] ImVec4 GetUIColor() const override { return COLOR; }
     [[nodiscard]] int GetNodeWidth() const override { return 150; }
+    [[nodiscard]] bool IsSequential() const override { return false; }
 
     // Pre-configured
     DecoderNode(Module *module, const std::string &guid, int bit_width);

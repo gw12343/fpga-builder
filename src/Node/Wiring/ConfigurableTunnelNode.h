@@ -16,6 +16,8 @@ public:
     // Save bit width and tunnel name to json
     [[nodiscard]] nlohmann::json ToJson() const override;
 
+    [[nodiscard]] bool IsSequential() const override { return false; }
+
     // Override configuration methods
     [[nodiscard]] bool HasConfiguration() const override { return true; }
     void RenderConfiguration() override;

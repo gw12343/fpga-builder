@@ -9,15 +9,16 @@ static auto SPLITTER_IN_PIN_VAL = "Value";
 
 class SplitterNode final : public ConfigurableBitWidthNode {
 public:
+    [[nodiscard]] std::shared_ptr<Node> Clone() const override;
     [[nodiscard]] std::string GetSerializationType() const override { return "SplitterNode"; }
+    [[nodiscard]] ImVec4 GetUIColor() const override { return COLOR; }
+    [[nodiscard]] int GetNodeWidth() const override { return 150; }
+    [[nodiscard]] bool IsSequential() const override { return false; }
 
     void accept(Visitor &v, int output_slot) override;
 
-    [[nodiscard]] std::shared_ptr<Node> Clone() const override;
 
     static constexpr ImVec4 COLOR = {0.325f, 0.290f, 0.718f, 1.0f};
-    [[nodiscard]] ImVec4 GetUIColor() const override { return COLOR; }
-    [[nodiscard]] int GetNodeWidth() const override { return 150; }
 
 
     static std::string GetBitOutPinName(int n);

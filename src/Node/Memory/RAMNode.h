@@ -18,6 +18,7 @@ public:
     [[nodiscard]] int GetNodeWidth() const override { return 225; }
     [[nodiscard]] ImVec4 GetUIColor() const override { return COLOR; }
     [[nodiscard]] std::string GetDisplayName() const override;
+    [[nodiscard]] bool IsSequential() const override { return true; }
 
     RAMNode(Module *module, const std::string &guid, int data_bits, int select_bits);
     explicit RAMNode(Module *module);

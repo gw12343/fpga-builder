@@ -13,6 +13,7 @@ public:
     [[nodiscard]] std::string GetSerializationType() const override { return "MultiplexerNode"; }
     [[nodiscard]] ImVec4 GetUIColor() const override { return COLOR; }
     [[nodiscard]] int GetNodeWidth() const override { return 225; }
+    [[nodiscard]] bool IsSequential() const override { return false; }
 
     MultiplexerNode(Module *module, const std::string &guid, int data_bits, int select_bits);
     explicit MultiplexerNode(Module *module);
