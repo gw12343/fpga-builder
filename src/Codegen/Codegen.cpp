@@ -973,10 +973,17 @@ void Codegen::visit(ROMNode &node, const int output_slot) {
     m_initial += "\tend\n\n";
 
 
-    // Synchronous read to ensure bram
-    m_later += "\talways @(posedge " + clk_val + ") begin\n";
-    m_later += "\t\t" + output_reg + " <= " + rom_reg + "[" + adr_val + "];\n";
-    m_later += "\tend\n\n";
+    if (node.m_async_read) {
+        // Asynchronous read
+        m_later += "\talways @(*) begin\n";
+        m_later += "\t\t" + output_reg + " = " + rom_reg + "[" + adr_val + "];\n";
+        m_later += "\tend\n\n";
+    } else {
+        // Synchronous read
+        m_later += "\talways @(posedge " + clk_val + ") begin\n";
+        m_later += "\t\t" + output_reg + " <= " + rom_reg + "[" + adr_val + "];\n";
+        m_later += "\tend\n\n";
+    }
 
 
     RETURN_REG(output_reg)

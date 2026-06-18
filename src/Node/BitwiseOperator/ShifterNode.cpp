@@ -31,12 +31,12 @@ int ShifterNode::GetShiftWidth() const { return ceill(log2(bits)); }
 void ShifterNode::InitPinsAfterConfig() {
     int n = 0;
     // Inputs
-    pins.push_back((Pin){SHIFTER_IN_PIN_INPUT, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(bits)});
+    pins.push_back({ SHIFTER_IN_PIN_INPUT, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(bits) });
     pins.push_back(
-            (Pin){SHIFTER_IN_PIN_DISTANCE, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(GetShiftWidth())});
+            { SHIFTER_IN_PIN_DISTANCE, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(GetShiftWidth()) });
 
     // Outputs
-    pins.push_back((Pin){SHIFTER_OUT_PIN_OUTPUT, ax::NodeEditor::PinKind::Output, *this, n, PinDataType(bits)});
+    pins.push_back({ SHIFTER_OUT_PIN_OUTPUT, ax::NodeEditor::PinKind::Output, *this, n, PinDataType(bits) });
 }
 
 Pin ShifterNode::GetInputPin() { return FindPin(SHIFTER_IN_PIN_INPUT).value(); }

@@ -22,7 +22,7 @@ void SplitterNode::accept(Visitor &v, const int output_slot) { v.visit(*this, ou
 
 void SplitterNode::InitPinsAfterConfig() {
     // Inputs
-    pins.push_back((Pin){SPLITTER_IN_PIN_VAL, ax::NodeEditor::PinKind::Input, *this, 0, PinDataType(bits)});
+    pins.push_back({ SPLITTER_IN_PIN_VAL, ax::NodeEditor::PinKind::Input, *this, 0, PinDataType(bits) });
 
     // Outputs
     int n = 1;

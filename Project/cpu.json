@@ -72,16 +72,6 @@
             "output_guid": "faf9f94d78c347399871c17589408e82node0"
         },
         {
-            "id": 815201834,
-            "input_guid": "e62544c02e6a46f6b0a47e9538759c46node3",
-            "output_guid": "1c2f46a215fd47c38a9125cdde9f2087node3"
-        },
-        {
-            "id": 18446744072193125483,
-            "input_guid": "faf9f94d78c347399871c17589408e82node3",
-            "output_guid": "1c2f46a215fd47c38a9125cdde9f2087node4"
-        },
-        {
             "id": 18446744072319801546,
             "input_guid": "687bcfcd0cb34c03b1a9cd0ec3f21fe0node13",
             "output_guid": "e62544c02e6a46f6b0a47e9538759c46node2"
@@ -325,6 +315,16 @@
             "id": 18446744073542611843,
             "input_guid": "a7f4d24e7c4d49d4945fbdee12ddea89node0",
             "output_guid": "1c2f46a215fd47c38a9125cdde9f2087node1"
+        },
+        {
+            "id": 815201834,
+            "input_guid": "e62544c02e6a46f6b0a47e9538759c46node3",
+            "output_guid": "1c2f46a215fd47c38a9125cdde9f2087node3"
+        },
+        {
+            "id": 18446744072193125483,
+            "input_guid": "faf9f94d78c347399871c17589408e82node3",
+            "output_guid": "1c2f46a215fd47c38a9125cdde9f2087node4"
         }
     ],
     "name": "cpu",

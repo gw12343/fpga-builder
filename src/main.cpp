@@ -25,7 +25,7 @@ int main(int, char **) {
     const auto topbar = std::make_shared<Topbar>();
     const auto toolbox = std::make_shared<Toolbox>();
 
-    const auto p = std::make_shared<Project>("../Project2");
+    const auto p = std::make_shared<Project>("../Project");
 
 
     // Main loop

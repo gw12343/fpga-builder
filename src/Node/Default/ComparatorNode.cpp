@@ -21,13 +21,13 @@ ComparatorNode::ComparatorNode(Module *module) : ConfigurableBitWidthNode(module
 void ComparatorNode::InitPinsAfterConfig() {
     int n = 0;
     // Inputs
-    pins.push_back((Pin){COMPARATOR_IN_PIN_A, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(bits)});
-    pins.push_back((Pin){COMPARATOR_IN_PIN_B, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(bits)});
+    pins.push_back({ COMPARATOR_IN_PIN_A, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(bits) });
+    pins.push_back({ COMPARATOR_IN_PIN_B, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(bits) });
 
     // Outputs
-    pins.push_back((Pin){COMPARATOR_OUT_PIN_GREATER, ax::NodeEditor::PinKind::Output, *this, n++, PinDataType(1)});
-    pins.push_back((Pin){COMPARATOR_OUT_PIN_EQUAL, ax::NodeEditor::PinKind::Output, *this, n++, PinDataType(1)});
-    pins.push_back((Pin){COMPARATOR_OUT_PIN_LESS, ax::NodeEditor::PinKind::Output, *this, n, PinDataType(1)});
+    pins.push_back({ COMPARATOR_OUT_PIN_GREATER, ax::NodeEditor::PinKind::Output, *this, n++, PinDataType(1) });
+    pins.push_back({ COMPARATOR_OUT_PIN_EQUAL, ax::NodeEditor::PinKind::Output, *this, n++, PinDataType(1) });
+    pins.push_back({ COMPARATOR_OUT_PIN_LESS, ax::NodeEditor::PinKind::Output, *this, n, PinDataType(1) });
 
     // Find output pin ids
     COMPARATOR_G_ID = FindPin(COMPARATOR_OUT_PIN_GREATER).value().GetNodeIndex();

@@ -20,13 +20,13 @@ RAMNode::RAMNode(Module *module) : ConfigurableDataAndSelectBitWidthNode(module,
 void RAMNode::InitPinsAfterConfig() {
     int n = 0;
     // Inputs
-    pins.push_back((Pin){RAM_IN_PIN_ADDRESS, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(select_bits)});
-    pins.push_back((Pin){RAM_IN_PIN_IN, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(data_bits)});
-    pins.push_back((Pin){RAM_IN_PIN_LOAD, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(1)});
-    pins.push_back((Pin){RAM_IN_PIN_CLOCK, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(1)});
+    pins.push_back({ RAM_IN_PIN_ADDRESS, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(select_bits) });
+    pins.push_back({ RAM_IN_PIN_IN, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(data_bits) });
+    pins.push_back({ RAM_IN_PIN_LOAD, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(1) });
+    pins.push_back({ RAM_IN_PIN_CLOCK, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(1) });
 
     // Output
-    pins.push_back((Pin){"Value", ax::NodeEditor::PinKind::Output, *this, n, PinDataType(data_bits)});
+    pins.push_back({ "Value", ax::NodeEditor::PinKind::Output, *this, n, PinDataType(data_bits) });
 }
 
 std::string RAMNode::GetDisplayName() const {

@@ -17,16 +17,16 @@ CounterNode::CounterNode(Module *module) : ConfigurableBitWidthNode(module, "Cou
 void CounterNode::InitPinsAfterConfig() {
     int n = 0;
     // Inputs
-    pins.push_back((Pin){COUTNER_IN_PIN_ENABLE, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(1)});
-    pins.push_back((Pin){COUTNER_IN_PIN_CLOCK, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(1)});
-    pins.push_back((Pin){COUTNER_IN_PIN_COUNT_UP, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(1)});
-    pins.push_back((Pin){COUTNER_IN_PIN_RESET, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(1)});
+    pins.push_back({COUTNER_IN_PIN_ENABLE, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(1)});
+    pins.push_back({COUTNER_IN_PIN_CLOCK, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(1)});
+    pins.push_back({COUTNER_IN_PIN_COUNT_UP, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(1)});
+    pins.push_back({COUTNER_IN_PIN_RESET, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(1)});
 
-    pins.push_back((Pin){COUTNER_IN_PIN_LOAD, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(1)});
-    pins.push_back((Pin){COUTNER_IN_PIN_DATA, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(bits)});
+    pins.push_back({COUTNER_IN_PIN_LOAD, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(1)});
+    pins.push_back({COUTNER_IN_PIN_DATA, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(bits)});
 
     // Outputs
-    pins.push_back((Pin){"Value", ax::NodeEditor::PinKind::Output, *this, n, PinDataType(bits)});
+    pins.push_back({"Value", ax::NodeEditor::PinKind::Output, *this, n, PinDataType(bits)});
 }
 Pin CounterNode::GetEnablePin() { return FindPin(COUTNER_IN_PIN_ENABLE).value(); }
 Pin CounterNode::GetCountUpPin() { return FindPin(COUTNER_IN_PIN_COUNT_UP).value(); }

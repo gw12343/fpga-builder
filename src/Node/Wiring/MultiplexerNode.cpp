@@ -21,10 +21,10 @@ void MultiplexerNode::InitPinsAfterConfig() {
         Pin new_input("In " + std::to_string(n), ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(data_bits));
         pins.push_back(new_input);
     }
-    pins.push_back((Pin){MP_IN_PIN_SELECT, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(select_bits)});
+    pins.push_back({ MP_IN_PIN_SELECT, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(select_bits) });
 
     // Output
-    pins.push_back((Pin){"Value", ax::NodeEditor::PinKind::Output, *this, n, PinDataType(data_bits)});
+    pins.push_back({ "Value", ax::NodeEditor::PinKind::Output, *this, n, PinDataType(data_bits) });
 }
 int MultiplexerNode::GetNumOptions() const { return static_cast<int>(powl(2.0, select_bits)); }
 Pin MultiplexerNode::GetInputPin(const int n) { return pins[n]; }

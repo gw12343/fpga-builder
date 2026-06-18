@@ -21,12 +21,12 @@ SubtractorNode::SubtractorNode(Module *module, const std::string &guid, const in
 void SubtractorNode::InitPinsAfterConfig() {
     int n = 0;
     // Inputs
-    pins.push_back((Pin){SUBTRACTOR_IN_PIN_A, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(bits)});
-    pins.push_back((Pin){SUBTRACTOR_IN_PIN_B, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(bits)});
+    pins.push_back({ SUBTRACTOR_IN_PIN_A, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(bits) });
+    pins.push_back({ SUBTRACTOR_IN_PIN_B, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(bits) });
 
     // Outputs
-    pins.push_back((Pin){SUBTRACTOR_OUT_PIN_Q, ax::NodeEditor::PinKind::Output, *this, n++, PinDataType(bits)});
-    pins.push_back((Pin){SUBTRACTOR_OUT_PIN_COUT, ax::NodeEditor::PinKind::Output, *this, n, PinDataType(1)});
+    pins.push_back({ SUBTRACTOR_OUT_PIN_Q, ax::NodeEditor::PinKind::Output, *this, n++, PinDataType(bits) });
+    pins.push_back({ SUBTRACTOR_OUT_PIN_COUT, ax::NodeEditor::PinKind::Output, *this, n, PinDataType(1) });
 
     // Find output pin ids
     SUBTRACTOR_Q_ID = FindPin(SUBTRACTOR_OUT_PIN_Q).value().GetNodeIndex();

@@ -49,5 +49,5 @@ LiteralNode::LiteralNode(Module *module) : ConfigurableBitWidthNode(module, "Lit
 
 void LiteralNode::InitPinsAfterConfig() {
     // Output
-    pins.push_back((Pin){"Value", ax::NodeEditor::PinKind::Output, *this, 0, PinDataType(bits)});
+    pins.push_back({ "Value", ax::NodeEditor::PinKind::Output, *this, 0, PinDataType(bits) });
 }

@@ -22,7 +22,7 @@ CombinerNode::CombinerNode(Module *module) : ConfigurableBitWidthNode(module, "C
 
 void CombinerNode::InitPinsAfterConfig() {
     // Output
-    pins.push_back((Pin){COMBINER_OUT_PIN_VAL, ax::NodeEditor::PinKind::Output, *this, 0, PinDataType(bits)});
+    pins.push_back({ COMBINER_OUT_PIN_VAL, ax::NodeEditor::PinKind::Output, *this, 0, PinDataType(bits) });
     // Inputs
     int n = 1;
     for (int i = 0; i < bits; i++) {

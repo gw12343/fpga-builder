@@ -72,11 +72,6 @@
             "output_guid": "02554352e87749be847fd791d02c0a61node1"
         },
         {
-            "id": 18446744072774313784,
-            "input_guid": "02554352e87749be847fd791d02c0a61node4",
-            "output_guid": "c70b1064d2a245bc86a51ba97ceca167node0"
-        },
-        {
             "id": 18446744072382543996,
             "input_guid": "02554352e87749be847fd791d02c0a61node5",
             "output_guid": "dd343a18b2854a2fa216399f058f65b3node2"
@@ -87,14 +82,19 @@
             "output_guid": "dd343a18b2854a2fa216399f058f65b3node3"
         },
         {
-            "id": 18446744072470569692,
-            "input_guid": "38e2f0ac1a87422687c9e609c91ab2fanode1",
-            "output_guid": "02554352e87749be847fd791d02c0a61node2"
+            "id": 1980862738,
+            "input_guid": "02554352e87749be847fd791d02c0a61node4",
+            "output_guid": "d37622b82c644cfa899fa4164500ad02node0"
         },
         {
-            "id": 703184908,
+            "id": 18446744072774581386,
             "input_guid": "8d7c7ed726a14440947351f440731a32node3",
-            "output_guid": "38e2f0ac1a87422687c9e609c91ab2fanode0"
+            "output_guid": "9b3eecf8bf9442daa236e8dfc6ffcc50node0"
+        },
+        {
+            "id": 1674216226,
+            "input_guid": "9b3eecf8bf9442daa236e8dfc6ffcc50node1",
+            "output_guid": "02554352e87749be847fd791d02c0a61node2"
         }
     ],
     "name": "main_module",
@@ -170,29 +170,29 @@
             "y": -363.0
         },
         {
-            "guid": "c70b1064d2a245bc86a51ba97ceca167",
-            "id": 18446744071582495973,
+            "guid": "d37622b82c644cfa899fa4164500ad02",
+            "id": 18446744072817343824,
             "name": "Output",
             "slot": 0,
             "type": "OutputNode",
-            "x": 1006.0,
-            "y": -435.0
+            "x": 1038.0,
+            "y": -467.0
         },
         {
-            "guid": "38e2f0ac1a87422687c9e609c91ab2fa",
-            "id": 18446744072693712900,
+            "guid": "9b3eecf8bf9442daa236e8dfc6ffcc50",
+            "id": 1575939059,
             "input_width": 32,
             "name": "Bit Selector",
-            "range_end_bit": 3,
+            "range_end_bit": 15,
             "range_start_bit": 0,
             "type": "BitSelectorNode",
-            "x": 345.0,
-            "y": -315.0
+            "x": 351.0,
+            "y": -299.0
         }
     ],
     "outputs": [
         {
-            "bits": 4,
+            "bits": 16,
             "name": "led"
         }
     ]

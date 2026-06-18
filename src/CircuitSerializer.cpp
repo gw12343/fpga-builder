@@ -82,7 +82,7 @@ std::unique_ptr<Node> CircuitSerializer::NodeFromJson(const json &j, Module *m) 
         p = std::make_unique<MultiplexerNode>(m, guid, j.at("data_bits").get<int>(), j.at("select_bits").get<int>());
     } else if (type == "ROMNode") {
         p = std::make_unique<ROMNode>(m, guid, j.at("data_bits").get<int>(), j.at("select_bits").get<int>(),
-                                      j.at("rom_file").get<std::string>());
+                                      j.at("rom_file").get<std::string>(), j.at("async_read").get<bool>());
     } else if (type == "RAMNode") {
         p = std::make_unique<RAMNode>(m, guid, j.at("data_bits").get<int>(), j.at("select_bits").get<int>());
     } else if (type == "LiteralNode") {
@@ -182,8 +182,8 @@ std::shared_ptr<Module> CircuitSerializer::LoadModule(Project *project, const st
         module->AddLink(link);
     }
 
-
-    ImGui::InsertNotification({ImGuiToastType::Success, 3000, "Loaded module '%s'", module->GetName().c_str()});
+    std::string name = module->GetName();
+    ImGui::InsertNotification({ImGuiToastType::Success, 3000, "Loaded module '%s'", name.c_str()});
 
     return module;
 }

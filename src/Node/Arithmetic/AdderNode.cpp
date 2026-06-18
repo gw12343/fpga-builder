@@ -17,13 +17,13 @@ AdderNode::AdderNode(Module *module) : ConfigurableBitWidthNode(module, "Adder")
 void AdderNode::InitPinsAfterConfig() {
     int n = 0;
     // Inputs
-    pins.push_back((Pin){ADDER_IN_PIN_A, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(bits)});
-    pins.push_back((Pin){ADDER_IN_PIN_B, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(bits)});
-    pins.push_back((Pin){ADDER_IN_PIN_CIN, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(1)});
+    pins.push_back({ADDER_IN_PIN_A, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(bits)});
+    pins.push_back({ADDER_IN_PIN_B, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(bits)});
+    pins.push_back({ADDER_IN_PIN_CIN, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(1)});
 
     // Outputs
-    pins.push_back((Pin){ADDER_OUT_PIN_Q, ax::NodeEditor::PinKind::Output, *this, n++, PinDataType(bits)});
-    pins.push_back((Pin){ADDER_OUT_PIN_COUT, ax::NodeEditor::PinKind::Output, *this, n, PinDataType(1)});
+    pins.push_back({ADDER_OUT_PIN_Q, ax::NodeEditor::PinKind::Output, *this, n++, PinDataType(bits)});
+    pins.push_back({ADDER_OUT_PIN_COUT, ax::NodeEditor::PinKind::Output, *this, n, PinDataType(1)});
 
     // Find output pin ids
     ADDER_Q_ID = FindPin(ADDER_OUT_PIN_Q).value().GetNodeIndex();

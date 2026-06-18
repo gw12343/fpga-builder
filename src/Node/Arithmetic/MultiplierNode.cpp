@@ -20,11 +20,11 @@ MultiplierNode::MultiplierNode(Module *module) : ConfigurableBitWidthNode(module
 void MultiplierNode::InitPinsAfterConfig() {
     int n = 0;
     // Inputs
-    pins.push_back((Pin){MULTIPLIER_IN_PIN_A, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(bits)});
-    pins.push_back((Pin){MULTIPLIER_IN_PIN_B, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(bits)});
+    pins.push_back({ MULTIPLIER_IN_PIN_A, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(bits) });
+    pins.push_back({ MULTIPLIER_IN_PIN_B, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(bits) });
 
     // Outputs
-    pins.push_back((Pin){MULTIPLIER_OUT_PIN_Q, ax::NodeEditor::PinKind::Output, *this, n, PinDataType(bits)});
+    pins.push_back({ MULTIPLIER_OUT_PIN_Q, ax::NodeEditor::PinKind::Output, *this, n, PinDataType(bits) });
 }
 
 Pin MultiplierNode::GetAInputPin() { return FindPin(MULTIPLIER_IN_PIN_A).value(); }

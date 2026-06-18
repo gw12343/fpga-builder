@@ -26,10 +26,10 @@ void CustomModuleNode::InitPinsAfterConfig() {
 
     int n = 0;
     for (const auto &[name, bits]: target_module->GetInputs()) {
-        pins.push_back((Pin){name, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(bits)});
+        pins.push_back({ name, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(bits) });
     }
     for (const auto &[name, bits]: target_module->GetOutputs()) {
-        pins.push_back((Pin){name, ax::NodeEditor::PinKind::Output, *this, n++, PinDataType(bits)});
+        pins.push_back({ name, ax::NodeEditor::PinKind::Output, *this, n++, PinDataType(bits) });
     }
 }
 

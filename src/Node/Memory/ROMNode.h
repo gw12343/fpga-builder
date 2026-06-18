@@ -19,7 +19,8 @@ public:
     void accept(Visitor &v, int output_slot) override;
 
 
-    ROMNode(Module *module, const std::string &guid, int data_bits, int select_bits, std::string data_file);
+    ROMNode(Module *module, const std::string &guid, int data_bits, int select_bits, std::string data_file,
+            bool async_read);
     explicit ROMNode(Module *module);
 
     void InitPinsAfterConfig() override;
@@ -34,4 +35,5 @@ public:
     static constexpr ImVec4 COLOR = {0.325f, 0.290f, 0.718f, 1.0f};
 
     std::string m_rom_file;
+    bool m_async_read = false;
 };

@@ -22,11 +22,11 @@ void BitSelectorNode::InitPinsAfterConfig() {
     int n = 0;
     // Inputs
     pins.push_back(
-            (Pin){BITSELECTOR_IN_PIN_INPUT, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(input_width)});
+            { BITSELECTOR_IN_PIN_INPUT, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(input_width) });
 
     // Outputs
-    pins.push_back((Pin){BITSELECTOR_OUT_PIN_OUTPUT, ax::NodeEditor::PinKind::Output, *this, n,
-                         PinDataType(GetDataRangeWidth())});
+    pins.push_back({ BITSELECTOR_OUT_PIN_OUTPUT, ax::NodeEditor::PinKind::Output, *this, n,
+                         PinDataType(GetDataRangeWidth()) });
 }
 
 Pin BitSelectorNode::GetInputPin() { return FindPin(BITSELECTOR_IN_PIN_INPUT).value(); }

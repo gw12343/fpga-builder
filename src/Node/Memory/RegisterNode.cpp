@@ -19,13 +19,13 @@ RegisterNode::RegisterNode(Module *module, const std::string &guid, const int bi
 void RegisterNode::InitPinsAfterConfig() {
     int n = 0;
     // Inputs
-    pins.push_back((Pin){REGISTER_IN_PIN_ENABLE, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(1)});
-    pins.push_back((Pin){REGISTER_IN_PIN_CLOCK, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(1)});
-    pins.push_back((Pin){REGISTER_IN_PIN_RESET, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(1)});
-    pins.push_back((Pin){REGISTER_IN_PIN_D, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(bits)});
+    pins.push_back({ REGISTER_IN_PIN_ENABLE, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(1) });
+    pins.push_back({ REGISTER_IN_PIN_CLOCK, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(1) });
+    pins.push_back({ REGISTER_IN_PIN_RESET, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(1) });
+    pins.push_back({ REGISTER_IN_PIN_D, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(bits) });
 
     // Outputs
-    pins.push_back((Pin){"Q", ax::NodeEditor::PinKind::Output, *this, n, PinDataType(bits)});
+    pins.push_back({ "Q", ax::NodeEditor::PinKind::Output, *this, n, PinDataType(bits) });
 }
 
 Pin RegisterNode::GetEnablePin() { return FindPin(REGISTER_IN_PIN_ENABLE).value(); }

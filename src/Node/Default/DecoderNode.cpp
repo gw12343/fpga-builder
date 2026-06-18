@@ -24,7 +24,7 @@ int DecoderNode::GetNumOutputs() const { return static_cast<int>(powl(2.0, bits)
 
 void DecoderNode::InitPinsAfterConfig() {
     // Inputs
-    pins.push_back((Pin){DECODER_IN_PIN_VAL, ax::NodeEditor::PinKind::Input, *this, 0, PinDataType(bits)});
+    pins.push_back({ DECODER_IN_PIN_VAL, ax::NodeEditor::PinKind::Input, *this, 0, PinDataType(bits) });
 
     // Outputs
     int n = 1;

@@ -15,9 +15,9 @@ UnaryOpNode::UnaryOpNode(Module *module, const std::string &name) : Configurable
 
 void UnaryOpNode::InitPinsAfterConfig() {
     // Input
-    pins.push_back((Pin){UNARY_OP_IN_PIN_A, ax::NodeEditor::PinKind::Input, *this, 0, PinDataType(bits)});
+    pins.push_back({ UNARY_OP_IN_PIN_A, ax::NodeEditor::PinKind::Input, *this, 0, PinDataType(bits) });
     // Output
-    pins.push_back((Pin){"Out", ax::NodeEditor::PinKind::Output, *this, 1, PinDataType(bits)});
+    pins.push_back({ "Out", ax::NodeEditor::PinKind::Output, *this, 1, PinDataType(bits) });
 }
 
 Pin UnaryOpNode::GetAInputPin() { return FindPin(UNARY_OP_IN_PIN_A).value(); }

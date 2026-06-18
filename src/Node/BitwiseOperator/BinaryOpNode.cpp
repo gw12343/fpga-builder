@@ -29,5 +29,5 @@ void BinaryOpNode::InitPinsAfterConfig() {
     }
 
     // Output
-    pins.push_back((Pin){"Out", ax::NodeEditor::PinKind::Output, *this, n, PinDataType(data_bits)});
+    pins.push_back({ "Out", ax::NodeEditor::PinKind::Output, *this, n, PinDataType(data_bits) });
 }
