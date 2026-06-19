@@ -84,7 +84,8 @@ std::unique_ptr<Node> CircuitSerializer::NodeFromJson(const json &j, Module *m) 
         p = std::make_unique<ROMNode>(m, guid, j.at("data_bits").get<int>(), j.at("select_bits").get<int>(),
                                       j.at("rom_file").get<std::string>(), j.at("async_read").get<bool>());
     } else if (type == "RAMNode") {
-        p = std::make_unique<RAMNode>(m, guid, j.at("data_bits").get<int>(), j.at("select_bits").get<int>());
+        p = std::make_unique<RAMNode>(m, guid, j.at("data_bits").get<int>(), j.at("select_bits").get<int>(),
+                                      j.at("ram_init_file").get<std::string>());
     } else if (type == "LiteralNode") {
         p = std::make_unique<LiteralNode>(m, guid, j.at("bits").get<int>(), j.at("value").get<int>());
     } else if (type == "SplitterNode") {

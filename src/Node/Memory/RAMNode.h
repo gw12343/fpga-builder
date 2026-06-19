@@ -15,16 +15,24 @@ class RAMNode final : public ConfigurableDataAndSelectBitWidthNode {
 public:
     [[nodiscard]] std::string GetSerializationType() const override { return "RAMNode"; }
     [[nodiscard]] std::shared_ptr<Node> Clone() const override;
+    [[nodiscard]] nlohmann::json ToJson() const override;
     [[nodiscard]] int GetNodeWidth() const override { return 225; }
     [[nodiscard]] ImVec4 GetUIColor() const override { return COLOR; }
     [[nodiscard]] std::string GetDisplayName() const override;
     [[nodiscard]] bool IsSequential() const override { return true; }
 
-    RAMNode(Module *module, const std::string &guid, int data_bits, int select_bits);
+    RAMNode(Module *module, const std::string &guid, int data_bits, int select_bits, std::string data_file);
     explicit RAMNode(Module *module);
 
     void accept(Visitor &v, int output_slot) override;
+    void RenderInternals() override;
+
     void InitPinsAfterConfig() override;
+
+    const std::string &GetRamInitFile() const { return m_ram_init_file; }
+
+    std::string m_ram_init_file;
+
 
     Pin GetAddressPin();
     Pin GetInPin();

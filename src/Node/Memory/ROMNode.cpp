@@ -10,7 +10,7 @@
 void ROMNode::accept(Visitor &v, const int output_slot) { v.visit(*this, output_slot); }
 
 std::shared_ptr<Node> ROMNode::Clone() const {
-    return std::make_unique<ROMNode>(module, GUID::generate_guid(), data_bits, select_bits, m_rom_file, m_async_read);
+    return std::make_unique<ROMNode>(module, GUID::generate_guid(), m_data_bits, m_select_bits, m_rom_file, m_async_read);
 }
 
 nlohmann::json ROMNode::ToJson() const {
@@ -33,15 +33,15 @@ ROMNode::ROMNode(Module *module) : ConfigurableDataAndSelectBitWidthNode(module,
 void ROMNode::InitPinsAfterConfig() {
     int n = 0;
     // Inputs
-    pins.push_back({ROM_IN_PIN_ADDRESS, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(select_bits)});
+    pins.push_back({ROM_IN_PIN_ADDRESS, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(m_select_bits)});
     pins.push_back({ROM_IN_PIN_CLOCK, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(1)});
 
     // Output
-    pins.push_back({"Value", ax::NodeEditor::PinKind::Output, *this, n, PinDataType(data_bits)});
+    pins.push_back({"Value", ax::NodeEditor::PinKind::Output, *this, n, PinDataType(m_data_bits)});
 }
 
 std::string ROMNode::GetDisplayName() const {
-    return name + " " + std::to_string(static_cast<int>(powl(2.0, select_bits))) + "x" + std::to_string(data_bits);
+    return name + " " + std::to_string(static_cast<int>(powl(2.0, m_select_bits))) + "x" + std::to_string(m_data_bits);
 }
 
 void ROMNode::RenderInternals() {

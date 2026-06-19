@@ -32,36 +32,6 @@
             "output_guid": "536aa22ac0ae4fec9df44a1b574aa359node0"
         },
         {
-            "id": 18446744071820261174,
-            "input_guid": "e141b3c4b14f424db36bdc85497491ccnode2",
-            "output_guid": "b6b223c0a3be4c388f84961a2dfa5beanode0"
-        },
-        {
-            "id": 18446744072950266381,
-            "input_guid": "b6b223c0a3be4c388f84961a2dfa5beanode2",
-            "output_guid": "8d7c7ed726a14440947351f440731a32node0"
-        },
-        {
-            "id": 488575279,
-            "input_guid": "f6caa8c9d3f34a3183c50f18af5d1809node0",
-            "output_guid": "e141b3c4b14f424db36bdc85497491ccnode1"
-        },
-        {
-            "id": 1339188726,
-            "input_guid": "f6caa8c9d3f34a3183c50f18af5d1809node0",
-            "output_guid": "b6b223c0a3be4c388f84961a2dfa5beanode1"
-        },
-        {
-            "id": 363623521,
-            "input_guid": "536aa22ac0ae4fec9df44a1b574aa359node4",
-            "output_guid": "e141b3c4b14f424db36bdc85497491ccnode0"
-        },
-        {
-            "id": 18446744073675824389,
-            "input_guid": "b6b223c0a3be4c388f84961a2dfa5beanode2",
-            "output_guid": "02554352e87749be847fd791d02c0a61node3"
-        },
-        {
             "id": 18446744072359453389,
             "input_guid": "8d7c7ed726a14440947351f440731a32node2",
             "output_guid": "02554352e87749be847fd791d02c0a61node0"
@@ -95,6 +65,16 @@
             "id": 1674216226,
             "input_guid": "9b3eecf8bf9442daa236e8dfc6ffcc50node1",
             "output_guid": "02554352e87749be847fd791d02c0a61node2"
+        },
+        {
+            "id": 1705496353,
+            "input_guid": "536aa22ac0ae4fec9df44a1b574aa359node4",
+            "output_guid": "02554352e87749be847fd791d02c0a61node3"
+        },
+        {
+            "id": 1514332174,
+            "input_guid": "536aa22ac0ae4fec9df44a1b574aa359node4",
+            "output_guid": "8d7c7ed726a14440947351f440731a32node0"
         }
     ],
     "name": "main_module",
@@ -113,6 +93,7 @@
             "guid": "dd343a18b2854a2fa216399f058f65b3",
             "id": 18446744072922257703,
             "name": "RAM",
+            "ram_init_file": "program.mem",
             "select_bits": 16,
             "type": "RAMNode",
             "x": 17.0,
@@ -124,24 +105,8 @@
             "name": "Input",
             "slot": 1,
             "type": "InputNode",
-            "x": -972.0,
-            "y": -291.0
-        },
-        {
-            "guid": "e141b3c4b14f424db36bdc85497491cc",
-            "id": 1843354012,
-            "name": "Debounce",
-            "type": "DebounceNode",
-            "x": -519.0,
-            "y": -107.0
-        },
-        {
-            "guid": "b6b223c0a3be4c388f84961a2dfa5bea",
-            "id": 18446744073020496831,
-            "name": "Edge",
-            "type": "EdgeNode",
-            "x": -359.0,
-            "y": -75.0
+            "x": -557.0,
+            "y": -307.0
         },
         {
             "bits": 4,
@@ -149,16 +114,16 @@
             "id": 18446744071921125091,
             "name": "Splitter",
             "type": "SplitterNode",
-            "x": -769.0,
-            "y": -219.0
+            "x": -322.0,
+            "y": -235.0
         },
         {
             "guid": "f6caa8c9d3f34a3183c50f18af5d1809",
             "id": 701818767,
             "name": "",
             "type": "ClockNode",
-            "x": -684.0,
-            "y": -27.0
+            "x": -132.0,
+            "y": 373.0
         },
         {
             "guid": "02554352e87749be847fd791d02c0a61",

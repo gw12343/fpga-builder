@@ -22,8 +22,8 @@ public:
     void RenderConfiguration() override;
 
     // Helpers
-    [[nodiscard]] int GetDataWidth() const { return data_bits; }
-    [[nodiscard]] int GetSelectWidth() const { return select_bits; }
+    [[nodiscard]] int GetDataWidth() const { return m_data_bits; }
+    [[nodiscard]] int GetSelectWidth() const { return m_select_bits; }
     [[nodiscard]] std::string GetDisplayName() const override;
 
 
@@ -31,6 +31,6 @@ public:
     static inline int defaultSelectBitsToUse = 1;
 
 protected:
-    int data_bits;
-    int select_bits;
+    int m_data_bits;
+    int m_select_bits;
 };

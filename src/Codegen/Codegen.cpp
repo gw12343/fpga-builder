@@ -42,6 +42,7 @@
 
 
 #define NODE_KEY(n) (node.guid + "-slot-" + std::to_string(n))
+#define NODE_KEY_C(guid, n) (guid + "-slot-" + std::to_string(n))
 
 
 #define CHECK_CACHE                                                                                                    \
@@ -49,10 +50,11 @@
         auto memo = CheckCache(NODE_KEY(output_slot));                                                                 \
         if (memo.has_value()) {                                                                                        \
             m_return_vals.emplace(memo.value());                                                                       \
-            std::cout << "used cache: " << node.name << std::endl;                                                     \
             return;                                                                                                    \
         }                                                                                                              \
     }
+
+
 #define CACHE_AND_RETURN(node, val, slot)                                                                              \
     {                                                                                                                  \
         m_visited_nodes[NODE_KEY(slot)] = val;                                                                         \
@@ -96,21 +98,40 @@
 #define START_CHECK_CYCLES                                                                                             \
     {                                                                                                                  \
         if (CheckActive(node.guid)) {                                                                                  \
+            std::cout << "ERROR STACK: ";                                                                              \
+            while (!m_active_nodes.empty()) {                                                                          \
+                std::cout << m_active_nodes.top() << " ";                                                              \
+                m_active_nodes.pop();                                                                                  \
+            }                                                                                                          \
             CircuitError("Cycle detected!", node);                                                                     \
             ERROR_AND_RETURN                                                                                           \
         }                                                                                                              \
         m_active_nodes.emplace(node.guid);                                                                             \
     }
+
 #define END_CHECK_CYCLES m_active_nodes.pop();
 
 #define FIND_SPACE(n) m_const_eval->EvalNode(n)
 
-Codegen::Codegen(std::shared_ptr<ErrorManager> error_man) : m_failed(false), m_error_manager(std::move(error_man)) {}
+
+#define CHECK_GENERATED_SEQUENTIAL()                                                                                   \
+    {                                                                                                                  \
+        if (m_state == CodegenState::SEQUENTIAL_PASS && m_has_generated[node.guid]) {                                  \
+            const auto &r = m_visited_nodes[NODE_KEY(output_slot)];                                                    \
+            std::cout << node.GetDisplayName() << ": using cache for " << node.guid << "   reg: " << r << std::endl;   \
+            RETURN_REG(r)                                                                                              \
+        }                                                                                                              \
+        m_has_generated[node.guid] = true;                                                                             \
+    }
+
+
+Codegen::Codegen(std::shared_ptr<ErrorManager> error_man) :
+    m_failed(false), m_error_manager(std::move(error_man)), m_state(CodegenState::IDLE) {}
 
 void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
     m_failed = false;
     m_const_eval = std::make_shared<ConstExprEvaluator>(m_error_manager);
-
+    m_state = CodegenState::IDLE;
 
     // ensure only 1 input per net
     std::set<std::string> net_inputs;
@@ -145,7 +166,25 @@ void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
 
     const std::string footer = "endmodule";
 
+    // first pass
 
+    m_state = CodegenState::NAME_PASS;
+    for (const auto &n: module->GetNodes()) {
+        if (n->IsSequential()) {
+            for (int i = n->GetNumInputs(); i < n->pins.size(); i++) {
+                // set names
+                n->accept(*this, i);
+            }
+        }
+    }
+
+
+    for (const auto &[id, n]: m_visited_nodes) {
+        std::cout << "aaaa " << id << "     " << n << std::endl;
+    }
+
+
+    m_state = CodegenState::OUTPUT_PASS;
     for (const auto &node: module->GetNodes()) {
         if (node->GetSerializationType() != "OutputNode")
             continue;
@@ -153,6 +192,21 @@ void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
                 "\t\t// Output " + module->GetOutputs()[std::static_pointer_cast<OutputNode>(node)->slot].name + "\n";
         node->accept(*this, 0);
         m_return_vals.pop();
+    }
+
+
+    m_state = CodegenState::SEQUENTIAL_PASS;
+    // sequential pass
+    for (const auto &n: module->GetNodes()) {
+        if (n->IsSequential()) {
+            std::cout << " eval sequential: " << n->GetSerializationType() << std::endl;
+
+            for (int i = n->GetNumInputs(); i < n->pins.size(); i++) {
+                const auto &p = n->pins.at(i);
+
+                EvalNode(p);
+            }
+        }
     }
 
 
@@ -175,8 +229,544 @@ void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
 }
 
 
+// ===== SINGLE OUTPUT SEQUENTIAL NODES ================================================================================
+void Codegen::visit(DFFNode &node, const int output_slot) {
+    std::cout << "eval node: " << node.GetDisplayName() << std::endl;
+    if (m_state == CodegenState::NAME_PASS) {
+        m_visited_nodes[NODE_KEY(output_slot)] = GetSafeWireName("dff_out");
+        return;
+    }
+    if (m_state == CodegenState::OUTPUT_PASS) {
+        RETURN_REG(m_visited_nodes[NODE_KEY(output_slot)])
+    }
+    CHECK_GENERATED_SEQUENTIAL()
+    std::string output_reg = m_visited_nodes[NODE_KEY(output_slot)];
+
+
+    // Input pins
+    const auto set = node.GetSetPin().GetConnectedPin();
+    const auto rst = node.GetResetPin().GetConnectedPin();
+    const auto d = node.GetDPin().GetConnectedPin();
+    const auto clk = node.GetClkPin().GetConnectedPin();
+
+    // Verify connections
+    VERIFY_CONNECTION(set)
+    VERIFY_CONNECTION(rst)
+    VERIFY_CONNECTION(d)
+    VERIFY_CONNECTION(clk)
+
+    const auto set_val = EvalNode(set);
+    const auto rst_val = EvalNode(rst);
+    const auto d_val = EvalNode(d);
+    const auto clk_val = EvalNode(clk);
+
+    // declare output register
+    m_decls += "reg " + output_reg + ";\n";
+
+    // Declare clocked logic
+    m_later += "\talways @(posedge " + clk_val + ") begin\n";
+    m_later += "\t\tif (" + rst_val + ")\n";
+    m_later += "\t\t\t" + output_reg + " <= 1'b0;\n"; // TODO add option for reset value to node
+    m_later += "\t\telse if (" + set_val + ")\n";
+    m_later += "\t\t\t" + output_reg + " <= " + d_val + ";\n";
+    m_later += "\tend\n\n";
+
+    RETURN_REG(output_reg)
+}
+
+
+void Codegen::visit(ROMNode &node, const int output_slot) {
+    std::cout << "eval node: " << node.GetDisplayName() << std::endl;
+    if (m_state == CodegenState::NAME_PASS) {
+        if (node.IsSequential()) {
+            m_visited_nodes[NODE_KEY(output_slot)] = GetSafeWireName("rom_out");
+        }
+        return;
+    }
+    if (m_state == CodegenState::OUTPUT_PASS) {
+        if (node.IsSequential()) {
+            RETURN_REG(m_visited_nodes[NODE_KEY(output_slot)])
+        }
+    }
+
+    std::string output_reg;
+
+    if (node.IsSequential()) {
+        output_reg = m_visited_nodes[NODE_KEY(output_slot)];
+
+        CHECK_GENERATED_SEQUENTIAL()
+    } else {
+        output_reg = GetSafeWireName("rom_out");
+    }
+
+
+    // Input pins
+    const auto adr = node.GetAddressPin().GetConnectedPin();
+    const auto clk = node.GetClockPin().GetConnectedPin();
+
+    VERIFY_CONNECTION(adr)
+    VERIFY_CONNECTION(clk)
+
+    const auto adr_val = EvalNode(adr);
+    const auto clk_val = EvalNode(clk);
+
+    const std::string rom_reg = GetSafeWireName("rom");
+
+    // declare output register
+    m_decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + rom_reg + " [" +
+               std::to_string(static_cast<int>(pow(2, node.GetSelectWidth())) - 1) + ":0];\n";
+    m_decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + output_reg + ";\n";
+
+    // debounce output register set
+    m_initial += "\tinitial begin\n";
+    m_initial += "\t\t$readmemh(\"" + node.GetRomFile() + "\", " + rom_reg + ");\n";
+    m_initial += "\tend\n\n";
+
+
+    if (node.m_async_read) {
+        // Asynchronous read
+        m_later += "\talways @(*) begin\n";
+        m_later += "\t\t" + output_reg + " = " + rom_reg + "[" + adr_val + "];\n";
+        m_later += "\tend\n\n";
+    } else {
+        // Synchronous read
+        m_later += "\talways @(posedge " + clk_val + ") begin\n";
+        m_later += "\t\t" + output_reg + " <= " + rom_reg + "[" + adr_val + "];\n";
+        m_later += "\tend\n\n";
+    }
+
+    RETURN_REG(output_reg)
+}
+
+
+void Codegen::visit(RAMNode &node, const int output_slot) {
+    std::cout << "eval node: " << node.GetDisplayName() << std::endl;
+    if (m_state == CodegenState::NAME_PASS) {
+        m_visited_nodes[NODE_KEY(output_slot)] = GetSafeWireName("ram_out");
+        return;
+    }
+    if (m_state == CodegenState::OUTPUT_PASS) {
+        RETURN_REG(m_visited_nodes[NODE_KEY(output_slot)])
+    }
+    CHECK_GENERATED_SEQUENTIAL()
+
+    const std::string output_reg = m_visited_nodes[NODE_KEY(output_slot)];
+
+
+    // Input pins
+    const auto adr = node.GetAddressPin().GetConnectedPin();
+    const auto in = node.GetInPin().GetConnectedPin();
+    const auto load = node.GetLoadPin().GetConnectedPin();
+    const auto clk = node.GetClockPin().GetConnectedPin();
+
+    VERIFY_CONNECTION(adr)
+    VERIFY_CONNECTION(in)
+    VERIFY_CONNECTION(load)
+    VERIFY_CONNECTION(clk)
+
+    const auto adr_val = EvalNode(adr);
+    const auto in_val = EvalNode(in);
+    const auto load_val = EvalNode(load);
+    const auto clk_val = EvalNode(clk);
+
+    const std::string ram_reg = GetSafeWireName("ram");
+
+    const std::string clear_i = GetSafeWireName("i");
+    m_initial += "\tinteger " + clear_i + ";\n";
+    m_initial += "\tinitial begin\n";
+    m_initial += "\t\tfor ( " + clear_i + " = 0; " + clear_i + " < " +
+                 std::to_string(static_cast<int>(powl(2, node.GetSelectWidth()))) + "; " + clear_i + " = " + clear_i +
+                 " + 1)\n";
+    m_initial += "\t\t\t" + ram_reg + "[" + clear_i + "] = " + std::to_string(node.GetDataWidth()) + "'b0;\n";
+    if (!node.GetRamInitFile().empty())
+        m_initial += "\n\t\t$readmemh(\"" + node.GetRamInitFile() + "\", " + ram_reg + ");\n";
+    m_initial += "\tend\n\n";
+
+
+    // declare ram and output reg
+    m_decls += "(* ram_style = \"block\" *) reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + ram_reg + " [" +
+               std::to_string(static_cast<int>(powl(2, node.GetSelectWidth())) - 1) + ":0];\n";
+
+    m_decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + output_reg + ";\n";
+
+
+    // Synchronous read to ensure bram
+    m_later += "\talways @(posedge " + clk_val + ") begin\n";
+    m_later += "\t\t" + output_reg + " <= " + ram_reg + "[" + adr_val + "];\n\n";
+    m_later += "\t\tif (" + load_val + ")\n";
+    m_later += "\t\t\t" + ram_reg + "[" + adr_val + "] <= " + in_val + ";\n";
+    m_later += "\tend\n\n";
+
+    RETURN_REG(output_reg)
+}
+
+
+void Codegen::visit(RegisterNode &node, const int output_slot) {
+    std::cout << "eval node: " << node.GetDisplayName() << std::endl;
+    if (m_state == CodegenState::NAME_PASS) {
+        m_visited_nodes[NODE_KEY(output_slot)] = GetSafeWireName("ram_out");
+        return;
+    }
+    if (m_state == CodegenState::OUTPUT_PASS) {
+        RETURN_REG(m_visited_nodes[NODE_KEY(output_slot)])
+    }
+    CHECK_GENERATED_SEQUENTIAL()
+
+    std::string output_reg = m_visited_nodes[NODE_KEY(output_slot)];
+
+
+    // Input pins
+    const auto enb = node.GetEnablePin().GetConnectedPin();
+    const auto d = node.GetDPin().GetConnectedPin();
+    const auto clk = node.GetClkPin().GetConnectedPin();
+    const auto rst = node.GetResetPin().GetConnectedPin();
+
+    // Verify connections to pins
+    VERIFY_CONNECTION(enb)
+    VERIFY_CONNECTION(d)
+    VERIFY_CONNECTION(clk)
+    VERIFY_CONNECTION(rst)
+
+    // Evaluate inputs
+    const auto enb_val = EvalNode(enb);
+    const auto d_val = EvalNode(d);
+    const auto clk_val = EvalNode(clk);
+    const auto rst_val = EvalNode(rst);
+
+    m_decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + output_reg + ";\n";
+
+    // counter block
+    m_later += "\talways @(posedge " + clk_val + ") begin\n";
+    m_later += "\t\tif (" + rst_val + ") \n";
+    m_later += "\t\t\t" + output_reg + " <= " + std::to_string(node.GetDataWidth()) + "'b0;\n";
+    m_later += "\t\telse if (" + enb_val + ")\n";
+    m_later += "\t\t\t" + output_reg + " <= " + d_val + ";\n";
+    m_later += "\tend\n\n";
+
+    RETURN_REG(output_reg)
+}
+
+
+void Codegen::visit(CounterNode &node, const int output_slot) {
+    std::cout << "eval node: " << node.GetDisplayName() << std::endl;
+    if (m_state == CodegenState::NAME_PASS) {
+        m_visited_nodes[NODE_KEY(output_slot)] = GetSafeWireName("counter_out");
+        return;
+    }
+    if (m_state == CodegenState::OUTPUT_PASS) {
+        RETURN_REG(m_visited_nodes[NODE_KEY(output_slot)])
+    }
+    CHECK_GENERATED_SEQUENTIAL()
+
+    std::string output_reg = m_visited_nodes[NODE_KEY(output_slot)];
+
+    // Input pins
+    const auto enb = node.GetEnablePin().GetConnectedPin();
+    const auto cup = node.GetCountUpPin().GetConnectedPin();
+    const auto clk = node.GetClkPin().GetConnectedPin();
+    const auto rst = node.GetResetPin().GetConnectedPin();
+
+    const auto load_enb = node.GetLoadPin().GetConnectedPin();
+    const auto load_val = node.GetLoadValuePin().GetConnectedPin();
+
+    // Verify connections to pins
+    VERIFY_CONNECTION(enb)
+    VERIFY_CONNECTION(cup)
+    VERIFY_CONNECTION(clk)
+    VERIFY_CONNECTION(rst)
+    VERIFY_CONNECTION(load_enb)
+    VERIFY_CONNECTION(load_val)
+
+
+    // Evaluate inputs
+    const auto clk_val = EvalNode(clk);
+    const auto cup_val = EvalNode(cup);
+    const auto rst_val = EvalNode(rst);
+    const auto load_enb_val = EvalNode(load_enb);
+    const auto load_val_val = EvalNode(load_val);
+    const auto enb_val = EvalNode(enb);
+
+    const auto load_enb_space = FIND_SPACE(load_enb);
+    const auto count_dir_space = FIND_SPACE(cup);
+    const auto enable_space = FIND_SPACE(enb);
+
+
+    m_decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + output_reg + ";\n";
+
+    // counter block
+    m_later += "\talways @(posedge " + clk_val + ") begin\n";
+
+    m_later += "\t\tif (" + rst_val + ") begin \n";
+    m_later += "\t\t\t" + output_reg + " <= " + std::to_string(node.GetDataWidth()) + "'b0;\n";
+
+    m_later += "\t\tend else begin\n";
+
+    bool load_branch = false;
+
+    // Check if the load enable is constant, and if it is make sure it is not always loading
+    if (!load_enb_space.IsConstant()) {
+        load_branch = true;
+        m_later += "\t\t\tif (" + load_enb_val + ") begin\n";
+        m_later += "\t\t\t\t" + output_reg + " <= " + load_val_val + ";\n";
+    } else if (load_enb_space.IsConstant() && load_enb_space.GetConstantValue() != 0) {
+        CircuitError("counter always loads!", node);
+        ERROR_AND_RETURN
+    }
+
+
+    const std::string pref = load_branch ? "end else " : "";
+
+    // Check if count direction is the same (always up or always down), and optimize accordingly
+    if (count_dir_space.IsConstant()) {
+        const auto count_up = count_dir_space.GetConstantValue() == 1 ? 1 : 0;
+        const auto op = count_up ? "+" : "-";
+
+        if (!enable_space.IsConstant()) {
+            // Conditional count
+            m_later += "\t\t\t" + pref + "if (" + enb_val + ")\n";
+            m_later += "\t\t\t\t" + output_reg + " <= " + output_reg + " " + op + " 1;\n";
+        } else if (enable_space.GetConstantValue() != 0) {
+            // Always count
+            if (load_branch)
+                m_later += "\t\t\t" + pref + "begin\n";
+            m_later += "\t\t\t\t" + output_reg + " <= " + output_reg + " " + op + " 1;\n";
+            if (load_branch)
+                m_later += "\t\t\tend\n";
+        }
+    } else {
+        if (!enable_space.IsConstant()) {
+            m_later += "\t\t\t" + pref + "if (" + enb_val + ") begin\n";
+
+            // If enable is set: increment if cup 1, decrement if cup 0
+            m_later += "\t\t\t\tif (" + cup_val + ")\n";
+            m_later += "\t\t\t\t\t" + output_reg + " <= " + output_reg + " + 1;\n";
+            m_later += "\t\t\t\telse\n";
+            m_later += "\t\t\t\t\t" + output_reg + " <= " + output_reg + " - 1;\n";
+            m_later += "\t\t\tend\n";
+
+        } else if (enable_space.GetConstantValue() != 0) {
+            // Increment if 1, decrement if 0. Safely close load branch if it exists.
+            if (load_branch)
+                m_later += "\t\t\t" + pref + "begin\n";
+            m_later += "\t\t\t\tif (" + cup_val + ")\n";
+            m_later += "\t\t\t\t\t" + output_reg + " <= " + output_reg + " + 1;\n";
+            m_later += "\t\t\t\telse\n";
+            m_later += "\t\t\t\t\t" + output_reg + " <= " + output_reg + " - 1;\n";
+            if (load_branch)
+                m_later += "\t\t\tend\n";
+        }
+    }
+
+    m_later += "\t\tend\n";
+    m_later += "\tend\n\n";
+
+    RETURN_REG(output_reg)
+}
+
+void Codegen::visit(DebounceNode &node, const int output_slot) {
+    std::cout << "eval node: " << node.GetDisplayName() << std::endl;
+    if (m_state == CodegenState::NAME_PASS) {
+        m_visited_nodes[NODE_KEY(output_slot)] = GetSafeWireName("debounce_out");
+        return;
+    }
+    if (m_state == CodegenState::OUTPUT_PASS) {
+        RETURN_REG(m_visited_nodes[NODE_KEY(output_slot)])
+    }
+    CHECK_GENERATED_SEQUENTIAL()
+
+    const std::string output_reg = m_visited_nodes[NODE_KEY(output_slot)];
+
+    // Input pins
+    const auto d = node.GetDPin().GetConnectedPin();
+    const auto clk = node.GetClockPin().GetConnectedPin();
+
+    VERIFY_CONNECTION(d)
+    VERIFY_CONNECTION(clk)
+
+    const auto d_val = EvalNode(d);
+    const auto clk_val = EvalNode(clk);
+
+    // Registers
+    const std::string sync0 = GetSafeWireName("debounce_sync0");
+    const std::string sync1 = GetSafeWireName("debounce_sync1");
+    const std::string counter = GetSafeWireName("debounce_counter");
+
+    m_decls += "reg " + sync0 + ", " + sync1 + ";\n";
+    m_decls += "reg [19:0] " + counter + ";\n";
+    m_decls += "reg " + output_reg + ";\n";
+
+    // Synchronizer
+    m_later += "\talways @(posedge " + clk_val + ") begin\n";
+    m_later += "\t\t" + sync0 + " <= " + d_val + ";\n";
+    m_later += "\t\t" + sync1 + " <= " + sync0 + ";\n";
+    m_later += "\tend\n\n";
+
+    // Debounce
+    m_later += "\talways @(posedge " + clk_val + ") begin\n";
+    m_later += "\t\tif (" + sync1 + " == " + output_reg + ") begin\n";
+    m_later += "\t\t\t" + counter + " <= 0;\n";
+    m_later += "\t\tend else begin\n";
+    m_later += "\t\t\t" + counter + " <= " + counter + " + 1;\n";
+    m_later += "\t\t\tif (" + counter + " == 20'hFFFFF)\n";
+    m_later += "\t\t\t\t" + output_reg + " <= " + sync1 + ";\n";
+    m_later += "\t\tend\n";
+    m_later += "\tend\n\n";
+
+    RETURN_REG(output_reg)
+}
+
+// ===== MULTI OUTPUT SEQUENTIAL NODES =================================================================================
+void Codegen::visit(EdgeNode &node, const int output_slot) {
+    std::cout << "eval node: " << node.GetDisplayName() << std::endl;
+    if (m_state == CodegenState::NAME_PASS) {
+        if (output_slot == node.EDGE_OUT_Q_ID) {
+            m_visited_nodes[NODE_KEY(output_slot)] = GetSafeWireName("edge_rise");
+        } else if (output_slot == node.EDGE_OUT_NQ_ID) {
+            m_visited_nodes[NODE_KEY(output_slot)] = GetSafeWireName("edge_fall");
+        }
+        return;
+    }
+    if (m_state == CodegenState::OUTPUT_PASS) {
+        RETURN_REG(m_visited_nodes[NODE_KEY(output_slot)])
+    }
+    CHECK_GENERATED_SEQUENTIAL()
+
+    const std::string output_rise = m_visited_nodes[NODE_KEY(node.EDGE_OUT_Q_ID)];
+    const std::string output_fall = m_visited_nodes[NODE_KEY(node.EDGE_OUT_NQ_ID)];
+
+    // Input pins
+    const auto d = node.GetDPin().GetConnectedPin();
+    const auto clk = node.GetClockPin().GetConnectedPin();
+
+    VERIFY_CONNECTION(d)
+    VERIFY_CONNECTION(clk)
+
+    const auto d_val = EvalNode(d);
+    const auto clk_val = EvalNode(clk);
+
+    // Registers
+    const std::string sync0 = GetSafeWireName("edge_sync0");
+    const std::string sync1 = GetSafeWireName("edge_sync1");
+    const std::string prev = GetSafeWireName("edge_prev");
+
+    m_decls += "reg " + sync0 + ", " + sync1 + ";\n";
+    m_decls += "reg " + prev + ";\n";
+    m_decls += "reg " + output_rise + ";\n";
+    m_decls += "reg " + output_fall + ";\n";
+
+    // Synchronizer
+    m_later += "\talways @(posedge " + clk_val + ") begin\n";
+    m_later += "\t\t" + sync0 + " <= " + d_val + ";\n";
+    m_later += "\t\t" + sync1 + " <= " + sync0 + ";\n";
+    m_later += "\tend\n\n";
+
+    // Edge detection
+    m_later += "\talways @(posedge " + clk_val + ") begin\n";
+    m_later += "\t\t" + output_rise + " <= " + sync1 + " & ~" + prev + ";\n";
+    m_later += "\t\t" + output_fall + " <= ~" + sync1 + " & " + prev + ";\n";
+    m_later += "\t\t" + prev + " <= " + sync1 + ";\n";
+    m_later += "\tend\n\n";
+
+
+    // Output selection
+    if (output_slot == node.EDGE_OUT_Q_ID) {
+        RETURN_REG(output_rise)
+    }
+    if (output_slot == node.EDGE_OUT_NQ_ID) {
+        RETURN_REG(output_fall)
+    }
+
+    CircuitError("Invalid connection!", node);
+}
+
+
+void Codegen::visit(CustomModuleNode &node, const int output_slot) {
+    std::cout << "eval node: " << node.GetDisplayName() << std::endl;
+    if (!node.module_ref.has_value()) {
+        CircuitError("Reference to missing module in custom node!", node);
+        ERROR_AND_RETURN
+    }
+    const auto &node_module = node.module_ref.value();
+    const int num_inputs = static_cast<int>(node_module->GetInputs().size());
+    const int num_outputs = static_cast<int>(node_module->GetOutputs().size());
+
+    if (m_state == CodegenState::NAME_PASS) {
+        const auto output_name =
+                GetSafeWireName(node_module->GetName() + "_custom_out_" + node.pins[output_slot].GetName());
+
+        m_visited_nodes[NODE_KEY(output_slot)] = GetSafeWireName(output_name);
+
+        return;
+    }
+
+    if (m_state == CodegenState::OUTPUT_PASS) {
+        RETURN_REG(m_visited_nodes[NODE_KEY(output_slot)])
+    }
+
+    CHECK_GENERATED_SEQUENTIAL()
+
+    std::vector<IO> output_wires;
+    std::vector<std::string> output_net_name;
+    // Cache each output wires name
+    for (int i = 0; i < num_outputs; i++) {
+        // Input pin
+        const int pin_number = num_inputs + i;
+        const auto output_name = m_visited_nodes[NODE_KEY(pin_number)];
+
+        output_wires.push_back({output_name, node.pins[pin_number].GetDataType().GetBitWidth()});
+        output_net_name.push_back(node.pins[pin_number].GetName());
+    }
+
+
+    std::vector<std::string> input_pin_values;
+    std::vector<std::string> input_pin_names;
+
+    // Evaluate and cache all inputs
+    for (int i = 0; i < num_inputs; i++) {
+        // Input pin
+        const auto in = node.pins[i].GetConnectedPin();
+        // Verify connection to input pin
+        VERIFY_CONNECTION(in)
+        // Get input value
+        const auto input_val = EvalNode(in);
+
+        // Save value
+        input_pin_values.push_back(input_val);
+        input_pin_names.push_back(node.pins[i].GetName());
+    }
+
+    // m_active_nodes = save;
+
+    // Create output wires
+    for (const auto &[name, bits]: output_wires) {
+        m_decls += "wire [" + std::to_string(bits - 1) + ":0] " + name + ";\n";
+    }
+
+    // Instantiate module and connect labeled inputs
+    m_instances += node_module->GetName() + " " + GetSafeWireName("custom_node") + " (\n";
+    m_instances += "\t.sys_clk(sys_clk),\n";
+    for (int i = 0; i < num_inputs; i++) {
+        m_instances += "\t." + input_pin_names[i] + "(" + input_pin_values[i] + "),\n";
+    }
+    for (int i = 0; i < num_outputs; i++) {
+        m_instances += "\t." + output_net_name[i] + "(" + output_wires[i].name + "),\n";
+    }
+    m_instances.pop_back();
+    m_instances.pop_back();
+    m_instances += "\n);\n";
+
+
+    RETURN_REG(m_visited_nodes[NODE_KEY(output_slot)])
+    //   TODO return??
+}
+
+
 // ===== MULTI OUTPUT NODES ============================================================================================
 void Codegen::visit(ComparatorNode &node, const int output_slot) {
+    std::cout << "eval node: " << node.GetDisplayName() << std::endl;
+    if (m_state == CodegenState::NAME_PASS) {
+        return;
+    }
     CHECK_CACHE
 
     const std::string output_greater = GetSafeWireName("comparator_greater");
@@ -224,81 +814,11 @@ void Codegen::visit(ComparatorNode &node, const int output_slot) {
     CircuitError("Invalid connection!", node);
 }
 
-void Codegen::visit(CustomModuleNode &node, const int output_slot) {
-    CHECK_CACHE
-    START_CHECK_CYCLES
-
-    if (!node.module_ref.has_value()) {
-        CircuitError("Reference to missing module in custom node!", node);
-        ERROR_AND_RETURN
-    }
-
-    const auto &node_module = node.module_ref.value();
-    const int num_inputs = static_cast<int>(node_module->GetInputs().size());
-    const int num_outputs = static_cast<int>(node_module->GetOutputs().size());
-
-    std::vector<IO> output_wires;
-    std::vector<std::string> output_net_name;
-    // Cache each output wires name
-    for (int i = 0; i < num_outputs; i++) {
-        // Input pin
-        const int pin_number = num_inputs + i;
-        const auto output_name =
-                GetSafeWireName(node_module->GetName() + "_custom_out_" + node.pins[pin_number].GetName());
-
-        output_wires.push_back({output_name, node.pins[pin_number].GetDataType().GetBitWidth()});
-        output_net_name.push_back(node.pins[pin_number].GetName());
-        m_visited_nodes[NODE_KEY(pin_number)] = output_name;
-    }
-
-
-    // const auto save = m_active_nodes;
-    // m_active_nodes = {};
-
-    std::vector<std::string> input_pin_values;
-    std::vector<std::string> input_pin_names;
-
-    // Evaluate and cache all inputs
-    for (int i = 0; i < num_inputs; i++) {
-        // Input pin
-        const auto in = node.pins[i].GetConnectedPin();
-        // Verify connection to input pin
-        VERIFY_CONNECTION(in)
-        // Get input value
-        const auto input_val = EvalNode(in);
-
-        // Save value
-        input_pin_values.push_back(input_val);
-        input_pin_names.push_back(node.pins[i].GetName());
-    }
-
-    // m_active_nodes = save;
-
-    // Create output wires
-    for (const auto &[name, bits]: output_wires) {
-        m_decls += "wire [" + std::to_string(bits - 1) + ":0] " + name + ";\n";
-    }
-
-    // Instantiate module and connect labeled inputs
-    m_instances += node_module->GetName() + " " + GetSafeWireName("custom_node") + " (\n";
-    m_instances += "\t.sys_clk(sys_clk),\n";
-    for (int i = 0; i < num_inputs; i++) {
-        m_instances += "\t." + input_pin_names[i] + "(" + input_pin_values[i] + "),\n";
-    }
-    for (int i = 0; i < num_outputs; i++) {
-        m_instances += "\t." + output_net_name[i] + "(" + output_wires[i].name + "),\n";
-    }
-    m_instances.pop_back();
-    m_instances.pop_back();
-    m_instances += "\n);\n";
-
-    RETURN_REG(output_wires[output_slot - num_inputs].name)
-
-    END_CHECK_CYCLES
-    //  TODO return??
-}
-
 void Codegen::visit(SplitterNode &node, const int output_slot) {
+    std::cout << "eval node: " << node.GetDisplayName() << std::endl;
+    if (m_state == CodegenState::NAME_PASS) {
+        return;
+    }
     CHECK_CACHE
     START_CHECK_CYCLES
     std::vector<std::string> out_wire_names;
@@ -340,60 +860,11 @@ void Codegen::visit(SplitterNode &node, const int output_slot) {
     RETURN_REG(out_wire_names[bit_index])
 }
 
-void Codegen::visit(EdgeNode &node, const int output_slot) {
-    CHECK_CACHE
-
-    const std::string output_rise = GetSafeWireName("edge_rise");
-    const std::string output_fall = GetSafeWireName("edge_fall");
-
-    m_visited_nodes[NODE_KEY(node.EDGE_OUT_Q_ID)] = output_rise;
-    m_visited_nodes[NODE_KEY(node.EDGE_OUT_NQ_ID)] = output_fall;
-
-    // Input pins
-    const auto d = node.GetDPin().GetConnectedPin();
-    const auto clk = node.GetClockPin().GetConnectedPin();
-
-    VERIFY_CONNECTION(d)
-    VERIFY_CONNECTION(clk)
-
-    const auto d_val = EvalNode(d);
-    const auto clk_val = EvalNode(clk);
-
-    // Registers
-    const std::string sync0 = GetSafeWireName("edge_sync0");
-    const std::string sync1 = GetSafeWireName("edge_sync1");
-    const std::string prev = GetSafeWireName("edge_prev");
-
-    m_decls += "reg " + sync0 + ", " + sync1 + ";\n";
-    m_decls += "reg " + prev + ";\n";
-    m_decls += "reg " + output_rise + ";\n";
-    m_decls += "reg " + output_fall + ";\n";
-
-    // Synchronizer
-    m_later += "\talways @(posedge " + clk_val + ") begin\n";
-    m_later += "\t\t" + sync0 + " <= " + d_val + ";\n";
-    m_later += "\t\t" + sync1 + " <= " + sync0 + ";\n";
-    m_later += "\tend\n\n";
-
-    // Edge detection
-    m_later += "\talways @(posedge " + clk_val + ") begin\n";
-    m_later += "\t\t" + output_rise + " <= " + sync1 + " & ~" + prev + ";\n";
-    m_later += "\t\t" + output_fall + " <= ~" + sync1 + " & " + prev + ";\n";
-    m_later += "\t\t" + prev + " <= " + sync1 + ";\n";
-    m_later += "\tend\n\n";
-
-    // Output selection
-    if (output_slot == node.EDGE_OUT_Q_ID) {
-        RETURN_REG(output_rise)
-    }
-    if (output_slot == node.EDGE_OUT_NQ_ID) {
-        RETURN_REG(output_fall)
-    }
-
-    CircuitError("Invalid connection!", node);
-}
-
 void Codegen::visit(AdderNode &node, const int output_slot) {
+    std::cout << "eval node: " << node.GetDisplayName() << std::endl;
+    if (m_state == CodegenState::NAME_PASS) {
+        return;
+    }
     CHECK_CACHE
 
     const std::string output_value = GetSafeWireName("adder_out");
@@ -434,6 +905,10 @@ void Codegen::visit(AdderNode &node, const int output_slot) {
 }
 
 void Codegen::visit(SubtractorNode &node, const int output_slot) {
+    std::cout << "eval node: " << node.GetDisplayName() << std::endl;
+    if (m_state == CodegenState::NAME_PASS) {
+        return;
+    }
     CHECK_CACHE
 
     const std::string output_value = GetSafeWireName("sub_out");
@@ -472,6 +947,10 @@ void Codegen::visit(SubtractorNode &node, const int output_slot) {
 }
 
 void Codegen::visit(DecoderNode &node, const int output_slot) {
+    std::cout << "eval node: " << node.GetDisplayName() << std::endl;
+    if (m_state == CodegenState::NAME_PASS) {
+        return;
+    }
     CHECK_CACHE
     START_CHECK_CYCLES
     std::vector<std::string> out_wire_names;
@@ -528,7 +1007,12 @@ void Codegen::visit(DecoderNode &node, const int output_slot) {
 
 // ===== SINGLE OUTPUT NODES ===========================================================================================
 void Codegen::visit(OutputTunnelNode &node, int output_slot) {
+    std::cout << "eval node: " << node.GetDisplayName() << std::endl;
+    if (m_state == CodegenState::NAME_PASS) {
+        return;
+    }
     CHECK_CACHE
+    START_CHECK_CYCLES
 
     const auto &net = node.GetNetName();
 
@@ -555,27 +1039,37 @@ void Codegen::visit(OutputTunnelNode &node, int output_slot) {
         const auto _val = m_return_vals.top();
         m_return_vals.pop();
 
+        END_CHECK_CYCLES
         m_visited_tunnels[net] = _val;
         CACHE_AND_RETURN(node, _val, output_slot)
     }
 
-
+    END_CHECK_CYCLES
     CircuitError("No tunnel input!", node);
     ERROR_AND_RETURN
 }
 
 void Codegen::visit(InputTunnelNode &node, int output_slot) {
+    std::cout << "eval node: " << node.GetDisplayName() << std::endl;
+    if (m_state == CodegenState::NAME_PASS) {
+        return;
+    }
     CHECK_CACHE
+    START_CHECK_CYCLES
 
     const auto in = node.GetInputPin().GetConnectedPin();
     VERIFY_CONNECTION(in)
     const auto in_val = EvalNode(in);
 
+    END_CHECK_CYCLES
     CACHE_AND_RETURN(node, in_val, output_slot)
 }
 
-
 void Codegen::visit(CombinerNode &node, const int output_slot) {
+    std::cout << "eval node: " << node.GetDisplayName() << std::endl;
+    if (m_state == CodegenState::NAME_PASS) {
+        return;
+    }
     CHECK_CACHE
     START_CHECK_CYCLES
     // Store evaluated pins
@@ -614,10 +1108,13 @@ void Codegen::visit(CombinerNode &node, const int output_slot) {
     CACHE_AND_RETURN(node, output_reg, output_slot)
 }
 
-
 void Codegen::visit(BitSelectorNode &node, const int output_slot) {
+    std::cout << "eval node: " << node.GetDisplayName() << std::endl;
+    if (m_state == CodegenState::NAME_PASS) {
+        return;
+    }
     CHECK_CACHE
-    // START_CHECK_CYCLES
+    START_CHECK_CYCLES
 
     const auto in = node.GetInputPin().GetConnectedPin();
 
@@ -633,13 +1130,16 @@ void Codegen::visit(BitSelectorNode &node, const int output_slot) {
     // Assignment statement in always
     m_inner += "\t\t" + output_wire + " = " + in_val + "[" + std::to_string(node.GetEndBit()) + " : " +
                std::to_string(node.GetStartBit()) + "];\n";
-    // END_CHECK_CYCLES
+    END_CHECK_CYCLES
 
     CACHE_AND_RETURN(node, output_wire, output_slot)
 }
 
-
 void Codegen::visit(MultiplexerNode &node, const int output_slot) {
+    std::cout << "eval node: " << node.GetDisplayName() << std::endl;
+    if (m_state == CodegenState::NAME_PASS) {
+        return;
+    }
     CHECK_CACHE
     START_CHECK_CYCLES
 
@@ -686,55 +1186,13 @@ void Codegen::visit(MultiplexerNode &node, const int output_slot) {
     CACHE_AND_RETURN(node, result_reg, output_slot)
 }
 
-
-void Codegen::visit(DebounceNode &node, const int output_slot) {
-    CHECK_CACHE
-
-    const std::string output_reg = GetSafeWireName("debounce_out");
-    m_visited_nodes[NODE_KEY(output_slot)] = output_reg;
-
-    // Input pins
-    const auto d = node.GetDPin().GetConnectedPin();
-    const auto clk = node.GetClockPin().GetConnectedPin();
-
-    VERIFY_CONNECTION(d)
-    VERIFY_CONNECTION(clk)
-
-    const auto d_val = EvalNode(d);
-    const auto clk_val = EvalNode(clk);
-
-    // Registers
-    const std::string sync0 = GetSafeWireName("debounce_sync0");
-    const std::string sync1 = GetSafeWireName("debounce_sync1");
-    const std::string counter = GetSafeWireName("debounce_counter");
-
-    m_decls += "reg " + sync0 + ", " + sync1 + ";\n";
-    m_decls += "reg [19:0] " + counter + ";\n";
-    m_decls += "reg " + output_reg + ";\n";
-
-    // Synchronizer
-    m_later += "\talways @(posedge " + clk_val + ") begin\n";
-    m_later += "\t\t" + sync0 + " <= " + d_val + ";\n";
-    m_later += "\t\t" + sync1 + " <= " + sync0 + ";\n";
-    m_later += "\tend\n\n";
-
-    // Debounce
-    m_later += "\talways @(posedge " + clk_val + ") begin\n";
-    m_later += "\t\tif (" + sync1 + " == " + output_reg + ") begin\n";
-    m_later += "\t\t\t" + counter + " <= 0;\n";
-    m_later += "\t\tend else begin\n";
-    m_later += "\t\t\t" + counter + " <= " + counter + " + 1;\n";
-    m_later += "\t\t\tif (" + counter + " == 20'hFFFFF)\n";
-    m_later += "\t\t\t\t" + output_reg + " <= " + sync1 + ";\n";
-    m_later += "\t\tend\n";
-    m_later += "\tend\n\n";
-
-    RETURN_REG(output_reg)
-}
-
-
 void Codegen::visit(ShifterNode &node, const int output_slot) {
+    std::cout << "eval node: " << node.GetDisplayName() << std::endl;
+    if (m_state == CodegenState::NAME_PASS) {
+        return;
+    }
     CHECK_CACHE
+    START_CHECK_CYCLES
 
     std::string output_reg = GetSafeWireName("shifter_out");
     m_visited_nodes[NODE_KEY(output_slot)] = output_reg;
@@ -753,290 +1211,17 @@ void Codegen::visit(ShifterNode &node, const int output_slot) {
 
     m_inner += "\t\t" + output_reg + " = " + node.GetShiftOperator(in_val, dist_val) + ";\n";
 
+    END_CHECK_CYCLES
     RETURN_REG(output_reg)
 }
-
-
-void Codegen::visit(RegisterNode &node, const int output_slot) {
-    CHECK_CACHE
-
-    std::string output_reg = GetSafeWireName("register_value");
-    m_visited_nodes[NODE_KEY(output_slot)] = output_reg;
-
-    // Input pins
-    const auto enb = node.GetEnablePin().GetConnectedPin();
-    const auto d = node.GetDPin().GetConnectedPin();
-    const auto clk = node.GetClkPin().GetConnectedPin();
-    const auto rst = node.GetResetPin().GetConnectedPin();
-
-    // Verify connections to pins
-    VERIFY_CONNECTION(enb)
-    VERIFY_CONNECTION(d)
-    VERIFY_CONNECTION(clk)
-    VERIFY_CONNECTION(rst)
-
-    // Evaluate inputs
-    const auto enb_val = EvalNode(enb);
-    const auto d_val = EvalNode(d);
-    const auto clk_val = EvalNode(clk);
-    const auto rst_val = EvalNode(rst);
-
-    m_decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + output_reg + ";\n";
-
-    // counter block
-    m_later += "\talways @(posedge " + clk_val + ") begin\n";
-    m_later += "\t\tif (" + rst_val + ") \n";
-    m_later += "\t\t\t" + output_reg + " <= " + std::to_string(node.GetDataWidth()) + "'b0;\n";
-    m_later += "\t\telse if (" + enb_val + ")\n";
-    m_later += "\t\t\t" + output_reg + " <= " + d_val + ";\n";
-    m_later += "\tend\n\n";
-
-    RETURN_REG(output_reg)
-}
-
-
-void Codegen::visit(CounterNode &node, const int output_slot) {
-    CHECK_CACHE
-
-    std::string output_reg = GetSafeWireName("counter_out");
-    m_visited_nodes[NODE_KEY(output_slot)] = output_reg;
-
-    // Input pins
-    const auto enb = node.GetEnablePin().GetConnectedPin();
-    const auto cup = node.GetCountUpPin().GetConnectedPin();
-    const auto clk = node.GetClkPin().GetConnectedPin();
-    const auto rst = node.GetResetPin().GetConnectedPin();
-
-    const auto load_enb = node.GetLoadPin().GetConnectedPin();
-    const auto load_val = node.GetLoadValuePin().GetConnectedPin();
-
-    // Verify connections to pins
-    VERIFY_CONNECTION(enb)
-    VERIFY_CONNECTION(cup)
-    VERIFY_CONNECTION(clk)
-    VERIFY_CONNECTION(rst)
-    VERIFY_CONNECTION(load_enb)
-    VERIFY_CONNECTION(load_val)
-
-
-    // Evaluate inputs
-    const auto clk_val = EvalNode(clk);
-    const auto cup_val = EvalNode(cup);
-    const auto rst_val = EvalNode(rst);
-    const auto load_enb_val = EvalNode(load_enb);
-    const auto load_val_val = EvalNode(load_val);
-    const auto enb_val = EvalNode(enb);
-
-    const auto load_enb_space = FIND_SPACE(load_enb);
-    const auto count_dir_space = FIND_SPACE(cup);
-    const auto enable_space = FIND_SPACE(enb);
-
-
-    m_decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + output_reg + ";\n";
-
-    // counter block
-    m_later += "\talways @(posedge " + clk_val + ") begin\n";
-
-    m_later += "\t\tif (" + rst_val + ") begin \n";
-    m_later += "\t\t\t" + output_reg + " <= " + std::to_string(node.GetDataWidth()) + "'b0;\n";
-
-    if (!enable_space.IsConstant()) {
-        m_later += "\t\tend else begin\n";
-    }
-
-    bool load_branch = false;
-
-    // Check if the load enable is constant, and if it is make sure it is not always loading
-    if (!load_enb_space.IsConstant()) {
-        load_branch = true;
-        m_later += "\t\t\tif (" + load_enb_val + ") begin\n";
-        m_later += "\t\t\t\t" + output_reg + " <= " + load_val_val + ";\n";
-    } else if (load_enb_space.IsConstant() && load_enb_space.GetConstantValue() != 0) {
-        CircuitError("counter always loads!", node);
-        ERROR_AND_RETURN
-    }
-
-
-    if ((load_enb_space.IsConstant() && enable_space.IsConstant()) &&
-        (load_enb_space.GetConstantValue() != 0 || enable_space.GetConstantValue() != 0)) {
-        m_later += "\t\tend else begin\n";
-    }
-
-
-    const std::string pref = load_branch ? "end else " : "";
-
-    // Check if count direction is the same (always up or always down), and optimize accordingly
-    if (count_dir_space.IsConstant()) {
-        const auto count_up = count_dir_space.GetConstantValue() == 1 ? 1 : 0;
-        const auto op = count_up ? "+" : "-";
-
-        if (!enable_space.IsConstant()) {
-            // Conditional count
-            m_later += "\t\t\t" + pref + "if (" + enb_val + ")\n";
-            m_later += "\t\t\t\t" + output_reg + " <= " + output_reg + " " + op + " 1;\n";
-        } else if (enable_space.GetConstantValue() != 0) {
-            // Always count
-            m_later += "\t\t\t" + output_reg + " <= " + output_reg + " " + op + " 1;\n";
-        }
-    } else {
-        if (!enable_space.IsConstant()) {
-            m_later += "\t\t\t" + pref + "if (" + enb_val + ") begin\n";
-
-            // If enable is set: increment if cup 1, decrement if cup 0
-            m_later += "\t\t\t\tif (" + cup_val + ")\n";
-            m_later += "\t\t\t\t\t" + output_reg + " <= " + output_reg + " + 1;\n";
-            m_later += "\t\t\t\telse\n";
-            m_later += "\t\t\t\t\t" + output_reg + " <= " + output_reg + " - 1;\n";
-            m_later += "\t\t\tend\n";
-
-        } else if (enable_space.GetConstantValue() != 0) {
-            // Increment if 1, decrement if 0
-            m_later += "\t\t\tend else if (" + cup_val + ") begin\n";
-            m_later += "\t\t\t\t" + output_reg + " <= " + output_reg + " + 1;\n";
-            m_later += "\t\t\tend else if (~" + cup_val + ") begin\n";
-            m_later += "\t\t\t\t" + output_reg + " <= " + output_reg + " - 1;\n";
-        }
-    }
-
-
-    m_later += "\t\tend\n";
-    m_later += "\tend\n\n";
-
-    RETURN_REG(output_reg)
-}
-
-
-void Codegen::visit(DFFNode &node, const int output_slot) {
-    CHECK_CACHE
-
-    std::string output_reg = GetSafeWireName("dff_out");
-    m_visited_nodes[NODE_KEY(output_slot)] = output_reg;
-
-    // Input pins
-    const auto set = node.GetSetPin().GetConnectedPin();
-    const auto rst = node.GetResetPin().GetConnectedPin();
-    const auto d = node.GetDPin().GetConnectedPin();
-    const auto clk = node.GetClkPin().GetConnectedPin();
-
-    // Verify connections
-    VERIFY_CONNECTION(set)
-    VERIFY_CONNECTION(rst)
-    VERIFY_CONNECTION(d)
-    VERIFY_CONNECTION(clk)
-
-    const auto set_val = EvalNode(set);
-    const auto rst_val = EvalNode(rst);
-    const auto d_val = EvalNode(d);
-    const auto clk_val = EvalNode(clk);
-
-    // declare output register
-    m_decls += "reg " + output_reg + ";\n";
-
-    // Declare clocked logic
-    m_later += "\talways @(posedge " + clk_val + ") begin\n";
-    m_later += "\t\tif (" + rst_val + ")\n";
-    m_later += "\t\t\t" + output_reg + " <= 1'b0;\n"; // TODO add option for reset value to node
-    m_later += "\t\telse if (" + set_val + ")\n";
-    m_later += "\t\t\t" + output_reg + " <= " + d_val + ";\n";
-    m_later += "\tend\n\n";
-
-    RETURN_REG(output_reg)
-}
-
-
-void Codegen::visit(ROMNode &node, const int output_slot) {
-    CHECK_CACHE
-
-    const std::string output_reg = GetSafeWireName("rom_out");
-    m_visited_nodes[NODE_KEY(output_slot)] = output_reg;
-
-    // Input pins
-    const auto adr = node.GetAddressPin().GetConnectedPin();
-    const auto clk = node.GetClockPin().GetConnectedPin();
-
-    VERIFY_CONNECTION(adr)
-    VERIFY_CONNECTION(clk)
-
-    const auto adr_val = EvalNode(adr);
-    const auto clk_val = EvalNode(clk);
-
-    const std::string rom_reg = GetSafeWireName("rom");
-
-    // declare output register
-    m_decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + rom_reg + " [" +
-               std::to_string(static_cast<int>(pow(2, node.GetSelectWidth())) - 1) + ":0];\n";
-    m_decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + output_reg + ";\n";
-
-    // debounce output register set
-    m_initial += "\tinitial begin\n";
-    m_initial += "\t\t$readmemh(\"" + node.GetRomFile() + "\", " + rom_reg + ");\n";
-    m_initial += "\tend\n\n";
-
-
-    if (node.m_async_read) {
-        // Asynchronous read
-        m_later += "\talways @(*) begin\n";
-        m_later += "\t\t" + output_reg + " = " + rom_reg + "[" + adr_val + "];\n";
-        m_later += "\tend\n\n";
-    } else {
-        // Synchronous read
-        m_later += "\talways @(posedge " + clk_val + ") begin\n";
-        m_later += "\t\t" + output_reg + " <= " + rom_reg + "[" + adr_val + "];\n";
-        m_later += "\tend\n\n";
-    }
-
-
-    RETURN_REG(output_reg)
-}
-
-
-void Codegen::visit(RAMNode &node, const int output_slot) {
-    CHECK_CACHE
-
-    const std::string output_reg = GetSafeWireName("ram_out");
-    m_visited_nodes[NODE_KEY(output_slot)] = output_reg;
-
-    // Input pins
-    const auto adr = node.GetAddressPin().GetConnectedPin();
-    const auto in = node.GetInPin().GetConnectedPin();
-    const auto load = node.GetLoadPin().GetConnectedPin();
-    const auto clk = node.GetClockPin().GetConnectedPin();
-
-    VERIFY_CONNECTION(adr)
-    VERIFY_CONNECTION(in)
-    VERIFY_CONNECTION(load)
-    VERIFY_CONNECTION(clk)
-
-    const auto adr_val = EvalNode(adr);
-    const auto in_val = EvalNode(in);
-    const auto load_val = EvalNode(load);
-    const auto clk_val = EvalNode(clk);
-
-    const std::string ram_reg = GetSafeWireName("ram");
-
-
-    // declare output register and shift register
-    m_decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + ram_reg + " [" +
-               std::to_string(static_cast<int>(pow(2, node.GetSelectWidth())) - 1) + ":0];\n";
-
-    m_decls += "reg [" + std::to_string(node.GetDataWidth() - 1) + ":0] " + output_reg + ";\n";
-
-
-    // Synchronous read to ensure bram
-    m_later += "\talways @(posedge " + clk_val + ") begin\n";
-    m_later += "\t\t" + output_reg + " <= " + ram_reg + "[" + adr_val + "];\n\n";
-    m_later += "\t\tif (" + load_val + ")\n";
-    m_later += "\t\t\t" + ram_reg + "[" + adr_val + "] <= " + in_val + ";\n";
-    m_later += "\tend\n\n";
-
-
-    RETURN_REG(output_reg)
-}
-
 
 void Codegen::visit(MultiplierNode &node, const int output_slot) {
+    std::cout << "eval node: " << node.GetDisplayName() << std::endl;
+    if (m_state == CodegenState::NAME_PASS) {
+        return;
+    }
     CHECK_CACHE
-
+    START_CHECK_CYCLES
     const std::string output_value = GetSafeWireName("mul_out");
 
     // Input pins
@@ -1054,12 +1239,15 @@ void Codegen::visit(MultiplierNode &node, const int output_slot) {
     // Subtraction with extension first
     m_inner += "\t\t" + output_value + " = " + a_val + " * " + b_val + ";\n";
 
-
+    END_CHECK_CYCLES
     CACHE_AND_RETURN(node, output_value, output_slot)
 }
 
-
 void Codegen::visit(BinaryOpNode &node, const int output_slot) {
+    std::cout << "eval node: " << node.GetDisplayName() << std::endl;
+    if (m_state == CodegenState::NAME_PASS) {
+        return;
+    }
     CHECK_CACHE
     // START_CHECK_CYCLES
 
@@ -1088,8 +1276,11 @@ void Codegen::visit(BinaryOpNode &node, const int output_slot) {
     CACHE_AND_RETURN(node, out_reg, output_slot)
 }
 
-
 void Codegen::visit(UnaryOpNode &node, const int output_slot) {
+    std::cout << "eval node: " << node.GetDisplayName() << std::endl;
+    if (m_state == CodegenState::NAME_PASS) {
+        return;
+    }
     CHECK_CACHE
     START_CHECK_CYCLES
 
@@ -1109,14 +1300,20 @@ void Codegen::visit(UnaryOpNode &node, const int output_slot) {
     CACHE_AND_RETURN(node, out_reg, output_slot)
 }
 
-
 void Codegen::visit(ClockNode &node, const int output_slot) {
+    std::cout << "eval node: " << node.GetDisplayName() << std::endl;
+    if (m_state == CodegenState::NAME_PASS) {
+        return;
+    }
     CHECK_CACHE
     CACHE_AND_RETURN(node, "sys_clk", output_slot)
 }
 
-
 void Codegen::visit(LiteralNode &node, const int output_slot) {
+    std::cout << "eval node: " << node.GetDisplayName() << std::endl;
+    if (m_state == CodegenState::NAME_PASS) {
+        return;
+    }
     CHECK_CACHE
     START_CHECK_CYCLES
 
@@ -1130,8 +1327,11 @@ void Codegen::visit(LiteralNode &node, const int output_slot) {
     CACHE_AND_RETURN(node, std::to_string(node.GetDataWidth()) + "'d" + std::to_string(node.value), output_slot)
 }
 
-
 void Codegen::visit(InputNode &node, const int output_slot) {
+    std::cout << "eval node: " << node.GetDisplayName() << std::endl;
+    if (m_state == CodegenState::NAME_PASS) {
+        return;
+    }
     CHECK_CACHE
     START_CHECK_CYCLES
 
@@ -1139,8 +1339,11 @@ void Codegen::visit(InputNode &node, const int output_slot) {
     CACHE_AND_RETURN(node, node.module->GetInputs()[node.slot].name, output_slot)
 }
 
-
 void Codegen::visit(OutputNode &node, const int output_slot) {
+    std::cout << "eval node: " << node.GetDisplayName() << std::endl;
+    if (m_state == CodegenState::NAME_PASS) {
+        return;
+    }
     CHECK_CACHE
     START_CHECK_CYCLES
 
@@ -1149,8 +1352,6 @@ void Codegen::visit(OutputNode &node, const int output_slot) {
 
     const auto s = FIND_SPACE(in);
 
-    std::cout << "   range: " << s.GetBits() << "  const: " << s.IsConstant() << "    val: " << s.GetConstantValue()
-              << std::endl;
 
     if (s.IsConstant()) {
         m_inner += "\t\t" + node.module->GetOutputs()[node.slot].name + " = " + TO_CONST(s) + ";\n";
@@ -1171,6 +1372,8 @@ std::optional<std::string> Codegen::CheckCache(const std::string &guid) {
 
     return m_visited_nodes[guid];
 }
+
+bool Codegen::CheckGenerated(const std::string &guid) { return m_has_generated[guid]; }
 
 std::string Codegen::GetSafeWireName(const std::string &wire_name) {
     if (m_wire_name_counts.contains(wire_name)) {

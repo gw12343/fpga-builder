@@ -4,6 +4,7 @@
 
 #include "StringParameterChangeCommand.h"
 
+#include "Node/Memory/RAMNode.h"
 #include "Node/Memory/ROMNode.h"
 
 
@@ -19,5 +20,8 @@ void StringParameterChangeCommand::SetValue(const std::string &val, int index) {
     if (m_node->GetSerializationType() == "ROMNode") {
         auto rom_node = std::static_pointer_cast<ROMNode>(m_node);
         rom_node->m_rom_file = val;
+    } else if (m_node->GetSerializationType() == "RAMNode") {
+        auto rom_node = std::static_pointer_cast<RAMNode>(m_node);
+        rom_node->m_ram_init_file = val;
     }
 }

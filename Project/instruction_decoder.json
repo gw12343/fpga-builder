@@ -12,6 +12,10 @@
         {
             "bits": 1,
             "name": "reset"
+        },
+        {
+            "bits": 1,
+            "name": "HALT"
         }
     ],
     "links": [
@@ -301,12 +305,7 @@
             "output_guid": "46f3af1bc9f34e53a33ccdb3df967882node4"
         },
         {
-            "id": 18446744072350670160,
-            "input_guid": "8bafe10c678e4427bc9d2495788c3be6node2",
-            "output_guid": "a1bf9ab89d4f46049ee9fe906fb99ccenode0"
-        },
-        {
-            "id": 2920288131,
+            "id": 18446744072334872451,
             "input_guid": "a1bf9ab89d4f46049ee9fe906fb99ccenode16",
             "output_guid": "aced3d30a8da4beca6e5e5309c12a2aanode0"
         },
@@ -314,6 +313,26 @@
             "id": 731665586,
             "input_guid": "f8a0c7711ec742ceb903c503b5d40044node0",
             "output_guid": "1df8c5ad300440458e018b7a6a57d7e7node1"
+        },
+        {
+            "id": 549255103,
+            "input_guid": "8bafe10c678e4427bc9d2495788c3be6node2",
+            "output_guid": "a300b7050f2c401c9abcc678831cb762node0"
+        },
+        {
+            "id": 133328180,
+            "input_guid": "a300b7050f2c401c9abcc678831cb762node3",
+            "output_guid": "a1bf9ab89d4f46049ee9fe906fb99ccenode0"
+        },
+        {
+            "id": 2071670664,
+            "input_guid": "a7bb8d599fbb47dbb84c8a87fb7c2703node0",
+            "output_guid": "a300b7050f2c401c9abcc678831cb762node2"
+        },
+        {
+            "id": 18446744072775276669,
+            "input_guid": "85579653f2d643c6b1b2ea44dab8a0b7node0",
+            "output_guid": "a300b7050f2c401c9abcc678831cb762node1"
         }
     ],
     "name": "instruction_decoder",
@@ -541,8 +560,8 @@
             "name": "OR",
             "num_inputs": 2,
             "type": "OrNode",
-            "x": -981.0,
-            "y": 789.0
+            "x": -1000.0,
+            "y": 1221.0
         },
         {
             "guid": "123e3c2b828a49c3bedcb4a29bcc1eee",
@@ -550,8 +569,8 @@
             "name": "Input",
             "slot": 1,
             "type": "InputNode",
-            "x": -1283.0,
-            "y": 701.0
+            "x": -1302.0,
+            "y": 1133.0
         },
         {
             "guid": "fb5414b98e434ae68d69e49e064588c9",
@@ -559,16 +578,16 @@
             "name": "Input",
             "slot": 2,
             "type": "InputNode",
-            "x": -1104.0,
-            "y": 493.0
+            "x": -1123.0,
+            "y": 925.0
         },
         {
             "guid": "54ec564eee124dd2ad2725170094fdab",
             "id": 2297448,
             "name": "",
             "type": "ClockNode",
-            "x": -708.0,
-            "y": 629.0
+            "x": -644.0,
+            "y": 853.0
         },
         {
             "bits": 4,
@@ -577,8 +596,8 @@
             "name": "Literal",
             "type": "LiteralNode",
             "value": 0,
-            "x": -1022.0,
-            "y": 1099.0
+            "x": -843.0,
+            "y": 1339.0
         },
         {
             "bits": 1,
@@ -587,7 +606,7 @@
             "name": "Literal",
             "type": "LiteralNode",
             "value": 1,
-            "x": -939.0,
+            "x": -843.0,
             "y": 923.0
         },
         {
@@ -599,8 +618,8 @@
             "rom_file": "microcode.mem",
             "select_bits": 12,
             "type": "ROMNode",
-            "x": 215.0,
-            "y": 1149.0
+            "x": 265.0,
+            "y": 1141.0
         },
         {
             "bits": 12,
@@ -634,8 +653,8 @@
             "name": "Input",
             "slot": 0,
             "type": "InputNode",
-            "x": -653.0,
-            "y": 1325.0
+            "x": -589.0,
+            "y": 1389.0
         },
         {
             "bits": 8,
@@ -649,7 +668,7 @@
         {
             "data_bits": 1,
             "guid": "aced3d30a8da4beca6e5e5309c12a2aa",
-            "id": 2523178934,
+            "id": 18446744071937763254,
             "name": "Input Tunnel",
             "net_name": "mc_end",
             "type": "InputTunnelNode",
@@ -663,8 +682,37 @@
             "name": "Output Tunnel",
             "net_name": "mc_end",
             "type": "OutputTunnelNode",
-            "x": -1164.0,
-            "y": 884.0
+            "x": -1183.0,
+            "y": 1316.0
+        },
+        {
+            "guid": "a7bb8d599fbb47dbb84c8a87fb7c2703",
+            "id": 18446744073148057710,
+            "name": "Input",
+            "slot": 3,
+            "type": "InputNode",
+            "x": 275.0,
+            "y": 1565.0
+        },
+        {
+            "data_bits": 29,
+            "guid": "a300b7050f2c401c9abcc678831cb762",
+            "id": 18446744071741945093,
+            "name": "Multiplexer",
+            "select_bits": 1,
+            "type": "MultiplexerNode",
+            "x": 609.0,
+            "y": 1317.0
+        },
+        {
+            "bits": 29,
+            "guid": "85579653f2d643c6b1b2ea44dab8a0b7",
+            "id": 18446744072529195603,
+            "name": "Literal",
+            "type": "LiteralNode",
+            "value": 0,
+            "x": 357.0,
+            "y": 1387.0
         }
     ],
     "outputs": [

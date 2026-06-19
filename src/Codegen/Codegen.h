@@ -48,6 +48,8 @@ public:
 
 private:
     std::optional<std::string> CheckCache(const std::string &guid);
+    bool CheckGenerated(const std::string &guid);
+
     bool CheckActive(const std::string &guid);
     std::string GetSafeWireName(const std::string &wire_name);
     void CircuitError(const std::string &msg, const Node &node);
@@ -68,11 +70,16 @@ private:
     bool m_failed;
 
 
+    enum class CodegenState { IDLE, NAME_PASS, OUTPUT_PASS, SEQUENTIAL_PASS };
+
+    CodegenState m_state;
+
     std::stack<std::string> m_return_vals;
     std::stack<std::string> m_active_nodes;
 
     std::map<std::string, int> m_wire_name_counts;
     std::map<std::string, std::string> m_visited_nodes;
+    std::map<std::string, bool> m_has_generated;
 
     std::shared_ptr<ErrorManager> m_error_manager;
     std::shared_ptr<ConstExprEvaluator> m_const_eval;
