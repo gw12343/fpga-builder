@@ -51,7 +51,7 @@ private:
     bool CheckGenerated(const std::string &guid);
 
     bool CheckActive(const std::string &guid);
-    std::string GetSafeWireName(const std::string &wire_name);
+    std::string GetSafeWireName(std::string wire_name);
     void CircuitError(const std::string &msg, const Node &node);
 
     std::string EvalNode(const std::optional<Pin> &pin) {

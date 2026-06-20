@@ -52,29 +52,59 @@
             "output_guid": "dd343a18b2854a2fa216399f058f65b3node3"
         },
         {
-            "id": 1980862738,
-            "input_guid": "02554352e87749be847fd791d02c0a61node4",
-            "output_guid": "d37622b82c644cfa899fa4164500ad02node0"
-        },
-        {
-            "id": 18446744072774581386,
+            "id": 18446744073667580152,
             "input_guid": "8d7c7ed726a14440947351f440731a32node3",
-            "output_guid": "9b3eecf8bf9442daa236e8dfc6ffcc50node0"
-        },
-        {
-            "id": 1674216226,
-            "input_guid": "9b3eecf8bf9442daa236e8dfc6ffcc50node1",
             "output_guid": "02554352e87749be847fd791d02c0a61node2"
         },
         {
-            "id": 1705496353,
+            "id": 780688949,
+            "input_guid": "02554352e87749be847fd791d02c0a61node4",
+            "output_guid": "9b3eecf8bf9442daa236e8dfc6ffcc50node0"
+        },
+        {
+            "id": 18446744072960315271,
+            "input_guid": "9b3eecf8bf9442daa236e8dfc6ffcc50node1",
+            "output_guid": "d37622b82c644cfa899fa4164500ad02node0"
+        },
+        {
+            "id": 18446744072700888617,
+            "input_guid": "02554352e87749be847fd791d02c0a61node4",
+            "output_guid": "4e3794caa8dc46908d1d47ea6e8e9da9node0"
+        },
+        {
+            "id": 1007394507,
             "input_guid": "536aa22ac0ae4fec9df44a1b574aa359node4",
+            "output_guid": "98d940633bba45c2b920824feee8a95fnode0"
+        },
+        {
+            "id": 1498845480,
+            "input_guid": "4a3e776db9f74b24a0f0308d3810dd3fnode0",
+            "output_guid": "8d7c7ed726a14440947351f440731a32node0"
+        },
+        {
+            "id": 18446744073637796674,
+            "input_guid": "714ea985be6e4873987088b970987ee6node0",
             "output_guid": "02554352e87749be847fd791d02c0a61node3"
         },
         {
-            "id": 1514332174,
-            "input_guid": "536aa22ac0ae4fec9df44a1b574aa359node4",
-            "output_guid": "8d7c7ed726a14440947351f440731a32node0"
+            "id": 18446744071720758144,
+            "input_guid": "d00ca08ded0249f192553c10a09db55anode0",
+            "output_guid": "4e3794caa8dc46908d1d47ea6e8e9da9node1"
+        },
+        {
+            "id": 18446744072220178372,
+            "input_guid": "4e3794caa8dc46908d1d47ea6e8e9da9node2",
+            "output_guid": "fff06797d39943bca4810507501af7f0node0"
+        },
+        {
+            "id": 367597866,
+            "input_guid": "4e3794caa8dc46908d1d47ea6e8e9da9node3",
+            "output_guid": "3fbaf23380cc4762827f92a4d90bc414node0"
+        },
+        {
+            "id": 376608039,
+            "input_guid": "4e3794caa8dc46908d1d47ea6e8e9da9node4",
+            "output_guid": "4befbe94134b47f9b71434870ccb9244node0"
         }
     ],
     "name": "main_module",
@@ -105,8 +135,8 @@
             "name": "Input",
             "slot": 1,
             "type": "InputNode",
-            "x": -557.0,
-            "y": -307.0
+            "x": 268.0,
+            "y": -563.0
         },
         {
             "bits": 4,
@@ -114,8 +144,8 @@
             "id": 18446744071921125091,
             "name": "Splitter",
             "type": "SplitterNode",
-            "x": -322.0,
-            "y": -235.0
+            "x": 503.0,
+            "y": -491.0
         },
         {
             "guid": "f6caa8c9d3f34a3183c50f18af5d1809",
@@ -131,8 +161,8 @@
             "module_guid": "84020fe9fc584e238b369a8039b024ca",
             "name": "Custom",
             "type": "CustomNode",
-            "x": 687.0,
-            "y": -363.0
+            "x": 641.0,
+            "y": -11.0
         },
         {
             "guid": "d37622b82c644cfa899fa4164500ad02",
@@ -140,8 +170,8 @@
             "name": "Output",
             "slot": 0,
             "type": "OutputNode",
-            "x": 1038.0,
-            "y": -467.0
+            "x": 1294.0,
+            "y": -291.0
         },
         {
             "guid": "9b3eecf8bf9442daa236e8dfc6ffcc50",
@@ -151,14 +181,122 @@
             "range_end_bit": 15,
             "range_start_bit": 0,
             "type": "BitSelectorNode",
-            "x": 351.0,
-            "y": -299.0
+            "x": 1067.0,
+            "y": -219.0
+        },
+        {
+            "guid": "4e3794caa8dc46908d1d47ea6e8e9da9",
+            "id": 809166517,
+            "module_guid": "7d15db07e38745aaad1e5ad7d161e7fc",
+            "name": "Custom",
+            "type": "CustomNode",
+            "x": 977.0,
+            "y": 69.0
+        },
+        {
+            "data_bits": 1,
+            "guid": "98d940633bba45c2b920824feee8a95f",
+            "id": 1449685451,
+            "name": "Input Tunnel",
+            "net_name": "reset",
+            "type": "InputTunnelNode",
+            "x": 689.0,
+            "y": -364.0
+        },
+        {
+            "data_bits": 1,
+            "guid": "4a3e776db9f74b24a0f0308d3810dd3f",
+            "id": 1867142039,
+            "name": "Output Tunnel",
+            "net_name": "reset",
+            "type": "OutputTunnelNode",
+            "x": -223.0,
+            "y": -108.0
+        },
+        {
+            "data_bits": 1,
+            "guid": "714ea985be6e4873987088b970987ee6",
+            "id": 18446744073191525603,
+            "name": "Output Tunnel",
+            "net_name": "reset",
+            "type": "OutputTunnelNode",
+            "x": 465.0,
+            "y": 132.0
+        },
+        {
+            "data_bits": 1,
+            "guid": "714ea985be6e4873987088b970987ee6",
+            "id": 18446744073191525603,
+            "name": "Output Tunnel",
+            "net_name": "reset",
+            "type": "OutputTunnelNode",
+            "x": 465.0,
+            "y": 132.0
+        },
+        {
+            "data_bits": 1,
+            "guid": "d00ca08ded0249f192553c10a09db55a",
+            "id": 18446744073291123525,
+            "name": "Output Tunnel",
+            "net_name": "reset",
+            "type": "OutputTunnelNode",
+            "x": 801.0,
+            "y": 212.0
+        },
+        {
+            "data_bits": 1,
+            "guid": "d00ca08ded0249f192553c10a09db55a",
+            "id": 18446744073291123525,
+            "name": "Output Tunnel",
+            "net_name": "reset",
+            "type": "OutputTunnelNode",
+            "x": 801.0,
+            "y": 212.0
+        },
+        {
+            "guid": "fff06797d39943bca4810507501af7f0",
+            "id": 18446744073367211875,
+            "name": "Output",
+            "slot": 1,
+            "type": "OutputNode",
+            "x": 1300.0,
+            "y": -99.0
+        },
+        {
+            "guid": "3fbaf23380cc4762827f92a4d90bc414",
+            "id": 18446744073259414274,
+            "name": "Output",
+            "slot": 2,
+            "type": "OutputNode",
+            "x": 1300.0,
+            "y": 61.0
+        },
+        {
+            "guid": "4befbe94134b47f9b71434870ccb9244",
+            "id": 820054673,
+            "name": "Output",
+            "slot": 3,
+            "type": "OutputNode",
+            "x": 1300.0,
+            "y": 221.0
         }
     ],
     "outputs": [
         {
             "bits": 16,
             "name": "led"
+        },
+        {
+            "bits": 7,
+            "name": "SEG"
+        },
+        {
+            "bits": 1,
+            "name": "DP"
+        },
+        {
+            "bits": 8,
+            "name": "AN"
         }
     ]
 }

@@ -404,7 +404,7 @@ void Codegen::visit(RAMNode &node, const int output_slot) {
 void Codegen::visit(RegisterNode &node, const int output_slot) {
     std::cout << "eval node: " << node.GetDisplayName() << std::endl;
     if (m_state == CodegenState::NAME_PASS) {
-        m_visited_nodes[NODE_KEY(output_slot)] = GetSafeWireName("ram_out");
+        m_visited_nodes[NODE_KEY(output_slot)] = GetSafeWireName("register_value");
         return;
     }
     if (m_state == CodegenState::OUTPUT_PASS) {
@@ -743,7 +743,7 @@ void Codegen::visit(CustomModuleNode &node, const int output_slot) {
     }
 
     // Instantiate module and connect labeled inputs
-    m_instances += node_module->GetName() + " " + GetSafeWireName("custom_node") + " (\n";
+    m_instances += node_module->GetName() + " " + GetSafeWireName("u_" + node_module->GetName()) + " (\n";
     m_instances += "\t.sys_clk(sys_clk),\n";
     for (int i = 0; i < num_inputs; i++) {
         m_instances += "\t." + input_pin_names[i] + "(" + input_pin_values[i] + "),\n";
@@ -1375,7 +1375,11 @@ std::optional<std::string> Codegen::CheckCache(const std::string &guid) {
 
 bool Codegen::CheckGenerated(const std::string &guid) { return m_has_generated[guid]; }
 
-std::string Codegen::GetSafeWireName(const std::string &wire_name) {
+
+std::string Codegen::GetSafeWireName(std::string wire_name) {
+    std::replace(wire_name.begin(), wire_name.end(), ' ', '_');
+    std::transform(wire_name.begin(), wire_name.end(), wire_name.begin(), ::tolower);
+
     if (m_wire_name_counts.contains(wire_name)) {
         return wire_name + std::to_string(m_wire_name_counts[wire_name]++);
     }
