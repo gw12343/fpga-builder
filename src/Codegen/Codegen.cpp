@@ -1377,8 +1377,8 @@ bool Codegen::CheckGenerated(const std::string &guid) { return m_has_generated[g
 
 
 std::string Codegen::GetSafeWireName(std::string wire_name) {
-    std::replace(wire_name.begin(), wire_name.end(), ' ', '_');
-    std::transform(wire_name.begin(), wire_name.end(), wire_name.begin(), ::tolower);
+    std::ranges::replace(wire_name, ' ', '_');
+    std::ranges::transform(wire_name, wire_name.begin(), ::tolower);
 
     if (m_wire_name_counts.contains(wire_name)) {
         return wire_name + std::to_string(m_wire_name_counts[wire_name]++);
