@@ -460,9 +460,14 @@
             "output_guid": "2d5652cb3e244fd5825e9fad5839acc2node1"
         },
         {
-            "id": 2774408242,
+            "id": 18446744072188992562,
             "input_guid": "0b3a65d4a2d041d38126889e75714f8cnode0",
             "output_guid": "2d5652cb3e244fd5825e9fad5839acc2node0"
+        },
+        {
+            "id": 18446744072810607156,
+            "input_guid": "8d7c7ed726a14440947351f440731a32node5",
+            "output_guid": "42c0205d0c124a588af475810031d832node0"
         }
     ],
     "name": "main_module",
@@ -995,6 +1000,15 @@
             "type": "OutputNode",
             "x": 1806.0,
             "y": -547.0
+        },
+        {
+            "guid": "42c0205d0c124a588af475810031d832",
+            "id": 18446744073212508660,
+            "name": "Output",
+            "slot": 5,
+            "type": "OutputNode",
+            "x": 526.0,
+            "y": -435.0
         }
     ],
     "outputs": [
@@ -1017,6 +1031,10 @@
         {
             "bits": 1,
             "name": "UART_RXD_OUT"
+        },
+        {
+            "bits": 3,
+            "name": "STATUS_LED"
         }
     ]
 }

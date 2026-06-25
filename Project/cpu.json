@@ -415,6 +415,26 @@
             "id": 960661241,
             "input_guid": "2ba0868827884e34984748172c20f286node0",
             "output_guid": "687bcfcd0cb34c03b1a9cd0ec3f21fe0node0"
+        },
+        {
+            "id": 426900333,
+            "input_guid": "295ac46d4d98403d9c45e704a137922fnode3",
+            "output_guid": "f392b041a5134ff8898c819bc9d10d42node0"
+        },
+        {
+            "id": 2408765634,
+            "input_guid": "7df33658ceec48869b9cf44073214d28node4",
+            "output_guid": "295ac46d4d98403d9c45e704a137922fnode2"
+        },
+        {
+            "id": 1099960842,
+            "input_guid": "a96aa7df26174cc7ae91991c2b7d7cdenode0",
+            "output_guid": "295ac46d4d98403d9c45e704a137922fnode0"
+        },
+        {
+            "id": 4157676589,
+            "input_guid": "e54e8a1b7eb54f1a90200a68c91802a0node0",
+            "output_guid": "295ac46d4d98403d9c45e704a137922fnode1"
         }
     ],
     "name": "cpu",
@@ -938,8 +958,8 @@
             "name": "Input Tunnel",
             "net_name": "IS_HALTED",
             "type": "InputTunnelNode",
-            "x": -1500.0,
-            "y": 2388.0
+            "x": -1532.0,
+            "y": 2324.0
         },
         {
             "data_bits": 1,
@@ -950,6 +970,55 @@
             "type": "OutputTunnelNode",
             "x": -2380.0,
             "y": 1844.0
+        },
+        {
+            "guid": "f392b041a5134ff8898c819bc9d10d42",
+            "id": 1916833177,
+            "name": "Output",
+            "slot": 3,
+            "type": "OutputNode",
+            "x": -754.0,
+            "y": 2221.0
+        },
+        {
+            "data_bits": 3,
+            "guid": "295ac46d4d98403d9c45e704a137922f",
+            "id": 2086162729,
+            "name": "Multiplexer",
+            "select_bits": 1,
+            "type": "MultiplexerNode",
+            "x": -1033.0,
+            "y": 2293.0
+        },
+        {
+            "bits": 3,
+            "guid": "a96aa7df26174cc7ae91991c2b7d7cde",
+            "id": 1834240875,
+            "name": "Literal",
+            "type": "LiteralNode",
+            "value": 2,
+            "x": -1259.0,
+            "y": 2139.0
+        },
+        {
+            "bits": 3,
+            "guid": "e54e8a1b7eb54f1a90200a68c91802a0",
+            "id": 1646815673,
+            "name": "Literal",
+            "type": "LiteralNode",
+            "value": 1,
+            "x": -1259.0,
+            "y": 2267.0
+        },
+        {
+            "bits": 3,
+            "guid": "e54e8a1b7eb54f1a90200a68c91802a0",
+            "id": 1646815673,
+            "name": "Literal",
+            "type": "LiteralNode",
+            "value": 1,
+            "x": -1259.0,
+            "y": 2267.0
         }
     ],
     "outputs": [
@@ -964,6 +1033,10 @@
         {
             "bits": 16,
             "name": "ADDRESS_OUT"
+        },
+        {
+            "bits": 3,
+            "name": "status_out"
         }
     ]
 }
