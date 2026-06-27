@@ -9,7 +9,6 @@
 #include "../Node/Wiring/BitSelectorNode.h"
 #include "../Node/Wiring/CombinerNode.h"
 #include "../Node/Wiring/SplitterNode.h"
-#include "CircuitSerializer.h"
 #include "Codegen/Codegen.h"
 #include "Lib/IconsFontAwesome6.h"
 #include "Node/Arithmetic/AdderNode.h"
@@ -38,8 +37,12 @@
 #include "Node/Wiring/MultiplexerNode.h"
 #include "Node/Wiring/OutputTunnelNode.h"
 
-
+#ifdef __EMSCRIPTEN__
+#define NODE_MIN_BTN_SIZE 100
+#else
 #define NODE_MIN_BTN_SIZE 150
+#endif
+
 
 #define ADD_NODE_TO_CATEGORY(category, name, type)                                                                     \
                                                                                                                        \

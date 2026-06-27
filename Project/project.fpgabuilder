@@ -17,9 +17,9 @@
         "memory_map.json",
         "HEX_DISPLAY32.json"
     ],
-    "name": "New Project",
+    "name": "32 Bit CPU Demo",
     "selected_module": 11,
     "time_created": 1777434014282,
     "top_level_node_guid": "274503748e194d7397018655226b8573",
-    "workspace_path": "../Project"
+    "workspace_path": "Project"
 }

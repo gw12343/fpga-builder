@@ -11,11 +11,15 @@
             GIT_TAG docking
     )
 
-    FetchContent_Declare(
-            SDL3
-            GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
-            GIT_TAG release-3.2.2
-    )
+    if (NOT EMSCRIPTEN)
+        FetchContent_Declare(
+                SDL3
+                GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
+                GIT_TAG release-3.2.2
+        )
+        set(SDL_SHARED OFF CACHE BOOL "" FORCE)
+        set(SDL_STATIC ON CACHE BOOL "" FORCE)
+    endif ()
 
     FetchContent_Declare(
             imgui_node_editor
@@ -26,12 +30,13 @@
     FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz)
     FetchContent_MakeAvailable(json)
 
-    set(SDL_SHARED OFF CACHE BOOL "" FORCE)
-    set(SDL_STATIC ON CACHE BOOL "" FORCE)
+    if (NOT EMSCRIPTEN)
+        FetchContent_MakeAvailable(imgui SDL3 imgui_node_editor json)
+        find_package(OpenGL REQUIRED)
+    else ()
+        FetchContent_MakeAvailable(imgui imgui_node_editor json)
+    endif ()
 
-    FetchContent_MakeAvailable(imgui SDL3 imgui_node_editor json)
-
-    find_package(OpenGL REQUIRED)
 
     set(IMGUI_SOURCES
             ${imgui_SOURCE_DIR}/imgui.cpp
@@ -48,12 +53,23 @@
 
     add_library(imgui STATIC ${IMGUI_SOURCES})
 
-    target_include_directories(imgui PUBLIC
-            ${imgui_SOURCE_DIR}
-            ${imgui_SOURCE_DIR}/backends
-            ${SDL3_SOURCE_DIR}/include
-            ${imgui_SOURCE_DIR}/misc/cpp/
-    )
+    if (EMSCRIPTEN)
+        target_include_directories(imgui PUBLIC
+                ${imgui_SOURCE_DIR}
+                ${imgui_SOURCE_DIR}/backends
+                ${imgui_SOURCE_DIR}/misc/cpp/
+        )
+
+        target_compile_options(imgui PUBLIC "-sUSE_SDL=3")
+    else ()
+        target_include_directories(imgui PUBLIC
+                ${imgui_SOURCE_DIR}
+                ${imgui_SOURCE_DIR}/backends
+                ${SDL3_SOURCE_DIR}/include
+                ${imgui_SOURCE_DIR}/misc/cpp/
+        )
+    endif ()
+
 
     add_library(imgui_node_editor STATIC
             ${imgui_node_editor_SOURCE_DIR}/crude_json.cpp
@@ -182,15 +198,46 @@
 
     target_link_libraries(fpga_builder PRIVATE
             imgui
-            SDL3::SDL3-static
-            OpenGL::GL
             imgui_node_editor
             nlohmann_json::nlohmann_json
     )
 
+    if (EMSCRIPTEN)
+        # Convert paths safely
+        file(TO_CMAKE_PATH "${CMAKE_SOURCE_DIR}/resources" CLEAN_RESOURCES_DIR)
+        file(TO_CMAKE_PATH "${CMAKE_SOURCE_DIR}/Project" CLEAN_PROJECT_DIR)
+        file(TO_CMAKE_PATH "${CMAKE_SOURCE_DIR}/imgui.ini" CLEAN_INI_FILE)
+
+        target_compile_options(fpga_builder PRIVATE "-O3")
+
+        # Use target_link_options with SHELL: for flags that contain spaces
+        target_link_options(fpga_builder PRIVATE
+                "-sUSE_SDL=3"
+                "-sUSE_WEBGL2=1"
+                "-sFULL_ES3=1"
+                "-sWASM=1"
+                "-sFORCE_FILESYSTEM=1"
+                "SHELL:--preload-file ${CLEAN_RESOURCES_DIR}@/resources"
+                "SHELL:--preload-file ${CLEAN_PROJECT_DIR}@/Project"
+                "SHELL:--preload-file ${CLEAN_INI_FILE}@/imgui.ini"
+        )
+
+        # Also pass dependencies down to imgui target
+        target_link_options(imgui PRIVATE "-sUSE_SDL=3" "-sUSE_WEBGL2=1")
+
+        set_target_properties(fpga_builder PROPERTIES SUFFIX ".html")
+    else ()
+        # Desktop libs
+        target_link_libraries(fpga_builder PRIVATE
+                SDL3::SDL3-static
+                OpenGL::GL
+        )
+    endif ()
+
+
     target_precompile_headers(fpga_builder PRIVATE ${CMAKE_SOURCE_DIR}/src/pch.h)
 
-    if (WIN32)
+    if (WIN32 AND NOT EMSCRIPTEN)
         target_link_libraries(fpga_builder PRIVATE
                 user32 gdi32 winmm imm32 ole32 oleaut32 version uuid
         )

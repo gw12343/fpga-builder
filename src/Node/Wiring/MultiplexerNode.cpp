@@ -18,13 +18,14 @@ void MultiplexerNode::InitPinsAfterConfig() {
     // Inputs
     int n = 0;
     for (int i = 0; i < GetNumOptions(); i++) {
-        Pin new_input("In " + std::to_string(n), ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(m_data_bits));
+        Pin new_input("In " + std::to_string(n), ax::NodeEditor::PinKind::Input, *this, n, PinDataType(m_data_bits));
+        n++;
         pins.push_back(new_input);
     }
-    pins.push_back({ MP_IN_PIN_SELECT, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(m_select_bits) });
+    pins.push_back({MP_IN_PIN_SELECT, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(m_select_bits)});
 
     // Output
-    pins.push_back({ "Value", ax::NodeEditor::PinKind::Output, *this, n, PinDataType(m_data_bits) });
+    pins.push_back({"Value", ax::NodeEditor::PinKind::Output, *this, n, PinDataType(m_data_bits)});
 }
 int MultiplexerNode::GetNumOptions() const { return static_cast<int>(powl(2.0, m_select_bits)); }
 Pin MultiplexerNode::GetInputPin(const int n) { return pins[n]; }

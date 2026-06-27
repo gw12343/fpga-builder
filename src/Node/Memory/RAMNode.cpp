@@ -2,7 +2,7 @@
 // Created by Gabe on 5/21/2026.
 //
 
-#include "RamNode.h"
+#include "RAMNode.h"
 #include "Events/StringParameterChangeCommand.h"
 #include "GUID.h"
 #include "Module.h"

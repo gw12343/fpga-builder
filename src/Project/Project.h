@@ -4,6 +4,8 @@
 
 #pragma once
 
+
+class OutputViewer;
 class ErrorManager;
 class Module;
 
@@ -11,7 +13,7 @@ class Project {
 public:
     explicit Project(const std::string &workspace);
 
-    void Render(const std::shared_ptr<ErrorManager> &error_manager);
+    void Render(const std::shared_ptr<ErrorManager> &error_manager, const std::shared_ptr<OutputViewer> &output_viewer);
 
     void RegisterModule(const std::shared_ptr<Module> &m);
 

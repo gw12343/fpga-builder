@@ -128,7 +128,7 @@
 Codegen::Codegen(std::shared_ptr<ErrorManager> error_man) :
     m_failed(false), m_error_manager(std::move(error_man)), m_state(CodegenState::IDLE) {}
 
-void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
+std::string Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
     m_failed = false;
     m_const_eval = std::make_shared<ConstExprEvaluator>(m_error_manager);
     m_state = CodegenState::IDLE;
@@ -226,6 +226,8 @@ void Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
     } else {
         std::cerr << "Could not open file \"" << out_path << "\"" << std::endl;
     }
+
+    return out;
 }
 
 
