@@ -223,12 +223,13 @@
                 "SHELL:--preload-file ${CLEAN_RESOURCES_DIR}@/resources"
                 "SHELL:--preload-file ${CLEAN_PROJECT_DIR}@/Project"
                 "SHELL:--preload-file ${CLEAN_INI_FILE}@/imgui.ini"
+                "SHELL:-o index.html"
         )
 
         # Also pass dependencies down to imgui target
         target_link_options(imgui PRIVATE "-sUSE_SDL=3" "-sUSE_WEBGL2=1")
-
-        set_target_properties(fpga_builder PROPERTIES SUFFIX ".html")
+        
+        set_target_properties(fpga_builder PROPERTIES OUTPUT_NAME "index")
     else ()
         # Desktop libs
         target_link_libraries(fpga_builder PRIVATE
