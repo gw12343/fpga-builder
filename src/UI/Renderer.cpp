@@ -29,6 +29,16 @@ void Renderer::InitWindow(const int w, const int h, const std::string &title) {
     m_window = SDL_CreateWindow(title.c_str(), w, h,
                                 SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY);
 
+
+    SDL_Surface *iconSurface = SDL_LoadBMP("resources/icon.bmp");
+
+    if (iconSurface != nullptr) {
+        SDL_SetWindowIcon(m_window, iconSurface);
+        SDL_DestroySurface(iconSurface);
+    } else {
+        std::cerr << "Failed to load icon: %s" << SDL_GetError() << "\n";
+    }
+
     m_gl_context = SDL_GL_CreateContext(m_window);
     SDL_GL_MakeCurrent(m_window, m_gl_context);
     SDL_GL_SetSwapInterval(1);

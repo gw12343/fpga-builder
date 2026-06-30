@@ -217,6 +217,7 @@
                 "-sFULL_ES3=1"
                 "-sWASM=1"
                 "-sFORCE_FILESYSTEM=1"
+                "-sALLOW_MEMORY_GROWTH=1"
                 "SHELL:--preload-file ${CLEAN_RESOURCES_DIR}@/resources"
                 "SHELL:--preload-file ${CLEAN_PROJECT_DIR}@/Project"
                 "SHELL:--preload-file ${CLEAN_INI_FILE}@/imgui.ini"
