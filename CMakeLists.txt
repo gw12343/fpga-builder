@@ -205,6 +205,11 @@
     )
 
     if (EMSCRIPTEN)
+        set_target_properties(fpga_builder PROPERTIES
+            OUTPUT_NAME "index"
+            SUFFIX ".html"
+        )
+        
         # Convert paths safely
         file(TO_CMAKE_PATH "${CMAKE_SOURCE_DIR}/resources" CLEAN_RESOURCES_DIR)
         file(TO_CMAKE_PATH "${CMAKE_SOURCE_DIR}/Project" CLEAN_PROJECT_DIR)
@@ -223,7 +228,6 @@
                 "SHELL:--preload-file ${CLEAN_RESOURCES_DIR}@/resources"
                 "SHELL:--preload-file ${CLEAN_PROJECT_DIR}@/Project"
                 "SHELL:--preload-file ${CLEAN_INI_FILE}@/imgui.ini"
-                "SHELL:-o index.html"
         )
 
         # Also pass dependencies down to imgui target
