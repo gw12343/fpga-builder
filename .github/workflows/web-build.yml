@@ -1,0 +1,65 @@
+name: Deploy Emscripten Build
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:     # Allow manual triggering from the GitHub UI
+
+# Set permissions for the GitHub Token to deploy to Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Prevent concurrent deployments from overwriting each other
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Emscripten
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: latest
+
+      - name: Configure CMake
+        run: emcmake cmake -S . -B build_web -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build Project
+        run: cmake --build build_web --config Release
+
+      - name: Prepare Deployment Directory
+        run: |
+          mkdir -p deploy_dist
+          
+          # Copy over the generated web artifacts. 
+          # Update the source paths if your CMake output goes to a nested bin/ directory.
+          cp build_web/*.wasm deploy_dist/
+          cp build_web/*.js deploy_dist/
+          cp build_web/*.html deploy_dist/ || true
+          cp build_web/*.data deploy_dist/ || true
+          
+          # Create the CNAME file
+          echo "http://fpgabuilder.gabrielwest.dev/" > deploy_dist/CNAME
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './deploy_dist'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
