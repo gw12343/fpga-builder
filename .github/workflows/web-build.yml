@@ -50,7 +50,7 @@ jobs:
           cp build_web/*.data deploy_dist/ || true
           
           # Create the CNAME file
-          echo "http://fpgabuilder.gabrielwest.dev/" > deploy_dist/CNAME
+          echo "fpgabuilder.gabrielwest.dev" > deploy_dist/CNAME
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
