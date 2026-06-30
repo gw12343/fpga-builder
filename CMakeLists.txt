@@ -25,6 +25,8 @@
             imgui_node_editor
             GIT_REPOSITORY https://github.com/thedmd/imgui-node-editor.git
             GIT_TAG master
+
+            PATCH_COMMAND ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_SOURCE_DIR}/patch_node_editor.cmake"
     )
 
     FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz)
