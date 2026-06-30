@@ -2,7 +2,7 @@ name: Deploy Emscripten Build
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "master" ]
   workflow_dispatch:     # Allow manual triggering from the GitHub UI
 
 # Set permissions for the GitHub Token to deploy to Pages
