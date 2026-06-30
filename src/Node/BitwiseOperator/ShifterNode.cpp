@@ -31,12 +31,11 @@ int ShifterNode::GetShiftWidth() const { return ceill(log2(bits)); }
 void ShifterNode::InitPinsAfterConfig() {
     int n = 0;
     // Inputs
-    pins.push_back({ SHIFTER_IN_PIN_INPUT, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(bits) });
-    pins.push_back(
-            { SHIFTER_IN_PIN_DISTANCE, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(GetShiftWidth()) });
+    pins.push_back({SHIFTER_IN_PIN_INPUT, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(bits)});
+    pins.push_back({SHIFTER_IN_PIN_DISTANCE, ax::NodeEditor::PinKind::Input, *this, n++, PinDataType(GetShiftWidth())});
 
     // Outputs
-    pins.push_back({ SHIFTER_OUT_PIN_OUTPUT, ax::NodeEditor::PinKind::Output, *this, n, PinDataType(bits) });
+    pins.push_back({SHIFTER_OUT_PIN_OUTPUT, ax::NodeEditor::PinKind::Output, *this, n, PinDataType(bits)});
 }
 
 Pin ShifterNode::GetInputPin() { return FindPin(SHIFTER_IN_PIN_INPUT).value(); }
@@ -48,7 +47,7 @@ std::string ShifterNode::GetShiftOperator(const std::string &in, const std::stri
     if (type_index == 1)
         return in + " >> " + shft;
     if (type_index == 2)
-        return in + " >>> " + shft;
+        return "$signed(" + in + ") >>> " + shft;
     if (type_index == 3)
         return "(" + in + " << " + shft + ") | (" + in + " >> (" + std::to_string(bits) + " - " + shft + "))";
     if (type_index == 4)
