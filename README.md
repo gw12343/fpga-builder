@@ -12,7 +12,7 @@
     <a href="https://github.com/gw12343/fpga-builder"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/gw12343/fpga-builder">View Live Web Demo</a>
+    <a href="https://fpgabuilder.gabrielwest.dev">View Live Web Demo</a>
     ·
     <a href="https://github.com/gw12343/fpga-builder/issues">Report Bug</a>
     ·
