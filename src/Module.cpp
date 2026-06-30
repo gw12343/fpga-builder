@@ -20,7 +20,7 @@ Module::Module(Project *parent, std::string name, std::string saved_guid) :
     m_project(parent), m_name(std::move(name)), m_guid(std::move(saved_guid)) {
 
     m_config = new ax::NodeEditor::Config();
-    m_config->SettingsFile = (name + ".json").c_str();
+    m_config->SettingsFile = (new std::string(name + ".json"))->c_str();
     m_context = CreateEditor(m_config);
 }
 

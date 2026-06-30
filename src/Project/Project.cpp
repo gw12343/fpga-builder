@@ -24,6 +24,7 @@ Project::Project(const std::string &workspace) : m_time_created(0), m_last_saved
 
         LoadConfigFile();
 
+
         std::cout << "name " << m_name << std::endl;
         std::cout << "author " << m_author << std::endl;
         std::cout << "workspace_path " << m_workspace_path << std::endl;

@@ -13,13 +13,31 @@
 
 
 void Renderer::InitWindow(const int w, const int h, const std::string &title) {
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+    if (!SDL_Init(SDL_INIT_VIDEO)) {
         std::cerr << "SDL_Init Error: " << SDL_GetError() << std::endl;
         return;
     }
 
+
+#ifdef __EMSCRIPTEN__
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+#endif
+
+
     m_window = SDL_CreateWindow(title.c_str(), w, h,
                                 SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY);
+
+
+    SDL_Surface *iconSurface = SDL_LoadBMP("resources/icon.bmp");
+
+    if (iconSurface != nullptr) {
+        SDL_SetWindowIcon(m_window, iconSurface);
+        SDL_DestroySurface(iconSurface);
+    } else {
+        std::cerr << "Failed to load icon: %s" << SDL_GetError() << "\n";
+    }
 
     m_gl_context = SDL_GL_CreateContext(m_window);
     SDL_GL_MakeCurrent(m_window, m_gl_context);
@@ -28,7 +46,7 @@ void Renderer::InitWindow(const int w, const int h, const std::string &title) {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO &io = ImGui::GetIO();
-
+    io.IniFilename = (new std::string(ASSET_BASE_PATH + "imgui.ini"))->c_str();
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
     ImGui::StyleColorsDark();
@@ -43,7 +61,9 @@ void Renderer::InitWindow(const int w, const int h, const std::string &title) {
     // ImFontConfig roboto_config;
     // roboto_config.MergeMode = true;
     // roboto_config.PixelSnapH = true;
-    io.Fonts->AddFontFromFileTTF("../resources/Roboto-Regular.ttf", 12.0f * UI_SCALE);
+
+    const auto roboto = ASSET_BASE_PATH + "resources/Roboto-Regular.ttf";
+    io.Fonts->AddFontFromFileTTF(roboto.c_str(), 12.0f * UI_SCALE);
 
     ImFontConfig fa_config;
     fa_config.MergeMode = true;
@@ -51,14 +71,23 @@ void Renderer::InitWindow(const int w, const int h, const std::string &title) {
     fa_config.GlyphMinAdvanceX = 12.0f;
 
     static constexpr ImWchar ICON_RANGES[] = {ICON_MIN_FA, ICON_MAX_FA, 0};
-    io.Fonts->AddFontFromFileTTF("../resources/fa-solid-900.ttf", 12.0f * UI_SCALE, &fa_config, ICON_RANGES);
+    const auto fa_solid = ASSET_BASE_PATH + "resources/fa-solid-900.ttf";
+
+    io.Fonts->AddFontFromFileTTF(fa_solid.c_str(), 12.0f * UI_SCALE, &fa_config, ICON_RANGES);
 
 
     io.FontGlobalScale = 1.0f;
 
 
     ImGui_ImplSDL3_InitForOpenGL(m_window, m_gl_context);
-    ImGui_ImplOpenGL3_Init("#version 130");
+
+#ifdef __EMSCRIPTEN__
+    const char *glsl_version = "#version 300 es";
+#else
+    const char *glsl_version = "#version 130";
+#endif
+
+    ImGui_ImplOpenGL3_Init(glsl_version);
 
     style.ChildRounding = 0;
     style.GrabRounding = 0;
@@ -200,10 +229,24 @@ void Renderer::EndFrame() const {
 
     ImGui::Render();
 
-    glViewport(0, 0, 800, 600);
+    int fb_width, fb_height;
+    SDL_GetWindowSizeInPixels(m_window, &fb_width, &fb_height);
+
+    glViewport(0, 0, fb_width, fb_height);
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-    ImGui::UpdatePlatformWindows();
+#ifndef __EMSCRIPTEN__
+    ImGuiIO &io_ref = ImGui::GetIO();
+    if (io_ref.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+        SDL_Window *backup_current_window = SDL_GL_GetCurrentWindow();
+        SDL_GLContext backup_current_context = SDL_GL_GetCurrentContext();
+        ImGui::UpdatePlatformWindows();
+        ImGui::RenderPlatformWindowsDefault();
+        SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
+    }
+#endif
+
     SDL_GL_SwapWindow(m_window);
 }

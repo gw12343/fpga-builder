@@ -17,7 +17,7 @@ class Codegen final : public Visitor {
 public:
     explicit Codegen(std::shared_ptr<ErrorManager> error_man);
 
-    void GenerateCode(const std::shared_ptr<Module> &module);
+    std::string GenerateCode(const std::shared_ptr<Module> &module);
 
     void visit(OutputTunnelNode &node, int output_slot) override;
     void visit(InputTunnelNode &node, int output_slot) override;

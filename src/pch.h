@@ -24,4 +24,12 @@
 
 #include <nlohmann/json.hpp>
 
+
+#ifdef __EMSCRIPTEN__
+// root of the virtual filesystem
+inline const std::string ASSET_BASE_PATH = "/";
+#else
+inline const std::string ASSET_BASE_PATH = "";
+#endif
+
 #endif // PCH_H

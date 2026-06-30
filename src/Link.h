@@ -12,9 +12,9 @@ public:
 
     Link(Module *module, std::string saved_id, std::string output_guid, std::string input_guid);
 
-    constexpr Link(Link &&other) = default;
-    constexpr Link(const Link &other) = default;
-    constexpr Link &operator=(const Link &) = default;
+    // constexpr Link(Link &&other) = default;
+    // constexpr Link(const Link &other) = default;
+    // constexpr Link &operator=(const Link &) = default;
 
     void Render() const;
 

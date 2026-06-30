@@ -3,9 +3,11 @@
 //
 
 #include "Node/CustomModuleNode.h"
+#include "OutputViewer.h"
 #include "Project/Project.h"
 
-void Project::Render(const std::shared_ptr<ErrorManager> &error_manager) {
+void Project::Render(const std::shared_ptr<ErrorManager> &error_manager,
+                     const std::shared_ptr<OutputViewer> &output_viewer) {
     ImGui::Begin("Project Viewer");
     ImGui::Text("Project Name: '%s'", m_name.c_str());
     ImGui::Text("Author: %s", m_author.c_str());
@@ -29,6 +31,9 @@ void Project::Render(const std::shared_ptr<ErrorManager> &error_manager) {
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.6, 0.15, 0.15, 1.0));
         }
         if (ImGui::Button((prefix + module->GetName()).c_str(), ImVec2(btn_width, 0.0f))) {
+            if (!is_selected) {
+                output_viewer->UpdateOutput(module);
+            }
             m_selected_module = i;
         }
         if (is_selected) {
