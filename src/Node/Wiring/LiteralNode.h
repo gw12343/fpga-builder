@@ -16,7 +16,7 @@ public:
     [[nodiscard]] bool IsSequential() const override { return false; }
 
     // Pre-configured
-    LiteralNode(Module *module, const std::string &guid, int bit_width, int val);
+    LiteralNode(Module *module, const std::string &guid, int bit_width, uint64_t val);
     // New node
     explicit LiteralNode(Module *module);
 
@@ -27,5 +27,5 @@ public:
 
 
     static constexpr ImVec4 COLOR = {0.373f, 0.369f, 0.353f, 1.0f};
-    int value;
+    uint64_t value;
 };

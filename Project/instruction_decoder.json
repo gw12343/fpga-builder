@@ -205,11 +205,6 @@
             "output_guid": "46f3af1bc9f34e53a33ccdb3df967882node5"
         },
         {
-            "id": 18446744073237988040,
-            "input_guid": "355833d991d04c8ab711fcb1f0cb62e8node0",
-            "output_guid": "46f3af1bc9f34e53a33ccdb3df967882node2"
-        },
-        {
             "id": 391276050,
             "input_guid": "3801266b2f224264ade91b16022e1caenode0",
             "output_guid": "8bafe10c678e4427bc9d2495788c3be6node0"
@@ -333,12 +328,22 @@
             "id": 18446744072775276669,
             "input_guid": "85579653f2d643c6b1b2ea44dab8a0b7node0",
             "output_guid": "a300b7050f2c401c9abcc678831cb762node1"
+        },
+        {
+            "id": 18446744073171899522,
+            "input_guid": "a1bf9ab89d4f46049ee9fe906fb99ccenode30",
+            "output_guid": "bb5cf0837f9e4e22b1f8d744a785abb5node0"
+        },
+        {
+            "id": 18446744073366326189,
+            "input_guid": "355833d991d04c8ab711fcb1f0cb62e8node0",
+            "output_guid": "46f3af1bc9f34e53a33ccdb3df967882node2"
         }
     ],
     "name": "instruction_decoder",
     "nodes": [
         {
-            "bits": 29,
+            "bits": 30,
             "guid": "a1bf9ab89d4f46049ee9fe906fb99cce",
             "id": 18446744073011192543,
             "name": "Splitter",
@@ -606,12 +611,12 @@
             "name": "Literal",
             "type": "LiteralNode",
             "value": 1,
-            "x": -843.0,
+            "x": -811.0,
             "y": 923.0
         },
         {
             "async_read": true,
-            "data_bits": 29,
+            "data_bits": 30,
             "guid": "8bafe10c678e4427bc9d2495788c3be6",
             "id": 475234686,
             "name": "ROM",
@@ -695,7 +700,7 @@
             "y": 1565.0
         },
         {
-            "data_bits": 29,
+            "data_bits": 30,
             "guid": "a300b7050f2c401c9abcc678831cb762",
             "id": 18446744071741945093,
             "name": "Multiplexer",
@@ -705,7 +710,7 @@
             "y": 1317.0
         },
         {
-            "bits": 29,
+            "bits": 30,
             "guid": "85579653f2d643c6b1b2ea44dab8a0b7",
             "id": 18446744072529195603,
             "name": "Literal",
@@ -713,6 +718,15 @@
             "value": 0,
             "x": 357.0,
             "y": 1387.0
+        },
+        {
+            "guid": "bb5cf0837f9e4e22b1f8d744a785abb5",
+            "id": 2109929073,
+            "name": "Output",
+            "slot": 17,
+            "type": "OutputNode",
+            "x": 1390.0,
+            "y": 1837.0
         }
     ],
     "outputs": [
@@ -783,6 +797,10 @@
         {
             "bits": 1,
             "name": "USE_CONST_AS_B"
+        },
+        {
+            "bits": 1,
+            "name": "PC_DEC"
         }
     ]
 }

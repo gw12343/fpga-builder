@@ -8,6 +8,10 @@
         {
             "bits": 32,
             "name": "DATA_IN"
+        },
+        {
+            "bits": 1,
+            "name": "IRQ"
         }
     ],
     "links": [
@@ -40,81 +44,6 @@
             "id": 18446744073495086303,
             "input_guid": "cdbcf21cf8474603b136dc300cc4ec3cnode3",
             "output_guid": "faf9f94d78c347399871c17589408e82node0"
-        },
-        {
-            "id": 18446744072127650054,
-            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node13",
-            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node0"
-        },
-        {
-            "id": 18446744072745684534,
-            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node14",
-            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node1"
-        },
-        {
-            "id": 1629434295,
-            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node15",
-            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node2"
-        },
-        {
-            "id": 842870129,
-            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node16",
-            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node3"
-        },
-        {
-            "id": 18446744072944196243,
-            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node17",
-            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node4"
-        },
-        {
-            "id": 18446744073339726006,
-            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node18",
-            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node5"
-        },
-        {
-            "id": 18446744072400332836,
-            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node19",
-            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node6"
-        },
-        {
-            "id": 229250667,
-            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node20",
-            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node7"
-        },
-        {
-            "id": 1222148279,
-            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node21",
-            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node8"
-        },
-        {
-            "id": 12865839,
-            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node22",
-            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node9"
-        },
-        {
-            "id": 18446744073207999823,
-            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node23",
-            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node10"
-        },
-        {
-            "id": 18446744073377967678,
-            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node24",
-            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node11"
-        },
-        {
-            "id": 1096482512,
-            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node25",
-            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node12"
-        },
-        {
-            "id": 18446744073476633283,
-            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node26",
-            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node13"
-        },
-        {
-            "id": 18446744072662029640,
-            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node27",
-            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node14"
         },
         {
             "id": 1502215043,
@@ -177,21 +106,6 @@
             "output_guid": "3e5c89368fd24eb2a29283faf3c8c2e3node7"
         },
         {
-            "id": 1188512881,
-            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node10",
-            "output_guid": "bb98c45c2baf40f0829c757645c2ba22node0"
-        },
-        {
-            "id": 774300415,
-            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node9",
-            "output_guid": "5c216754b8fc4433b1ede4fdfcca1f86node0"
-        },
-        {
-            "id": 1158229344,
-            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node11",
-            "output_guid": "1958b0efcf0a41aeb0bb6a64278d6144node0"
-        },
-        {
             "id": 18446744073542611843,
             "input_guid": "a7f4d24e7c4d49d4945fbdee12ddea89node0",
             "output_guid": "1c2f46a215fd47c38a9125cdde9f2087node1"
@@ -242,11 +156,6 @@
             "output_guid": "e62544c02e6a46f6b0a47e9538759c46node2"
         },
         {
-            "id": 18446744073602864274,
-            "input_guid": "3e5c89368fd24eb2a29283faf3c8c2e3node8",
-            "output_guid": "5f7ed3bf9824413cb47d00cb479192b9node0"
-        },
-        {
             "id": 12802768,
             "input_guid": "929df8944ce44e17a4ecbb110dd9d980node0",
             "output_guid": "687bcfcd0cb34c03b1a9cd0ec3f21fe0node1"
@@ -275,11 +184,6 @@
             "id": 1302387084,
             "input_guid": "3b059c69fabc4bd19521dec2d2eea928node0",
             "output_guid": "77b9ae5c4b0b43ee8a7408e54bcc423bnode3"
-        },
-        {
-            "id": 18446744071776932242,
-            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node12",
-            "output_guid": "27f926d0b38945fcbc1b1d6f4a873027node0"
         },
         {
             "id": 18446744073020422833,
@@ -422,7 +326,7 @@
             "output_guid": "f392b041a5134ff8898c819bc9d10d42node0"
         },
         {
-            "id": 2408765634,
+            "id": 18446744071823349954,
             "input_guid": "7df33658ceec48869b9cf44073214d28node4",
             "output_guid": "295ac46d4d98403d9c45e704a137922fnode2"
         },
@@ -432,9 +336,149 @@
             "output_guid": "295ac46d4d98403d9c45e704a137922fnode0"
         },
         {
-            "id": 4157676589,
+            "id": 18446744073572260909,
             "input_guid": "e54e8a1b7eb54f1a90200a68c91802a0node0",
             "output_guid": "295ac46d4d98403d9c45e704a137922fnode1"
+        },
+        {
+            "id": 18446744072964986566,
+            "input_guid": "3e5c89368fd24eb2a29283faf3c8c2e3node10",
+            "output_guid": "5f7ed3bf9824413cb47d00cb479192b9node0"
+        },
+        {
+            "id": 1177256443,
+            "input_guid": "25cb247b9fbf47cfb991a3ef0417f314node1",
+            "output_guid": "3e5c89368fd24eb2a29283faf3c8c2e3node9"
+        },
+        {
+            "id": 1829569677,
+            "input_guid": "3e5c89368fd24eb2a29283faf3c8c2e3node11",
+            "output_guid": "65f1bc4781344fd09f1303127bc74e53node0"
+        },
+        {
+            "id": 18446744073541194565,
+            "input_guid": "14a9edd16970468b99ce626523ca223dnode0",
+            "output_guid": "1c2f46a215fd47c38a9125cdde9f2087node9"
+        },
+        {
+            "id": 739199628,
+            "input_guid": "95bae818796548a780f63d6cb09275c0node0",
+            "output_guid": "1c2f46a215fd47c38a9125cdde9f2087node10"
+        },
+        {
+            "id": 2144945311,
+            "input_guid": "9845373442fb47f6a53045ab91d4f09bnode0",
+            "output_guid": "3e5c89368fd24eb2a29283faf3c8c2e3node8"
+        },
+        {
+            "id": 1582292637,
+            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node31",
+            "output_guid": "a45cdf1f6e4f4b8bbe44fc07e5c34acenode0"
+        },
+        {
+            "id": 1951002331,
+            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node30",
+            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node14"
+        },
+        {
+            "id": 1635992489,
+            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node29",
+            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node13"
+        },
+        {
+            "id": 924335138,
+            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node28",
+            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node12"
+        },
+        {
+            "id": 470556862,
+            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node27",
+            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node11"
+        },
+        {
+            "id": 237602973,
+            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node26",
+            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node10"
+        },
+        {
+            "id": 18446744072316419160,
+            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node25",
+            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node9"
+        },
+        {
+            "id": 18446744072464592630,
+            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node24",
+            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node8"
+        },
+        {
+            "id": 2116342488,
+            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node23",
+            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node7"
+        },
+        {
+            "id": 18446744072344235290,
+            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node22",
+            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node6"
+        },
+        {
+            "id": 806792869,
+            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node21",
+            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node5"
+        },
+        {
+            "id": 18446744072919461042,
+            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node20",
+            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node4"
+        },
+        {
+            "id": 220895087,
+            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node19",
+            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node3"
+        },
+        {
+            "id": 18446744072357870350,
+            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node18",
+            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node2"
+        },
+        {
+            "id": 18446744071725901670,
+            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node17",
+            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node1"
+        },
+        {
+            "id": 18446744072396736250,
+            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node16",
+            "output_guid": "d8627c0683f64f06bdee67e7a6c8a7d7node0"
+        },
+        {
+            "id": 18446744072455765422,
+            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node15",
+            "output_guid": "27f926d0b38945fcbc1b1d6f4a873027node0"
+        },
+        {
+            "id": 1429178217,
+            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node14",
+            "output_guid": "1958b0efcf0a41aeb0bb6a64278d6144node0"
+        },
+        {
+            "id": 851813371,
+            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node13",
+            "output_guid": "bb98c45c2baf40f0829c757645c2ba22node0"
+        },
+        {
+            "id": 18446744072677329341,
+            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node12",
+            "output_guid": "5c216754b8fc4433b1ede4fdfcca1f86node0"
+        },
+        {
+            "id": 375217418,
+            "input_guid": "1c2f46a215fd47c38a9125cdde9f2087node12",
+            "output_guid": "25cb247b9fbf47cfb991a3ef0417f314node0"
+        },
+        {
+            "id": 18446744071664266893,
+            "input_guid": "687bcfcd0cb34c03b1a9cd0ec3f21fe0node21",
+            "output_guid": "1c2f46a215fd47c38a9125cdde9f2087node11"
         }
     ],
     "name": "cpu",
@@ -562,7 +606,7 @@
             "name": "Custom",
             "type": "CustomNode",
             "x": -7.0,
-            "y": 2085.0
+            "y": 2213.0
         },
         {
             "guid": "279f6c6c83ea405fbba9ac0e0e337ad6",
@@ -588,8 +632,8 @@
             "name": "Input",
             "slot": 0,
             "type": "InputNode",
-            "x": -269.0,
-            "y": 1725.0
+            "x": -717.0,
+            "y": 1437.0
         },
         {
             "guid": "541453a69e3545cf8950e9e137394f09",
@@ -597,7 +641,7 @@
             "name": "Input",
             "slot": 0,
             "type": "InputNode",
-            "x": 947.0,
+            "x": 723.0,
             "y": 1741.0
         },
         {
@@ -654,7 +698,7 @@
             "net_name": "ins_opcode",
             "type": "InputTunnelNode",
             "x": 356.0,
-            "y": 2276.0
+            "y": 2404.0
         },
         {
             "data_bits": 1,
@@ -673,8 +717,8 @@
             "name": "Input Tunnel",
             "net_name": "flag_false",
             "type": "InputTunnelNode",
-            "x": 1516.0,
-            "y": 1412.0
+            "x": 1548.0,
+            "y": 1396.0
         },
         {
             "data_bits": 2,
@@ -722,7 +766,7 @@
             "id": 1933707096,
             "name": "Literal",
             "type": "LiteralNode",
-            "value": 0,
+            "value": 65532,
             "x": -1022.0,
             "y": 811.0
         },
@@ -732,7 +776,7 @@
             "id": 1933707096,
             "name": "Literal",
             "type": "LiteralNode",
-            "value": 0,
+            "value": 65532,
             "x": -1022.0,
             "y": 811.0
         },
@@ -754,7 +798,7 @@
             "net_name": "INS_OUT",
             "type": "OutputTunnelNode",
             "x": -182.0,
-            "y": 2116.0
+            "y": 2244.0
         },
         {
             "data_bits": 4,
@@ -764,7 +808,7 @@
             "net_name": "INS_REG_A",
             "type": "InputTunnelNode",
             "x": 357.0,
-            "y": 2148.0
+            "y": 2276.0
         },
         {
             "data_bits": 4,
@@ -774,7 +818,7 @@
             "net_name": "INS_REG_B",
             "type": "InputTunnelNode",
             "x": 357.0,
-            "y": 2212.0
+            "y": 2340.0
         },
         {
             "data_bits": 4,
@@ -823,7 +867,7 @@
             "name": "Output Tunnel",
             "net_name": "FLAG_CONDITIONS",
             "type": "OutputTunnelNode",
-            "x": 895.0,
+            "x": 703.0,
             "y": 1668.0
         },
         {
@@ -843,8 +887,8 @@
             "name": "Output Tunnel",
             "net_name": "CONST_AS_B",
             "type": "OutputTunnelNode",
-            "x": 75.0,
-            "y": 1924.0
+            "x": 43.0,
+            "y": 2052.0
         },
         {
             "data_bits": 1,
@@ -863,8 +907,8 @@
             "name": "Output Tunnel",
             "net_name": "INS_LIT_AS_B",
             "type": "OutputTunnelNode",
-            "x": 73.0,
-            "y": 1988.0
+            "x": 41.0,
+            "y": 2116.0
         },
         {
             "data_bits": 1,
@@ -883,7 +927,7 @@
             "name": "Output Tunnel",
             "net_name": "UPDATE_FLAGS",
             "type": "OutputTunnelNode",
-            "x": 926.0,
+            "x": 718.0,
             "y": 1604.0
         },
         {
@@ -893,8 +937,8 @@
             "name": "Literal",
             "type": "LiteralNode",
             "value": 1,
-            "x": -2027.0,
-            "y": 2571.0
+            "x": -1963.0,
+            "y": 2635.0
         },
         {
             "data_bits": 4,
@@ -922,8 +966,8 @@
             "id": 1523891939,
             "name": "Register",
             "type": "RegisterNode",
-            "x": -1783.0,
-            "y": 2357.0
+            "x": -1719.0,
+            "y": 2421.0
         },
         {
             "guid": "ae9def869ea84465ba03786dd30351a1",
@@ -931,8 +975,8 @@
             "name": "Input",
             "slot": 0,
             "type": "InputNode",
-            "x": -2077.0,
-            "y": 2397.0
+            "x": -2013.0,
+            "y": 2461.0
         },
         {
             "guid": "ae9def869ea84465ba03786dd30351a1",
@@ -940,16 +984,16 @@
             "name": "Input",
             "slot": 0,
             "type": "InputNode",
-            "x": -2077.0,
-            "y": 2397.0
+            "x": -2013.0,
+            "y": 2461.0
         },
         {
             "guid": "11df7ccb2d5549e2b61580b702779964",
             "id": 18446744072808261759,
             "name": "",
             "type": "ClockNode",
-            "x": -1956.0,
-            "y": 2309.0
+            "x": -1892.0,
+            "y": 2373.0
         },
         {
             "data_bits": 1,
@@ -1019,6 +1063,66 @@
             "value": 1,
             "x": -1259.0,
             "y": 2267.0
+        },
+        {
+            "guid": "25cb247b9fbf47cfb991a3ef0417f314",
+            "id": 558675727,
+            "input_width": 32,
+            "name": "Bit Selector",
+            "range_end_bit": 5,
+            "range_start_bit": 0,
+            "type": "BitSelectorNode",
+            "x": 735.0,
+            "y": 1189.0
+        },
+        {
+            "data_bits": 6,
+            "guid": "65f1bc4781344fd09f1303127bc74e53",
+            "id": 1182291032,
+            "name": "Input Tunnel",
+            "net_name": "FLAGS",
+            "type": "InputTunnelNode",
+            "x": 1545.0,
+            "y": 1460.0
+        },
+        {
+            "data_bits": 6,
+            "guid": "14a9edd16970468b99ce626523ca223d",
+            "id": 18446744073601283845,
+            "name": "Output Tunnel",
+            "net_name": "FLAGS",
+            "type": "OutputTunnelNode",
+            "x": -215.0,
+            "y": 1588.0
+        },
+        {
+            "guid": "95bae818796548a780f63d6cb09275c0",
+            "id": 342270225,
+            "name": "Input",
+            "slot": 2,
+            "type": "InputNode",
+            "x": -509.0,
+            "y": 1933.0
+        },
+        {
+            "data_bits": 1,
+            "guid": "a45cdf1f6e4f4b8bbe44fc07e5c34ace",
+            "id": 18446744073606865290,
+            "name": "Input Tunnel",
+            "net_name": "ld_flags",
+            "type": "InputTunnelNode",
+            "x": 437.0,
+            "y": 2100.0
+        },
+        {
+            "data_bits": 1,
+            "guid": "9845373442fb47f6a53045ab91d4f09b",
+            "id": 2084346519,
+            "name": "Output Tunnel",
+            "net_name": "ld_flags",
+            "type": "OutputTunnelNode",
+            "x": 933.0,
+            "y": 1860.0
         }
     ],
     "outputs": [

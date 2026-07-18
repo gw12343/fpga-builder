@@ -22,25 +22,29 @@ nlohmann::json LiteralNode::ToJson() const {
 
 void LiteralNode::RenderInternals() {
     ImGui::PushItemWidth(60);
-    const int old_val = value;
-    const bool f = ImGui::SliderInt(("##" + guid).c_str(), &value, 0, powl(2, bits) - 1);
+    // const uint64_t old_val = value;
+    const uint64_t maxValue = (bits >= 64) ? std::numeric_limits<uint64_t>::max() : ((1ULL << bits) - 1);
+    const uint64_t minValue = 0;
 
-    if (value < 0) {
-        value = 0;
-    } else if (value > powl(2, bits) - 1) {
-        value = powl(2, bits) - 1;
+    const bool f = ImGui::SliderScalar(("##" + guid).c_str(), ImGuiDataType_U64, &value, &minValue, &maxValue);
+
+    if (value > maxValue) {
+        value = maxValue;
     }
 
-    if (f && value != old_val) {
-        const auto cmd = std::make_shared<NumericParameterChangeCommand>(module->shared_from_this(), shared_from_this(),
-                                                                         old_val, value, 0);
-        module->ExecuteCommand(cmd);
-    }
+
+    // TODO for unsigned, maybe template?
+    //  if (f && value != old_val) {
+    //      const auto cmd = std::make_shared<NumericParameterChangeCommand>(module->shared_from_this(),
+    //      shared_from_this(),
+    //                                                                       old_val, value, 0);
+    //      module->ExecuteCommand(cmd);
+    //  }
 
     ImGui::PopItemWidth();
 }
 
-LiteralNode::LiteralNode(Module *module, const std::string &guid, const int bit_width, const int val) :
+LiteralNode::LiteralNode(Module *module, const std::string &guid, const int bit_width, const uint64_t val) :
     ConfigurableBitWidthNode(guid, module, "Literal", bit_width), value(val) {
 
     InitPinsAfterConfig();
@@ -49,5 +53,5 @@ LiteralNode::LiteralNode(Module *module) : ConfigurableBitWidthNode(module, "Lit
 
 void LiteralNode::InitPinsAfterConfig() {
     // Output
-    pins.push_back({ "Value", ax::NodeEditor::PinKind::Output, *this, 0, PinDataType(bits) });
+    pins.push_back({"Value", ax::NodeEditor::PinKind::Output, *this, 0, PinDataType(bits)});
 }
