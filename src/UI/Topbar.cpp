@@ -57,9 +57,9 @@ void Topbar::Render(const std::shared_ptr<Project> &project, const std::shared_p
     if (ImGui::Button("Export Project")) {
         for (const auto module: project->GetModules()) {
             Codegen c(error_manager);
-            c.GenerateCode(module);
-
-            output_viewer->UpdateOutput(module);
+            const auto verilog = c.GenerateCode(module);
+            // Last module wins in the viewer; files are still written under Export/.
+            output_viewer->UpdateOutput(verilog);
         }
     }
     ImGui::SameLine();
@@ -70,17 +70,19 @@ void Topbar::Render(const std::shared_ptr<Project> &project, const std::shared_p
 
         if (ImGui::Button("Generate Verilog")) {
             Codegen c(error_manager);
-            c.GenerateCode(module.value());
-
-            output_viewer->UpdateOutput(module.value());
+            // Always feed the viewer from the in-memory result. Re-reading Export/*.v
+            // breaks on the web build whenever the virtual FS write fails (common on
+            // GitHub Pages where Project/Export is not preloaded and cannot be created
+            // by a bare ofstream).
+            const auto verilog = c.GenerateCode(module.value());
+            output_viewer->UpdateOutput(verilog);
         }
 #ifdef __EMSCRIPTEN__
         ImGui::SameLine();
         if (ImGui::Button("Export Verilog")) {
             Codegen c(error_manager);
             const auto verilog = c.GenerateCode(module.value());
-
-            output_viewer->UpdateOutput(module.value());
+            output_viewer->UpdateOutput(verilog);
             DownloadString(verilog, module.value()->GetName() + ".v");
         }
 #endif

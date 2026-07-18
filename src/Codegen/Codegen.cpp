@@ -4,6 +4,7 @@
 
 #include "Codegen.h"
 
+#include <filesystem>
 #include <fstream>
 #include <set>
 
@@ -217,13 +218,23 @@ std::string Codegen::GenerateCode(const std::shared_ptr<Module> &module) {
                             "\talways @(*) begin\n" + m_inner + "\tend\n\n" +
                             "\n// === clocked logic ========================================\n" + m_later + footer;
 
-    const std::string out_path = module->GetProject()->GetWorkspacePath() + OUTPUT_DIR + module->GetName() + ".v";
+    // Keep path consistent with OutputViewer (ASSET_BASE_PATH is "/" on Emscripten).
+    const std::string export_dir =
+            ASSET_BASE_PATH + module->GetProject()->GetWorkspacePath() + OUTPUT_DIR;
+    const std::string out_path = export_dir + module->GetName() + ".v";
+
+    std::error_code ec;
+    std::filesystem::create_directories(export_dir, ec);
+    if (ec) {
+        std::cerr << "Could not create export directory \"" << export_dir << "\": " << ec.message() << std::endl;
+    }
 
     if (std::ofstream file(out_path); file.is_open()) {
         std::cout << "Writing output file... to " << out_path << std::endl;
         file << out;
         file.close();
     } else {
+        // On web this is non-fatal: callers still get `out` in memory for the viewer / download.
         std::cerr << "Could not open file \"" << out_path << "\"" << std::endl;
     }
 

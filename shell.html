@@ -47,6 +47,17 @@
         })(),
     };
 
+    // Suppress the browser context menu so right-click stays with ImGui/SDL
+    // (node editor menus, etc.) instead of Chrome's "Save image..." popup.
+    function suppressBrowserContextMenu(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+    }
+    window.addEventListener("contextmenu", suppressBrowserContextMenu, { capture: true });
+    document.addEventListener("contextmenu", suppressBrowserContextMenu, { capture: true });
+    document.getElementById("canvas").addEventListener("contextmenu", suppressBrowserContextMenu, { capture: true });
+
     // Ctrl/Cmd+wheel: app UI zoom (not browser page zoom).
     // Use capture so we see the event even if something else tries to handle it.
     // Call into wasm when ready; always preventDefault so the page doesn't zoom.

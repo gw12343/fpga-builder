@@ -159,17 +159,29 @@ OutputViewer::OutputViewer() {
 
     m_editor.SetPalette(palette);
 
-    m_editor.SetText("TODO");
-    // UpdateOutput(module);
+    m_editor.SetText("// Click \"Generate Verilog\" to compile the selected module.");
 }
+
+void OutputViewer::UpdateOutput(const std::string &verilog_source) {
+    m_editor.SetText(verilog_source);
+}
+
 void OutputViewer::UpdateOutput(const std::shared_ptr<Module> &module) {
+    // Prefer an on-disk export when present (native builds, or web after a successful FS write).
+    // On Emscripten the preloaded Project/ tree usually has no Export/ folder, and ofstream
+    // will not create intermediate directories — so Generate must also call the string overload.
     const std::string path =
             ASSET_BASE_PATH + module->GetProject()->GetWorkspacePath() + "/Export/" + module->GetName() + ".v";
 
-    const std::ifstream file(path);
+    std::ifstream file(path);
+    if (!file) {
+        m_editor.SetText("// No exported Verilog for \"" + module->GetName() +
+                         "\" yet.\n// Click \"Generate Verilog\" to compile this module.");
+        return;
+    }
+
     std::stringstream buffer;
     buffer << file.rdbuf();
-
     m_editor.SetText(buffer.str());
 }
 
