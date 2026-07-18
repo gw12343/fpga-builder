@@ -87,7 +87,7 @@ std::unique_ptr<Node> CircuitSerializer::NodeFromJson(const json &j, Module *m) 
         p = std::make_unique<RAMNode>(m, guid, j.at("data_bits").get<int>(), j.at("select_bits").get<int>(),
                                       j.at("ram_init_file").get<std::string>());
     } else if (type == "LiteralNode") {
-        p = std::make_unique<LiteralNode>(m, guid, j.at("bits").get<int>(), j.at("value").get<int>());
+        p = std::make_unique<LiteralNode>(m, guid, j.at("bits").get<int>(), j.at("value").get<uint64_t>());
     } else if (type == "SplitterNode") {
         p = std::make_unique<SplitterNode>(m, guid, j.at("bits").get<int>());
     } else if (type == "DecoderNode") {
@@ -156,7 +156,7 @@ std::shared_ptr<Module> CircuitSerializer::LoadModule(Project *project, const st
     std::cout << "loading module " << file_path << std::endl;
 
     // Open and read file
-    std::ifstream file(file_path);
+    std::ifstream file(ASSET_BASE_PATH + file_path);
     std::stringstream buffer;
     buffer << file.rdbuf();
     // Parse data

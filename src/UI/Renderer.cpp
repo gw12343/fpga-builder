@@ -9,8 +9,164 @@
 #include <SDL3/SDL_opengl.h>
 #include <imgui_impl_opengl3.h>
 #include <imgui_impl_sdl3.h>
+#include <algorithm>
+#include <cmath>
 #include <iostream>
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#include <emscripten/html5.h>
+
+namespace {
+Renderer *g_web_renderer = nullptr;
+
+EM_BOOL OnWebResize(int /*eventType*/, const EmscriptenUiEvent * /*event*/, void *userData) {
+    if (auto *renderer = static_cast<Renderer *>(userData)) {
+        renderer->SyncWebCanvas(true);
+    }
+    return EM_TRUE;
+}
+
+EM_BOOL OnWebFullscreen(int /*eventType*/, const EmscriptenFullscreenChangeEvent * /*event*/, void *userData) {
+    if (auto *renderer = static_cast<Renderer *>(userData)) {
+        renderer->SyncWebCanvas(true);
+    }
+    return EM_TRUE;
+}
+} // namespace
+
+/// Called from shell.html on Ctrl/Cmd+wheel (DOM has reliable modifier flags).
+/// Must not live in an anonymous namespace or it will not export as _fpga_web_on_ctrl_wheel.
+/// Uses double so the JS number ABI is reliable without ccall helpers.
+extern "C" EMSCRIPTEN_KEEPALIVE void fpga_web_on_ctrl_wheel(double delta_y) {
+    if (g_web_renderer) {
+        g_web_renderer->ZoomByWheelDelta(static_cast<float>(delta_y));
+    }
+}
+
+void Renderer::SetWebZoom(float zoom) {
+    m_web_zoom = std::clamp(zoom, 0.5f, 3.0f);
+    SyncWebCanvas(true);
+}
+
+void Renderer::ZoomByWheelDelta(float dom_delta_y) {
+    if (dom_delta_y == 0.0f) {
+        return;
+    }
+    // DOM wheel: positive deltaY = scroll down = zoom out.
+    constexpr float kStep = 1.1f;
+    const float factor = dom_delta_y < 0.0f ? kStep : (1.0f / kStep);
+    SetWebZoom(m_web_zoom * factor);
+}
+
+void Renderer::ApplyWebZoomToImGui() {
+    if (ImGui::GetCurrentContext() == nullptr) {
+        return;
+    }
+
+    if (m_have_base_style) {
+        // Re-derive from the post-init style so ScaleAllSizes stays idempotent.
+        ImGui::GetStyle() = m_base_style;
+        if (m_web_zoom != 1.0f) {
+            ImGui::GetStyle().ScaleAllSizes(m_web_zoom);
+        }
+    }
+    ImGui::GetIO().FontGlobalScale = m_web_zoom;
+}
+
+void Renderer::SyncWebCanvas(bool force) {
+    if (!m_window) {
+        return;
+    }
+
+    // 1) Force CSS full-DOM. SDL and emscripten often write fixed px sizes on
+    //    the canvas which break under browser zoom (gray gutters, cornered view).
+    // 2) Measure the *laid-out* canvas box (handles browser +/- zoom correctly).
+    // 3) Set only the backing-store attributes; leave CSS as 100%.
+    const double css_w = EM_ASM_DOUBLE({
+        const c = document.getElementById('canvas');
+        if (!c) {
+            return window.innerWidth || 1;
+        }
+        // Strip fixed px that SDL/emscripten may have applied.
+        c.style.setProperty('width', '100%', 'important');
+        c.style.setProperty('height', '100%', 'important');
+        c.style.setProperty('top', '0', 'important');
+        c.style.setProperty('left', '0', 'important');
+        c.style.setProperty('right', '0', 'important');
+        c.style.setProperty('bottom', '0', 'important');
+        c.style.setProperty('position', 'fixed', 'important');
+        c.style.removeProperty('max-width');
+        c.style.removeProperty('max-height');
+        // Force a layout pass, then measure the real CSS box.
+        const rect = c.getBoundingClientRect();
+        let w = rect.width;
+        if (!(w > 0)) {
+            w = c.clientWidth || window.innerWidth || document.documentElement.clientWidth || 1;
+        }
+        return w;
+    });
+    const double css_h = EM_ASM_DOUBLE({
+        const c = document.getElementById('canvas');
+        if (!c) {
+            return window.innerHeight || 1;
+        }
+        const rect = c.getBoundingClientRect();
+        let h = rect.height;
+        if (!(h > 0)) {
+            h = c.clientHeight || window.innerHeight || document.documentElement.clientHeight || 1;
+        }
+        return h;
+    });
+
+    const float dpr = static_cast<float>(EM_ASM_DOUBLE({ return window.devicePixelRatio || 1; }));
+    const int css_w_i = std::max(1, static_cast<int>(std::lround(css_w)));
+    const int css_h_i = std::max(1, static_cast<int>(std::lround(css_h)));
+
+    // Backing store tracks device pixels * app zoom. CSS box stays full-window.
+    const float pixel_scale = std::max(0.5f, dpr * m_web_zoom);
+    const int fb_w = std::max(1, static_cast<int>(std::lround(static_cast<double>(css_w_i) * pixel_scale)));
+    const int fb_h = std::max(1, static_cast<int>(std::lround(static_cast<double>(css_h_i) * pixel_scale)));
+
+    const bool size_changed = css_w_i != m_last_css_w || css_h_i != m_last_css_h || dpr != m_last_dpr ||
+                              fb_w != m_last_fb_w || fb_h != m_last_fb_h;
+    const bool zoom_changed = m_web_zoom != m_last_zoom;
+
+    if (!force && !size_changed && !zoom_changed) {
+        return;
+    }
+
+    m_last_css_w = css_w_i;
+    m_last_css_h = css_h_i;
+    m_last_dpr = dpr;
+    m_last_zoom = m_web_zoom;
+    m_last_fb_w = fb_w;
+    m_last_fb_h = fb_h;
+
+    // Logical window for SDL/ImGui mouse + layout (CSS pixels).
+    SDL_SetWindowSize(m_window, css_w_i, css_h_i);
+
+    // SDL often resets the canvas buffer and/or inline CSS on SetWindowSize —
+    // re-assert both every time.
+    emscripten_set_canvas_element_size("#canvas", fb_w, fb_h);
+    EM_ASM({
+        const c = document.getElementById('canvas');
+        if (!c) return;
+        c.style.setProperty('width', '100%', 'important');
+        c.style.setProperty('height', '100%', 'important');
+        c.style.setProperty('position', 'fixed', 'important');
+        c.style.setProperty('top', '0', 'important');
+        c.style.setProperty('left', '0', 'important');
+        // Ensure attribute size matches (some SDL builds only touch attributes).
+        if (c.width !== $0) c.width = $0;
+        if (c.height !== $1) c.height = $1;
+    }, fb_w, fb_h);
+
+    if (zoom_changed || force) {
+        ApplyWebZoomToImGui();
+    }
+}
+#endif
 
 void Renderer::InitWindow(const int w, const int h, const std::string &title) {
     if (!SDL_Init(SDL_INIT_VIDEO)) {
@@ -167,10 +323,60 @@ void Renderer::InitWindow(const int w, const int h, const std::string &title) {
     colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.00f, 1.00f, 1.00f, 0.70f);
     colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
     colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.11f, 0.13f, 0.13f, 0.35f);
+
+#ifdef __EMSCRIPTEN__
+    // Snapshot style at zoom=1.0 so ctrl+scroll can re-scale without drift.
+    m_base_style = ImGui::GetStyle();
+    m_have_base_style = true;
+    g_web_renderer = this;
+
+    // Initial full-DOM size (overrides the desktop 2000x1600 request).
+    SyncWebCanvas(true);
+    emscripten_set_resize_callback(EMSCRIPTEN_EVENT_TARGET_WINDOW, this, false, OnWebResize);
+    emscripten_set_fullscreenchange_callback(EMSCRIPTEN_EVENT_TARGET_DOCUMENT, this, false, OnWebFullscreen);
+
+    // Browser zoom and mobile chrome often update visualViewport without a
+    // reliable window.resize; poll path in StartFrame also covers this.
+    EM_ASM({
+        const fire = () => { window.dispatchEvent(new Event('resize')); };
+        window.addEventListener('resize', fire);
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', fire);
+            window.visualViewport.addEventListener('scroll', fire);
+        }
+        // devicePixelRatio changes with browser zoom in Chromium.
+        if (window.matchMedia) {
+            let mql = window.matchMedia('screen and (resolution: ' + window.devicePixelRatio + 'dppx)');
+            const onDpr = () => {
+                try {
+                    mql.removeEventListener('change', onDpr);
+                } catch (err) {
+                    try { mql.removeListener(onDpr); } catch (e2) {}
+                }
+                mql = window.matchMedia('screen and (resolution: ' + window.devicePixelRatio + 'dppx)');
+                try {
+                    mql.addEventListener('change', onDpr);
+                } catch (err) {
+                    try { mql.addListener(onDpr); } catch (e2) {}
+                }
+                fire();
+            };
+            try {
+                mql.addEventListener('change', onDpr);
+            } catch (err) {
+                try { mql.addListener(onDpr); } catch (e2) {}
+            }
+        }
+    });
+#endif
 }
 
 void Renderer::CloseWindow() const {
-
+#ifdef __EMSCRIPTEN__
+    if (g_web_renderer == this) {
+        g_web_renderer = nullptr;
+    }
+#endif
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplSDL3_Shutdown();
@@ -183,16 +389,39 @@ void Renderer::CloseWindow() const {
 
 SDL_Event event;
 void Renderer::StartFrame() {
+#ifdef __EMSCRIPTEN__
+    // Pick up DPR / viewport changes that don't always fire resize events
+    // (e.g. moving across monitors, some browser UI chrome toggles).
+    SyncWebCanvas(false);
+#endif
 
     while (SDL_PollEvent(&event)) {
         ImGui_ImplSDL3_ProcessEvent(&event);
 
         if (event.type == SDL_EVENT_QUIT)
             m_running = false;
+#ifdef __EMSCRIPTEN__
+        if (event.type == SDL_EVENT_WINDOW_RESIZED || event.type == SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED) {
+            SyncWebCanvas(true);
+        }
+#endif
     }
 
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplSDL3_NewFrame();
+#ifdef __EMSCRIPTEN__
+    // Own DisplaySize / FramebufferScale: CSS logical size vs canvas buffer.
+    // (SDL's pixel-size query often ignores our DPR/zoom buffer sizing.)
+    {
+        ImGuiIO &io = ImGui::GetIO();
+        if (m_last_css_w > 0 && m_last_css_h > 0 && m_last_fb_w > 0 && m_last_fb_h > 0) {
+            io.DisplaySize = ImVec2(static_cast<float>(m_last_css_w), static_cast<float>(m_last_css_h));
+            io.DisplayFramebufferScale =
+                    ImVec2(static_cast<float>(m_last_fb_w) / static_cast<float>(m_last_css_w),
+                           static_cast<float>(m_last_fb_h) / static_cast<float>(m_last_css_h));
+        }
+    }
+#endif
     ImGui::NewFrame();
 
 
@@ -229,8 +458,17 @@ void Renderer::EndFrame() const {
 
     ImGui::Render();
 
-    int fb_width, fb_height;
+    int fb_width = 0, fb_height = 0;
+#ifdef __EMSCRIPTEN__
+    // Prefer the real canvas buffer size we set in SyncWebCanvas so the
+    // viewport stays correct if SDL's pixel-size query lags a frame.
+    emscripten_get_canvas_element_size("#canvas", &fb_width, &fb_height);
+    if (fb_width <= 0 || fb_height <= 0) {
+        SDL_GetWindowSizeInPixels(m_window, &fb_width, &fb_height);
+    }
+#else
     SDL_GetWindowSizeInPixels(m_window, &fb_width, &fb_height);
+#endif
 
     glViewport(0, 0, fb_width, fb_height);
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);

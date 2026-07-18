@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FPGA Builder</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #1a1a1a;
+            overscroll-behavior: none;
+            touch-action: none;
+        }
+
+        /*
+         * Full-DOM canvas. Do NOT set width/height in JS to fixed px — browser
+         * zoom changes the CSS viewport and fixed px leave gray gutters.
+         * C++ only owns the canvas backing-store (width/height attributes).
+         */
+        #canvas {
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100% !important;
+            height: 100% !important;
+            outline: none;
+            touch-action: none;
+            /* Avoid the browser applying its own canvas upscaling blur rules oddly */
+            image-rendering: auto;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas" tabindex="0"></canvas>
+
+<script>
+    var Module = {
+        canvas: (function () {
+            var c = document.getElementById("canvas");
+            c.addEventListener("click", function () { c.focus(); });
+            return c;
+        })(),
+    };
+
+    // Ctrl/Cmd+wheel: app UI zoom (not browser page zoom).
+    // Use capture so we see the event even if something else tries to handle it.
+    // Call into wasm when ready; always preventDefault so the page doesn't zoom.
+    window.addEventListener("wheel", function (e) {
+        if (!(e.ctrlKey || e.metaKey)) {
+            return;
+        }
+        e.preventDefault();
+        if (typeof Module !== "undefined" && typeof Module._fpga_web_on_ctrl_wheel === "function") {
+            Module._fpga_web_on_ctrl_wheel(e.deltaY);
+        }
+    }, { passive: false, capture: true });
+
+    // Safari pinch-zoom gestures
+    window.addEventListener("gesturestart", function (e) { e.preventDefault(); }, { passive: false });
+    window.addEventListener("gesturechange", function (e) { e.preventDefault(); }, { passive: false });
+    window.addEventListener("gestureend", function (e) { e.preventDefault(); }, { passive: false });
+</script>
+
+{{{ SCRIPT }}}
+</body>
+</html>

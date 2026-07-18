@@ -206,10 +206,10 @@
 
     if (EMSCRIPTEN)
         set_target_properties(fpga_builder PROPERTIES
-            OUTPUT_NAME "index"
-            SUFFIX ".html"
+                OUTPUT_NAME "index"
+                SUFFIX ".html"
         )
-        
+
         # Convert paths safely
         file(TO_CMAKE_PATH "${CMAKE_SOURCE_DIR}/resources" CLEAN_RESOURCES_DIR)
         file(TO_CMAKE_PATH "${CMAKE_SOURCE_DIR}/Project" CLEAN_PROJECT_DIR)
@@ -225,6 +225,9 @@
                 "-sWASM=1"
                 "-sFORCE_FILESYSTEM=1"
                 "-sALLOW_MEMORY_GROWTH=1"
+                # Export ctrl-wheel zoom entry for shell.html (in addition to KEEP ALIVE).
+                "SHELL:-sEXPORTED_FUNCTIONS=_main,_fpga_web_on_ctrl_wheel"
+                "SHELL:--shell-file ${CMAKE_SOURCE_DIR}/shell.html"
                 "SHELL:--preload-file ${CLEAN_RESOURCES_DIR}@/resources"
                 "SHELL:--preload-file ${CLEAN_PROJECT_DIR}@/Project"
                 "SHELL:--preload-file ${CLEAN_INI_FILE}@/imgui.ini"
@@ -232,7 +235,7 @@
 
         # Also pass dependencies down to imgui target
         target_link_options(imgui PRIVATE "-sUSE_SDL=3" "-sUSE_WEBGL2=1")
-        
+
         set_target_properties(fpga_builder PROPERTIES OUTPUT_NAME "index")
     else ()
         # Desktop libs

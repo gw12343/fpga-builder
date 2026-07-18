@@ -1,5 +1,5 @@
 cmake-build-debug/**
-build-web/**
+build_web/**
 Project/main_module.json
 Project/Export
 *.v

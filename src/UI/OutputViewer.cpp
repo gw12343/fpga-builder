@@ -163,7 +163,8 @@ OutputViewer::OutputViewer() {
     // UpdateOutput(module);
 }
 void OutputViewer::UpdateOutput(const std::shared_ptr<Module> &module) {
-    const std::string path = module->GetProject()->GetWorkspacePath() + "/Export/" + module->GetName() + ".v";
+    const std::string path =
+            ASSET_BASE_PATH + module->GetProject()->GetWorkspacePath() + "/Export/" + module->GetName() + ".v";
 
     const std::ifstream file(path);
     std::stringstream buffer;
